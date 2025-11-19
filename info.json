@@ -1,0 +1,14 @@
+{
+  "name": "ufo",
+  "title": "Use Fulgorian Object",
+  "description": "Use Fulgorian Object",
+  "author": "xyzzycgn",
+  "version": "0.0.1",
+  "factorio_version": "2.0",
+  "dependencies": [
+    "space-age >= 2.0.72",
+    "flib >= 0.16.2",
+    "log4factorio >= 0.2.2"
+  ],
+  "space_travel_required": true
+}
