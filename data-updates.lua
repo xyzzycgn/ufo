@@ -6,7 +6,6 @@ local data_util = require('__flib__.data-util')
 Log.setSeverity(Log.CONFIG)
 
 local fulg_attr = data.raw["lightning-attractor"]["fulgoran-ruin-attractor"]
-
 fulg_attr.energy_source = {
     buffer_capacity = "2000MJ",
     drain = "2.5GJ",
@@ -15,9 +14,6 @@ fulg_attr.energy_source = {
     usage_priority = "primary-output"
   }
 fulg_attr.efficiency = 0.45
-
--- der fulgorianische blitzableiter
-Log.logBlock(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], function(m)log(m)end)
 
 -- adapter item
 local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["small-lamp"], "ufo-adapter")
@@ -37,24 +33,16 @@ ufo_adapter_recipe.ingredients = {
 }
 
 -- effects for tech
-local effects = {
-    { type = 'unlock-recipe', recipe = 'ufo-adapter' },
-}
+local effects = {{ type = 'unlock-recipe', recipe = 'ufo-adapter' }}
 
 -- all recipes unlocked by tech
-local recipes = {
-    [1] = ufo_adapter_recipe
-}
+local recipes = { [1] = ufo_adapter_recipe }
 
 -- all items unlocked by tech
-local items = {
-    [1] = ufo_adapter_item
-}
+local items = { [1] = ufo_adapter_item }
 
 -- all entities unlocked by tech
-local entities = {
-    [1] = ufo_adapter_entity
-}
+local entities = { [1] = ufo_adapter_entity }
 
 -- create recipes and so on for each electric-pole
 for k, _ in pairs(data.raw["electric-pole"]) do
@@ -70,19 +58,18 @@ for k, _ in pairs(data.raw["electric-pole"]) do
         {type = 'item', name = 'ufo-adapter', amount = 1},
     }
     recipe.results = {{ type = 'item', name = adapted_name, amount = 1}}
-    recipe.localised_name = { "entity-name." .. k} -- TODO adapter/kompatibel in Text einbauen
-    --recipe.localised_description = { "entity-description." .. k} -- TODO hilft nicht - adapter/kompatibel in Text einbauen
     recipes[#recipes + 1] = recipe
 
     -- and item
     local ufo_adapted_item = data_util.copy_prototype(data.raw["item"][k], adapted_name)
-    ufo_adapted_item.localised_name = { "entity-name." .. k} -- TODO adapter/kompatibel in Text einbauen
-    --ufo_adapted_item.localised_description = { "entity-description." .. k} -- hilft nicht -TODO adapter/kompatibel in Text einbauen
     -- ufo_adapted_entity.tint = ....
     items[#items + 1] = ufo_adapted_item
 
     -- and entity
     local ufo_adapted_entity = data_util.copy_prototype(data.raw["electric-pole"][k], adapted_name)
+    -- localised_name and localised_description are used for item and recipe too
+    ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. k }}
+    ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. k }}
     entities[#entities + 1] = ufo_adapted_entity
 end
 
@@ -92,10 +79,10 @@ local ufo_tech = {
     type = 'technology',
     icon = "__space-age__/graphics/icons/fulgoran-ruin-attractor.png",
 
-    prerequisites = { "space-platform" }, -- TODO
+    prerequisites = { "planet-discovery-fulgora" },
     effects = effects,
 
-    research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", "5"}},
+    research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", "5"}}, -- TODO setting
     order = "c-e-b2",
 }
 

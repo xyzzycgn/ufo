@@ -1,0 +1,6 @@
+.idea/
+*.iml
+factorio_def.lua
+*luacov.report.html
+luacov.stats.out
+luacov.sh
