@@ -74,6 +74,7 @@ for k, _ in pairs(data.raw["electric-pole"]) do
 end
 
 --- ufo technology
+local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 local ufo_tech = {
     name = 'ufo-tech',
     type = 'technology',
@@ -82,7 +83,7 @@ local ufo_tech = {
     prerequisites = { "planet-discovery-fulgora" },
     effects = effects,
 
-    research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", "5"}}, -- TODO setting
+    research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", tostring(num_vaults)}},
     order = "c-e-b2",
 }
 
