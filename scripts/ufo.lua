@@ -53,6 +53,24 @@ local function registerEvents()
 end
 -- ###############################################################
 
+function string:startswith(start)
+    return self:sub(1, #start) == start
+end
+
+local function checkPoles()
+    local poles = prototypes.get_entity_filtered({ { filter = "type", type = "electric-pole" }})
+    Log.logBlock(poles, function(m)log(m)end, Log.FINE)
+    for ndx, prot in pairs(poles) do
+        local name = prot.name
+        if name:startswith("ufo-adapted-") then
+            local type = prot.type
+            Log.logLine({ ndx = ndx, name = name, type = type}, function(m)log(m)end, Log.FINE)
+            -- TODO remember and check against old save
+        end
+    end
+end
+-- ###############################################################
+
 -- complete initialization of ufo for new map/save-file
 local function ufo_initializer()
     initLogging()
@@ -75,6 +93,7 @@ local function ufo_initializer()
     end
 
     registerEvents()
+    checkPoles()
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -84,6 +103,7 @@ local function ufo_load()
     Log.log('ufo on_load', function(m)log(m)end)
 
     registerEvents()
+    checkPoles()
 end
 
 --- init ufo on every mod update or change
