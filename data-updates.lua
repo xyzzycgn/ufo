@@ -5,15 +5,17 @@ local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
 Log.setSeverity(Log.CONFIG)
 
-local fulg_attr = data.raw["lightning-attractor"]["fulgoran-ruin-attractor"]
-fulg_attr.energy_source = {
+
+local ufo_attractor = data_util.copy_prototype(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], "ufo-adapted-attractor")
+ufo_attractor.energy_source = {
     buffer_capacity = "2000MJ",
     drain = "2.5GJ",
     output_flow_limit = "2000MJ",
     type = "electric",
     usage_priority = "primary-output"
   }
-fulg_attr.efficiency = 0.45
+ufo_attractor.efficiency = 0.45
+-- TODO blue light on top (alter icon!)
 
 -- adapter item
 local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["small-lamp"], "ufo-adapter")
@@ -88,7 +90,9 @@ local ufo_tech = {
 }
 
 
-local extensions = {}
+local extensions = {
+    [1] = ufo_attractor
+}
 for _, item in pairs(items) do
     extensions[#extensions + 1] = item
 end

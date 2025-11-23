@@ -52,21 +52,23 @@ local function onPlayerMinedEntity(event)
 end
 -- ###############################################################
 
---- event handler for on_player_mined_entity
+--- event handler for on_built_entity
 --- @param event EventData
 local function onBuiltEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
+    local entity = event.entity
+    Log.logEntity(entity, function(m)log(m)end, Log.FINE)
 end
 -- ###############################################################
 
---- event handler for on_player_mined_entity
+--- event handler for on_entity_cloned
 --- @param event EventData
 local function onEntityCloned(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
 end
 -- ###############################################################
 
---- event handler for on_player_mined_entity
+--- event handler for on_entity_died
 --- @param event EventData
 local function entityDied(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
@@ -99,6 +101,8 @@ function string:startswith(start)
     return self:sub(1, #start) == start
 end
 
+--- checks if there changes to the set of electric-poles known by the game
+--- @return any<string>, any<string> the two arras contain the names of formerly unknown and no longer known poles
 local function checkPoles()
     local poles = prototypes.get_entity_filtered({ { filter = "type", type = "electric-pole" }})
     Log.logBlock(poles, function(m)log(m)end, Log.FINE)
@@ -107,6 +111,7 @@ local function checkPoles()
     Log.logBlock(known, function(m)log(m)end, Log.FINE)
     local remaining = {}
     local new = {}
+    local removed = {}
 
     for name, prot in pairs(poles) do
         if name:startswith("ufo-adapted-") then
@@ -117,7 +122,6 @@ local function checkPoles()
             else
                 Log.logMsg(function(m)log(m)end, Log.CONFIG, "new type of pole detected: %s", name)
                 new[name] = true
-                adapterHandling.addAdapter(name)
             end
         end
     end
@@ -127,15 +131,29 @@ local function checkPoles()
     for name, _ in pairs(known) do
         if not (remaining[name] or new[name]) then
             Log.logMsg(function(m)log(m)end, Log.CONFIG, "type of pole has been removed: %s", name)
-            adapterHandling.removeAdapter(name)
-            -- TODO clean up further structures (not yet existing, but coming)
+            removed[name] = true
         end
+    end
+
+    return new, removed
+end
+-- ###############################################################
+
+local function updatePoles()
+    local new, removed = checkPoles()
+    for name, _ in pairs(new) do
+        adapterHandling.addAdapter(name)
+    end
+
+    for name, _ in pairs(removed) do
+        adapterHandling.removeAdapter(name)
+        -- TODO clean up further structures (not yet existing, but coming)
     end
 end
 -- ###############################################################
 
 -- complete initialization of ufo for new map/save-file
-local function ufo_initializer()
+local function onInit()
     initLogging()
     Log.log('ufo on_init', function(m)log(m)end)
     global_data.init();
@@ -143,35 +161,39 @@ local function ufo_initializer()
     local forces = {}
     for _, player in pairs(game.players) do
         local force = player.force
-        Log.logLine(force, function(m)log(m)end, Log.FINE)
+        Log.logLine(force, function(m)log(m)end, Log.FINER)
         if not forces[force] then
             forces[#forces + 1] = force
         end
     end
-    Log.logLine(forces, function(m)log(m)end, Log.FINE)
+    Log.logLine(forces, function(m)log(m)end, Log.FINER)
 
     for _, force in pairs(forces) do
         local fd = force_data.init_force_data()
         global_data.addForce_data(force, fd)
     end
-
-    checkPoles()
-    registerEvents()
 end
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--###############################################################
 
 --- initialization of ufo for save-file which already contained this mod
-local function ufo_load()
+local function onLoad()
     initLogging()
     Log.log('ufo on_load', function(m)log(m)end)
 
-    checkPoles()
-    registerEvents()
+    local new, removed = checkPoles()
+    if (table_size(new) == 0 and table_size(removed) == 0) then
+        -- no changes to set of poles known to game,
+        -- this has to be done in on_configuration_changed as this implies also a change in mods
+        registerEvents()
+    end
 end
+--###############################################################
 
 --- init ufo on every mod update or change
-local function ufo_config_changed()
+local function onConfigurationChanged()
     Log.log('ufo config_changed', function(m)log(m)end)
+    updatePoles()
+    registerEvents()
 end
 --###############################################################
 
@@ -191,6 +213,7 @@ local function alterSetting(event, which, func)
     end
     return false -- signals no match
 end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local function changeSettings(e)
     -- local var to make lua happy
@@ -203,9 +226,9 @@ end
 -- mod initialization/configuration of handlers
 local ufo = {}
 
-ufo.on_init = ufo_initializer
-ufo.on_load = ufo_load
-ufo.on_configuration_changed = ufo_config_changed
+ufo.on_init = onInit
+ufo.on_load = onLoad
+ufo.on_configuration_changed = onConfigurationChanged
 
 -- events without filters
 ufo.events = {
