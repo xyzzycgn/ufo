@@ -5,6 +5,9 @@ local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
 Log.setSeverity(Log.CONFIG)
 
+---- der fulgorianische Blitzableiter
+--Log.logBlock(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], function(m)log(m)end)
+
 
 local ufo_attractor = data_util.copy_prototype(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], "ufo-adapted-attractor")
 ufo_attractor.energy_source = {
@@ -15,7 +18,9 @@ ufo_attractor.energy_source = {
     usage_priority = "primary-output"
   }
 ufo_attractor.efficiency = 0.45
--- TODO blue light on top (alter icon!)
+ufo_attractor.hidden_in_factoriopedia = true -- TODO ??? really?
+-- TODO blue light on top
+-- ufo_attractor.chargable_graphics.charge_light = {}
 
 -- adapter item
 local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["small-lamp"], "ufo-adapter")
@@ -46,6 +51,9 @@ local items = { [1] = ufo_adapter_item }
 -- all entities unlocked by tech
 local entities = { [1] = ufo_adapter_entity }
 
+--- @type SurfaceCondition only on fulgora
+local sc_only_fulgora = {{ property = "magnetic-field", min = 99 }}
+
 -- create recipes and so on for each electric-pole
 for k, _ in pairs(data.raw["electric-pole"]) do
     local adapted_name = 'ufo-adapted-' .. k
@@ -60,6 +68,7 @@ for k, _ in pairs(data.raw["electric-pole"]) do
         {type = 'item', name = 'ufo-adapter', amount = 1},
     }
     recipe.results = {{ type = 'item', name = adapted_name, amount = 1}}
+    recipe.surface_conditions = sc_only_fulgora
     recipes[#recipes + 1] = recipe
 
     -- and item
@@ -72,6 +81,7 @@ for k, _ in pairs(data.raw["electric-pole"]) do
     -- localised_name and localised_description are used for item and recipe too
     ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. k }}
     ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. k }}
+    ufo_adapted_entity.surface_conditions = sc_only_fulgora
     entities[#entities + 1] = ufo_adapted_entity
 end
 
