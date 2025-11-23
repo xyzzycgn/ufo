@@ -21,42 +21,77 @@ end
 local function onPlayerMinedEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
 
-    local player = game.players[event.player_index]
-    local force = player.force
+    local entity = event.entity
+    if entity.name == "fulgoran-ruin-vault" then
+        local player = game.players[event.player_index]
+        local force = player.force
 
-    --- @type LuaTechnology
-    local lt = force.technologies["ufo-tech"]
-    if not (lt and lt.researched) then
-        local fd = global_data.getForce_data(force.index)
-        if not fd then
-            -- just to be sure ;-)
-            Log.log("new force detected", function(m)log(m)end, Log.INFO)
-            fd = force_data.init_force_data()
-            global_data.addForce_data(force, fd)
+        --- @type LuaTechnology
+        local lt = force.technologies["ufo-tech"]
+        if not (lt and lt.researched) then
+            local fd = global_data.getForce_data(force.index)
+            if not fd then
+                -- just to be sure ;-)
+                Log.log("new force detected", function(m)log(m)end, Log.INFO)
+                fd = force_data.init_force_data()
+                global_data.addForce_data(force, fd)
+            end
+
+            fd.num_vaults = fd.num_vaults + 1
+            Log.logLine(fd.num_vaults, function(m)log(m)end, Log.FINE)
+
+            if fd.num_vaults >= num_vaults then
+                force.script_trigger_research("ufo-tech")
+                Log.log("triggered ufo-tech", function(m)log(m)end, Log.INFO)
+            end
         end
-
-        fd.num_vaults = fd.num_vaults + 1
-        Log.logLine(fd.num_vaults, function(m)log(m)end, Log.FINE)
-
-        if fd.num_vaults >= num_vaults then
-            force.script_trigger_research("ufo-tech")
-            Log.log("triggered ufo-tech", function(m)log(m)end, Log.INFO)
-        end
+    else
+        -- TODO remove adapted pole
+        Log.log(entity.name, function(m)log(m)end, Log.FINE)
     end
+end
+-- ###############################################################
+
+--- event handler for on_player_mined_entity
+--- @param event EventData
+local function onBuiltEntity(event)
+    Log.logEvent(event, function(m)log(m)end, Log.FINE)
+end
+-- ###############################################################
+
+--- event handler for on_player_mined_entity
+--- @param event EventData
+local function onEntityCloned(event)
+    Log.logEvent(event, function(m)log(m)end, Log.FINE)
+end
+-- ###############################################################
+
+--- event handler for on_player_mined_entity
+--- @param event EventData
+local function entityDied(event)
+    Log.logEvent(event, function(m)log(m)end, Log.FINE)
 end
 -- ###############################################################
 
 --- register complexer events, i.e. with additional filters
 local function registerEvents()
-    local filters_ufo_components = { { filter = 'name', name = 'fulgoran-ruin-vault' }, }
+    local filters_all_ufo = { { filter = 'name', name = 'fulgoran-ruin-vault' }, }
+    local filters_ufo_components = {}
 
     local poles = adapterHandling.getAdapter()
     for name, _ in pairs(poles) do
+        local filter = { filter = 'name', name = name }
+        filters_all_ufo[#filters_all_ufo + 1] = { filter = 'name', name = name }
         filters_ufo_components[#filters_ufo_components + 1] = { filter = 'name', name = name }
     end
 
-    Log.logBlock(filters_ufo_components, function(m)log(m)end, Log.FINE)
-    script.on_event(defines.events.on_player_mined_entity, onPlayerMinedEntity, filters_ufo_components)
+    Log.logLine(filters_ufo_components, function(m)log(m)end, Log.FINE)
+    Log.logLine(filters_all_ufo, function(m)log(m)end, Log.FINE)
+
+    script.on_event(defines.events.on_player_mined_entity, onPlayerMinedEntity, filters_all_ufo)
+    script.on_event(defines.events.on_built_entity,        onBuiltEntity,       filters_ufo_components)
+    script.on_event(defines.events.on_entity_cloned,       onEntityCloned,      filters_ufo_components)
+    script.on_event(defines.events.on_entity_died,         entityDied,          filters_ufo_components)
 end
 -- ###############################################################
 
