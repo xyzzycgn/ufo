@@ -6,6 +6,7 @@ local Log = require("__log4factorio__.Log")
 local events_force = require("scripts.events.force")
 local force_data = require("scripts.force_data")
 local global_data = require("scripts.global_data")
+local adapterHandling = require("scripts.adapterHandling")
 
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 
@@ -49,6 +50,12 @@ end
 local function registerEvents()
     local filters_ufo_components = { { filter = 'name', name = 'fulgoran-ruin-vault' }, }
 
+    local poles = adapterHandling.getAdapter()
+    for name, _ in pairs(poles) do
+        filters_ufo_components[#filters_ufo_components + 1] = { filter = 'name', name = name }
+    end
+
+    Log.logBlock(filters_ufo_components, function(m)log(m)end, Log.FINE)
     script.on_event(defines.events.on_player_mined_entity, onPlayerMinedEntity, filters_ufo_components)
 end
 -- ###############################################################
@@ -60,12 +67,33 @@ end
 local function checkPoles()
     local poles = prototypes.get_entity_filtered({ { filter = "type", type = "electric-pole" }})
     Log.logBlock(poles, function(m)log(m)end, Log.FINE)
-    for ndx, prot in pairs(poles) do
-        local name = prot.name
+
+    local known = adapterHandling.getAdapter()
+    Log.logBlock(known, function(m)log(m)end, Log.FINE)
+    local remaining = {}
+    local new = {}
+
+    for name, prot in pairs(poles) do
         if name:startswith("ufo-adapted-") then
             local type = prot.type
-            Log.logLine({ ndx = ndx, name = name, type = type}, function(m)log(m)end, Log.FINE)
-            -- TODO remember and check against old save
+            Log.logLine({ name = name, type = type}, function(m)log(m)end, Log.FINE)
+            if known[name] then
+                remaining[name] = true
+            else
+                Log.logMsg(function(m)log(m)end, Log.CONFIG, "new type of pole detected: %s", name)
+                new[name] = true
+                adapterHandling.addAdapter(name)
+            end
+        end
+    end
+
+    -- now new contain new pole types, remaining contains old types still in save
+    -- known - new - remaining = removed types
+    for name, _ in pairs(known) do
+        if not (remaining[name] or new[name]) then
+            Log.logMsg(function(m)log(m)end, Log.CONFIG, "type of pole has been removed: %s", name)
+            adapterHandling.removeAdapter(name)
+            -- TODO clean up further structures (not yet existing, but coming)
         end
     end
 end
@@ -92,8 +120,8 @@ local function ufo_initializer()
         global_data.addForce_data(force, fd)
     end
 
-    registerEvents()
     checkPoles()
+    registerEvents()
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -102,8 +130,8 @@ local function ufo_load()
     initLogging()
     Log.log('ufo on_load', function(m)log(m)end)
 
-    registerEvents()
     checkPoles()
+    registerEvents()
 end
 
 --- init ufo on every mod update or change

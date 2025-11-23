@@ -9,7 +9,8 @@ local global_data = {}
 
 function global_data.init()
     Log.log('global_data.init', function(m)log(m)end, Log.FINER)
-    storage.forces =  storage.forces or {}
+    storage.forces = storage.forces or {}
+    storage.adapter = storage.adapter or {}
 end
 -- ###############################################################
 
@@ -36,6 +37,15 @@ function global_data.deleteForce_data(forceindex)
     Log.logMsg(function(m)log(m)end, Log.INFO, "force deleted - index=%d", forceindex)
     storage.forces[forceindex] = nil
 end
+-- ###############################################################
+
+--- @param forceindex number
+--- @return string[]
+function global_data.getAdapter()
+    return storage.adapter
+end
+
+
 -- ###############################################################
 
 return global_data
