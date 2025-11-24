@@ -6,7 +6,7 @@ local data_util = require('__flib__.data-util')
 Log.setSeverity(Log.CONFIG)
 
 ---- der fulgorianische Blitzableiter
---Log.logBlock(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], function(m)log(m)end)
+Log.logBlock(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], function(m)log(m)end)
 
 
 local ufo_attractor = data_util.copy_prototype(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], "ufo-adapted-attractor")
@@ -21,6 +21,7 @@ ufo_attractor.efficiency = 0.45
 ufo_attractor.hidden_in_factoriopedia = true -- TODO ??? really?
 -- TODO blue light on top
 -- ufo_attractor.chargable_graphics.charge_light = {}
+Log.logBlock(ufo_attractor, function(m)log(m)end)
 
 -- adapter item
 local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["small-lamp"], "ufo-adapter")
