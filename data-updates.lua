@@ -19,6 +19,7 @@ ufo_attractor.energy_source = {
   }
 ufo_attractor.efficiency = 0.45
 ufo_attractor.hidden_in_factoriopedia = true -- TODO ??? really?
+ufo_attractor.render_no_network_icon = true
 -- TODO blue light on top
 -- ufo_attractor.chargable_graphics.charge_light = {}
 Log.logBlock(ufo_attractor, function(m)log(m)end)

@@ -58,6 +58,7 @@ local function onBuiltEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
     local entity = event.entity
     Log.logEntity(entity, function(m)log(m)end, Log.FINE)
+    adapterHandling.handleBuild(entity)
 end
 -- ###############################################################
 
