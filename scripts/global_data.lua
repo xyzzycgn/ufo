@@ -12,6 +12,7 @@ function global_data.init()
     storage.forces = storage.forces or {}
     storage.adapterPrototypes = storage.adapterPrototypes or {}
     storage.adapterData = storage.adapterData or {}
+    storage.adaptees = storage.adaptees or {}
 end
 -- ###############################################################
 
@@ -53,8 +54,13 @@ end
 function global_data.getAdapterData()
     return storage.adapterData
 end
+-- ###############################################################
 
-
+--- List of known adapted attractors
+--- @return table<number, AdaptedAttractor> indexed by unit_number of adapted attractor entity
+function global_data.getAdaptees()
+    return storage.adaptees
+end
 -- ###############################################################
 
 return global_data

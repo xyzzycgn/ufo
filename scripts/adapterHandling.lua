@@ -89,14 +89,16 @@ local function handleBuild(entity)
                                                     direction = attdirection,
                                                     force = attforce,
             })
-            ad.adaptees[adaptee.unit_number] = aa
+            global_data.getAdaptees()[adaptee.unit_number] = aa
+            ad.adaptees[adaptee.unit_number] = true
         else
             -- already adapted attractor
-            ad.adaptees[att.unit_number] = aa
+            ad.adaptees[att.unit_number] = true
         end
     end
 
     Log.logBlock(gad, function(m)log(m)end, Log.FINE)
+    Log.logBlock(global_data.getAdaptees, function(m)log(m)end, Log.FINE)
 end
 -- ###############################################################
 
