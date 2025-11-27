@@ -81,7 +81,7 @@ local function registerEvents()
     local filters_all_ufo = { { filter = 'name', name = 'fulgoran-ruin-vault' }, }
     local filters_ufo_components = {}
 
-    local poles = adapterHandling.getAdapter()
+    local poles = adapterHandling.getAdapterPrototypes()
     for name, _ in pairs(poles) do
         local filter = { filter = 'name', name = name }
         filters_all_ufo[#filters_all_ufo + 1] = { filter = 'name', name = name }
@@ -103,12 +103,12 @@ function string:startswith(start)
 end
 
 --- checks if there changes to the set of electric-poles known by the game
---- @return any<string>, any<string> the two arras contain the names of formerly unknown and no longer known poles
+--- @return any<string>, any<string> the names of the formerly unknown and of the no longer known adpters for poles
 local function checkPoles()
     local poles = prototypes.get_entity_filtered({ { filter = "type", type = "electric-pole" }})
     Log.logBlock(poles, function(m)log(m)end, Log.FINE)
 
-    local known = adapterHandling.getAdapter()
+    local known = adapterHandling.getAdapterPrototypes()
     Log.logBlock(known, function(m)log(m)end, Log.FINE)
     local remaining = {}
     local new = {}
@@ -143,11 +143,11 @@ end
 local function updatePoles()
     local new, removed = checkPoles()
     for name, _ in pairs(new) do
-        adapterHandling.addAdapter(name)
+        adapterHandling.addAdapterPrototypes(name)
     end
 
     for name, _ in pairs(removed) do
-        adapterHandling.removeAdapter(name)
+        adapterHandling.removeAdapterPrototypes(name)
         -- TODO clean up further structures (not yet existing, but coming)
     end
 end

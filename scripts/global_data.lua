@@ -10,7 +10,8 @@ local global_data = {}
 function global_data.init()
     Log.log('global_data.init', function(m)log(m)end, Log.FINER)
     storage.forces = storage.forces or {}
-    storage.adapter = storage.adapter or {}
+    storage.adapterPrototypes = storage.adapterPrototypes or {}
+    storage.adapterData = storage.adapterData or {}
 end
 -- ###############################################################
 
@@ -39,10 +40,18 @@ function global_data.deleteForce_data(forceindex)
 end
 -- ###############################################################
 
---- @param forceindex number
---- @return string[]
-function global_data.getAdapter()
-    return storage.adapter
+--- List of known prototypes for adapted electric poles
+--- @return table<string, true> indexed by name of prototype
+function global_data.getAdapterPrototypes()
+    return storage.adapterPrototypes
+end
+
+-- ###############################################################
+
+--- List of known adapted electric poles
+--- @return table<string, AdapterData> indexed by name of prototype
+function global_data.getAdapterData()
+    return storage.adapterData
 end
 
 
