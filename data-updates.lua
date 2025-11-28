@@ -19,6 +19,7 @@ ufo_attractor.energy_source = {
   }
 ufo_attractor.efficiency = 0.55
 ufo_attractor.hidden_in_factoriopedia = true -- TODO ??? really?
+-- TODO if shown in factoriopedia change group where it's shown (not environment, but production)
 ufo_attractor.render_no_network_icon = true
 -- TODO blue light on top
 -- ufo_attractor.chargable_graphics.charge_light = {}

@@ -116,12 +116,10 @@ local function handleDestruction(entity)
         --- @type AdaptedAttractor
         local adaptee = adaptees[un]
         if adaptee then
-            --- @type AdapterData
-            local ad = global_data.getAdapterData()
             -- array with the un of the adapter entities adapting this adaptee
             local adaptedBy = adaptee.adaptedBy
             -- iterating over all types of adapters
-            for _, ufoAdapters in pairs(ad) do
+            for _, ufoAdapters in pairs(global_data.getAdapterData()) do
                 for adapter_un, _ in pairs(adaptedBy) do
                     local adapteesOfAdapter = ufoAdapters[adapter_un].adaptees
                     -- remove attractor from list of adaptees
@@ -139,12 +137,43 @@ local function handleDestruction(entity)
             Log.log("unknown ufo-adapted-attractor - ignored", function(m)log(m)end, Log.WARN)
         end
     else
-        Log.log("adapter weg", function(m)log(m)end, Log.FINE)
         -- removal of an adapter
 
-        -- TODO
-        -- replace ufo-adapted-attractor with fulgoran-ruin-attractor if no other adapter is range
-        -- remove from structures
+        local ufoAdapters = global_data.getAdapterData()[entity.name]
+        local ufoAdapter = ufoAdapters and ufoAdapters[un]
+        if ufoAdapter then
+            -- found the removed adapter
+            local all_adaptees = global_data.getAdaptees()
+
+            for un_adaptee, _ in pairs(ufoAdapter.adaptees) do
+                local aa = all_adaptees[un_adaptee]
+                if aa then
+                    -- remove adapter from list
+                    aa.adaptedBy[un] = nil
+                    if table_size(aa.adaptedBy) == 0 then
+                        -- last adapter removed - replace ufo-adapted-attractor with fulgoran-ruin-attractor
+                        local surface = entity.surface
+                        Log.logLine(entity.destroy(), function(m)log(m)end, Log.FINE)
+                        ---@type LuaEntity
+                        local ruin = surface.create_entity({ name = "fulgoran-ruin-attractor",
+                                                position = aa.pos,
+                                                direction = aa.direction,
+                                                force = aa.force,
+                        })
+                        --Log.logEntity(ruin, function(m)log(m)end, Log.FINE)
+                        --Log.logBlock({ ebs = ruin.electric_buffer_size, ed = ruin.electric_drain, ofl = ruin.get_electric_output_flow_limit() },
+                        --        function(m)log(m)end, Log.FINE)
+                        -- remove from structures
+                        all_adaptees[un_adaptee] = nil
+                    end
+                else
+                    Log.log("unknown adaptee - ignored", function(m)log(m)end, Log.WARN)
+                end
+            end
+            ufoAdapters[un] = nil
+        else
+            Log.log("unknown adapter - ignored", function(m)log(m)end, Log.WARN)
+        end
     end
 end
 -- ###############################################################

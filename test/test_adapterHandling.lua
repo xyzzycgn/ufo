@@ -265,7 +265,7 @@ end
 -- ###############################################################
 
 -- test remove an adapted attractor
-function TestAdapterHandling:test_handleDestruction()
+function TestAdapterHandling:test_handleDestructionAttractor()
     storage.adapterData = {
         ["test-adapter"] = {
             [4711] = {
@@ -324,6 +324,84 @@ function TestAdapterHandling:test_handleDestruction()
             force = 1,
             pos = { x = 12.5, y = 13.5 }
         }
+    })
+end
+-- ###############################################################
+
+
+-- test remove an ufo adapter
+function TestAdapterHandling:test_handleDestructionAdapter()
+    storage.adapterData = {
+        ["test-adapter"] = {
+            [4711] = {
+                adaptees = { [815] = true },
+                dist = 3.5,
+                pos = { x = 1, y = 2 }
+            },
+            [4712] = {
+                adaptees = { [815] = true, [816] = true },
+                dist = 3.5,
+                pos = { x = 11, y = 12 }
+            }
+        }
+    }
+
+    storage.adaptees = {
+        [815] = {
+            adaptedBy = { [4711] = true, [4712] = true },
+            direction = 2,
+            force = 1,
+            pos = { x = 2.5, y = 3.5 }
+        },
+        [816] = {
+            adaptedBy = { [4712] = true },
+            direction = 2,
+            force = 1,
+            pos = { x = 12.5, y = 13.5 }
+        }
+    }
+
+    -- and the surface
+    local surface = {
+        create_entity = function(arg)
+            arg2create = arg
+            -- no return as the result is skipped in code
+        end,
+    }
+
+    local adapter = {
+        name = "test-adapter",
+        position = { x = 11, y = 12 },
+        force = {
+            index = 1,
+        },
+        unit_number = 4712,
+        surface = surface,
+        destroy = function(arg)
+            arg2destroy = arg
+            destroyCalled = destroyCalled + 1
+            return true
+        end
+    }
+
+    adapterHandling.handleDestruction(adapter)
+
+    lu.assertEquals(global_data.getAdapterData(), {
+        ["test-adapter"] = {
+            [4711] = {
+                adaptees = { [815] = true },
+                dist = 3.5,
+                pos = { x = 1, y = 2 }
+            },
+        }
+    })
+    lu.assertEquals(global_data.getAdaptees(), {
+        [815] = {
+            adaptedBy = { [4711] = true, },
+            direction = 2,
+            force = 1,
+            pos = { x = 2.5, y = 3.5 }
+        },
     })
 end
 -- ###############################################################
