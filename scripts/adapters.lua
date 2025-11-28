@@ -15,9 +15,10 @@
 --- @field dist float supply area distance
 --- @field adaptees table<number, true> indexed by unit_number of adapted attractor
 
---- describes an attractor connected to an ufo adapter.
+--- describes an attractor connected to at least one ufo adapter.
 --- @class AdaptedAttractor
 --- @field pos MapPosition location of adapted attractor
 --- @field direction defines.direction
 --- @field force ForceID id of the owning force
+--- @field adaptedBy table<number, true>unit_numbers of the adapter entities
 

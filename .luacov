@@ -1,0 +1,6 @@
+reporter = "html"
+reportfile = "ufo-luacov.report.html"
+exclude = { "lib", "test" }
+include = { "./", "scripts/" }
+runreport = true
+includeuntestedfiles = true

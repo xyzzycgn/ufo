@@ -15,14 +15,14 @@ local function initLogging()
 end
 -- ###############################################################
 
---- event handler for on_player_mined_entity
---- triggered if a fulgoran-ruin-vault has been mined
+--- triggered if a fulgoran-ruin-vault or an adapter has been mined
 --- @param event EventData
 local function onPlayerMinedEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
 
     local entity = event.entity
     if entity.name == "fulgoran-ruin-vault" then
+        -- player mined a vault
         local player = game.players[event.player_index]
         local force = player.force
 
@@ -46,8 +46,9 @@ local function onPlayerMinedEntity(event)
             end
         end
     else
-        -- TODO remove adapted pole
+        -- player mined an adapter or an ufo-adapted-attractor
         Log.log(entity.name, function(m)log(m)end, Log.FINE)
+        adapterHandling.handleDestruction(entity)
     end
 end
 -- ###############################################################
@@ -69,32 +70,39 @@ local function onEntityCloned(event)
 end
 -- ###############################################################
 
---- event handler for on_entity_died
+--- an adapter was destroyed
 --- @param event EventData
 local function entityDied(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
+    adapterHandling.handleDestruction(event.entity)
 end
 -- ###############################################################
 
 --- register complexer events, i.e. with additional filters
 local function registerEvents()
-    local filters_all_ufo = { { filter = 'name', name = 'fulgoran-ruin-vault' }, }
-    local filters_ufo_components = {}
+    local uaa = { filter = 'name', name = 'ufo-adapted-attractor' }
+    -- filter for all known adapter of electric-poles
+    local filters_adapters_only = {}
+    -- filter for all known adapter of electric-poles + fulgoran-ruin-vault + ufo-adapted-attractor
+    local filters_mining = { { filter = 'name', name = 'fulgoran-ruin-vault' }, uaa }
+    -- filter for all known adapter of electric-poles + ufo-adapted-attractor
+    local filters_died = { uaa }
 
     local poles = adapterHandling.getAdapterPrototypes()
     for name, _ in pairs(poles) do
         local filter = { filter = 'name', name = name }
-        filters_all_ufo[#filters_all_ufo + 1] = { filter = 'name', name = name }
-        filters_ufo_components[#filters_ufo_components + 1] = { filter = 'name', name = name }
+        filters_mining[#filters_mining + 1] = { filter = 'name', name = name }
+        filters_adapters_only[#filters_adapters_only + 1] = { filter = 'name', name = name }
+        filters_died[#filters_died + 1] = { filter = 'name', name = name }
     end
 
-    Log.logLine(filters_ufo_components, function(m)log(m)end, Log.FINE)
-    Log.logLine(filters_all_ufo, function(m)log(m)end, Log.FINE)
+    Log.logLine(filters_adapters_only, function(m)log(m)end, Log.FINE)
+    Log.logLine(filters_mining, function(m)log(m)end, Log.FINE)
 
-    script.on_event(defines.events.on_player_mined_entity, onPlayerMinedEntity, filters_all_ufo)
-    script.on_event(defines.events.on_built_entity,        onBuiltEntity,       filters_ufo_components)
-    script.on_event(defines.events.on_entity_cloned,       onEntityCloned,      filters_ufo_components)
-    script.on_event(defines.events.on_entity_died,         entityDied,          filters_ufo_components)
+    script.on_event(defines.events.on_player_mined_entity, onPlayerMinedEntity, filters_mining)
+    script.on_event(defines.events.on_built_entity,        onBuiltEntity, filters_adapters_only)
+    script.on_event(defines.events.on_entity_cloned,       onEntityCloned, filters_adapters_only)
+    script.on_event(defines.events.on_entity_died,         entityDied, filters_died)
 end
 -- ###############################################################
 
@@ -143,11 +151,11 @@ end
 local function updatePoles()
     local new, removed = checkPoles()
     for name, _ in pairs(new) do
-        adapterHandling.addAdapterPrototypes(name)
+        adapterHandling.addAdapterPrototype(name)
     end
 
     for name, _ in pairs(removed) do
-        adapterHandling.removeAdapterPrototypes(name)
+        adapterHandling.removeAdapterPrototype(name)
         -- TODO clean up further structures (not yet existing, but coming)
     end
 end
