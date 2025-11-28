@@ -11,13 +11,13 @@ Log.logBlock(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], functio
 
 local ufo_attractor = data_util.copy_prototype(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], "ufo-adapted-attractor")
 ufo_attractor.energy_source = {
-    buffer_capacity = "2000MJ",
-    drain = "2.5GJ",
-    output_flow_limit = "2000MJ",
+    buffer_capacity = "2GJ",
+    drain = "100MW",
+    output_flow_limit = "1GW",
     type = "electric",
     usage_priority = "primary-output"
   }
-ufo_attractor.efficiency = 0.45
+ufo_attractor.efficiency = 0.55
 ufo_attractor.hidden_in_factoriopedia = true -- TODO ??? really?
 ufo_attractor.render_no_network_icon = true
 -- TODO blue light on top
