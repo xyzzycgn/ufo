@@ -50,7 +50,7 @@ end
 -- ###############################################################
 
 --- List of known adapted electric poles
---- @return table<string, AdapterData> indexed by name of prototype
+--- @return AdapterData indexed by name of prototype
 function global_data.getAdapterData()
     return storage.adapterData
 end

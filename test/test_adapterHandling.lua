@@ -264,4 +264,68 @@ function TestAdapterHandling:test_handleBuildOneAdaptedAttractor()
 end
 -- ###############################################################
 
+-- test remove an adapted attractor
+function TestAdapterHandling:test_handleDestruction()
+    storage.adapterData = {
+        ["test-adapter"] = {
+            [4711] = {
+                adaptees = { [815] = true },
+                dist = 3.5,
+                pos = { x = 1, y = 2 }
+            },
+            [4712] = {
+                adaptees = { [815] = true, [816] = true },
+                dist = 3.5,
+                pos = { x = 11, y = 12 }
+            }
+        }
+    }
+
+    storage.adaptees = {
+        [815] = {
+            adaptedBy = { [4711] = true, [4712] = true },
+            direction = 2,
+            force = 1,
+            pos = { x = 2.5, y = 3.5 }
+        },
+        [816] = {
+            adaptedBy = { [4712] = true },
+            direction = 2,
+            force = 1,
+            pos = { x = 12.5, y = 13.5 }
+        }
+    }
+
+    local attractor = {
+         name = "ufo-adapted-attractor",
+         position = { x = 2.5, y = 3.5 },
+         direction = 2,
+         force = {
+            index = 1,
+         },
+         unit_number = 815,
+    }
+
+    adapterHandling.handleDestruction(attractor)
+
+    lu.assertEquals(global_data.getAdapterData(), {
+        ["test-adapter"] = {
+            [4712] = {
+                adaptees = { [816] = true },
+                dist = 3.5,
+                pos = { x = 11, y = 12 }
+            }
+        }
+    })
+    lu.assertEquals(global_data.getAdaptees(), {
+        [816] = {
+            adaptedBy = { [4712] = true },
+            direction = 2,
+            force = 1,
+            pos = { x = 12.5, y = 13.5 }
+        }
+    })
+end
+-- ###############################################################
+
 BaseTest:hookTests()

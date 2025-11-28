@@ -111,9 +111,35 @@ end
 local function handleDestruction(entity)
     local un = entity.unit_number
     if entity.name == "ufo-adapted-attractor" then
-        -- TODO
-        -- remove from structures
+        -- removal of an adaptee aka ufo-adapted-attractor
+        local adaptees = global_data.getAdaptees()
+        --- @type AdaptedAttractor
+        local adaptee = adaptees[un]
+        if adaptee then
+            --- @type AdapterData
+            local ad = global_data.getAdapterData()
+            -- array with the un of the adapter entities adapting this adaptee
+            local adaptedBy = adaptee.adaptedBy
+            -- iterating over all types of adapters
+            for _, ufoAdapters in pairs(ad) do
+                for adapter_un, _ in pairs(adaptedBy) do
+                    local adapteesOfAdapter = ufoAdapters[adapter_un].adaptees
+                    -- remove attractor from list of adaptees
+                    adapteesOfAdapter[un] = nil
+                    if table_size(adapteesOfAdapter) == 0 then
+                        -- last adaptee was removed => remove adapter from list
+                        ufoAdapters[adapter_un] = nil
+                    end
+                end
+            end
+
+            -- remove it from list of known adapted attractors
+            adaptees[un] = nil
+        else
+            Log.log("unknown ufo-adapted-attractor - ignored", function(m)log(m)end, Log.WARN)
+        end
     else
+        Log.log("adapter weg", function(m)log(m)end, Log.FINE)
         -- removal of an adapter
 
         -- TODO

@@ -2,9 +2,8 @@
 --- Created by xyzzycgn.
 ---
 
---- indexed by the name of the prototype of the adaper for the electric-pole
---- @class AdapterData
---- @field ad table<string, UfoAdapters>
+--- indexed by the name of the prototype of the adapter for the electric-pole
+--- @alias AdapterData table<string, UfoAdapters>
 
 --- indexed by the unit_number of the adapter entity
 --- @alias UfoAdapters table<number, UfoAdapter>
