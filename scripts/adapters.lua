@@ -16,6 +16,7 @@
 
 --- describes an attractor connected to at least one ufo adapter.
 --- @class AdaptedAttractor
+--- @field entity LuaEntity the attractor entity
 --- @field pos MapPosition location of adapted attractor
 --- @field direction defines.direction
 --- @field force ForceID id of the owning force

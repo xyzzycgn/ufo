@@ -92,6 +92,7 @@ local function handleBuild(entity)
                                                     direction = attdirection,
                                                     force = attforce,
             })
+            aa.entity = adaptee -- for later use in handleDestruction
             global_data.getAdaptees()[adaptee.unit_number] = aa
             ad.adaptees[adaptee.unit_number] = true
         else
@@ -144,6 +145,7 @@ local function handleDestruction(entity)
         if ufoAdapter then
             -- found the removed adapter
             local all_adaptees = global_data.getAdaptees()
+            local surface = entity.surface
 
             for un_adaptee, _ in pairs(ufoAdapter.adaptees) do
                 local aa = all_adaptees[un_adaptee]
@@ -152,8 +154,7 @@ local function handleDestruction(entity)
                     aa.adaptedBy[un] = nil
                     if table_size(aa.adaptedBy) == 0 then
                         -- last adapter removed - replace ufo-adapted-attractor with fulgoran-ruin-attractor
-                        local surface = entity.surface
-                        Log.logLine(entity.destroy(), function(m)log(m)end, Log.FINE)
+                        Log.logLine(aa.entity.destroy(), function(m)log(m)end, Log.FINE)
                         ---@type LuaEntity
                         local ruin = surface.create_entity({ name = "fulgoran-ruin-attractor",
                                                 position = aa.pos,
