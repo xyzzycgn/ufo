@@ -17,7 +17,7 @@ end
 
 --- triggered if a fulgoran-ruin-vault or an adapter has been mined
 --- @param event EventData
-local function onPlayerMinedEntity(event)
+local function onMinedEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
 
     local entity = event.entity
@@ -53,7 +53,7 @@ local function onPlayerMinedEntity(event)
 end
 -- ###############################################################
 
---- event handler for on_built_entity
+--- triggered if an adapter has been built
 --- @param event EventData
 local function onBuiltEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
@@ -99,8 +99,10 @@ local function registerEvents()
     Log.logLine(filters_adapters_only, function(m)log(m)end, Log.FINE)
     Log.logLine(filters_mining, function(m)log(m)end, Log.FINE)
 
-    script.on_event(defines.events.on_player_mined_entity, onPlayerMinedEntity, filters_mining)
+    script.on_event(defines.events.on_player_mined_entity, onMinedEntity, filters_mining)
+    script.on_event(defines.events.on_robot_mined_entity,  onMinedEntity, filters_mining)
     script.on_event(defines.events.on_built_entity,        onBuiltEntity, filters_adapters_only)
+    script.on_event(defines.events.on_robot_built_entity,  onBuiltEntity, filters_adapters_only)
     script.on_event(defines.events.on_entity_cloned,       onEntityCloned, filters_adapters_only)
     script.on_event(defines.events.on_entity_died,         entityDied, filters_died)
 end
