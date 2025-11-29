@@ -18,11 +18,29 @@ ufo_attractor.energy_source = {
     usage_priority = "primary-output"
   }
 ufo_attractor.efficiency = 0.55
-ufo_attractor.hidden_in_factoriopedia = true -- TODO ??? really?
+ufo_attractor.hidden_in_factoriopedia = false
+ufo_attractor.localised_description = { "entity-description.ufo-adapted-attractor" }
+ufo_attractor.factoriopedia_description = { "factoriopedia-description.ufo-adapted-attractor" }
 -- TODO if shown in factoriopedia change group where it's shown (not environment, but production)
 ufo_attractor.render_no_network_icon = true
--- TODO blue light on top
--- ufo_attractor.chargable_graphics.charge_light = {}
+-- blue light on top
+local sheet = ufo_attractor.stateless_visualisation.animation.sheet
+ufo_attractor.stateless_visualisation.animation = {
+    sheets = {
+        [1] = sheet,
+        [2] = {
+            filename = "__ufo__/graphics/entity//fulgoran-ruin-attractor-glow.png",
+            frame_count = 1,
+            height = 384,
+            line_length = 4,
+            scale = 0.5,
+            shift = { 1.609375, -1.5625 },
+            variation_count = 4,
+            width = 448
+        }
+    },
+    sheet = nil
+}
 Log.logBlock(ufo_attractor, function(m)log(m)end)
 
 -- adapter item
