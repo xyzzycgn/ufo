@@ -31,10 +31,10 @@ ufo_attractor.stateless_visualisation.animation = {
         [2] = {
             filename = "__ufo__/graphics/entity//fulgoran-ruin-attractor-glow.png",
             frame_count = 1,
-            height = 384,
+            height = 96,
             line_length = 4,
             scale = 0.5,
-            shift = { 1.609375, -1.5625 },
+            shift = { 1.609375, -3.8125 },
             variation_count = 4,
             width = 448
         }
