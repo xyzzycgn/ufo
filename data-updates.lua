@@ -19,6 +19,7 @@ ufo_attractor.energy_source = {
   }
 ufo_attractor.efficiency = 0.55
 ufo_attractor.hidden_in_factoriopedia = false
+ufo_attractor.icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png"
 ufo_attractor.localised_description = { "entity-description.ufo-adapted-attractor" }
 ufo_attractor.factoriopedia_description = { "factoriopedia-description.ufo-adapted-attractor" }
 -- TODO if shown in factoriopedia change group where it's shown (not environment, but production)
@@ -46,11 +47,14 @@ Log.logBlock(ufo_attractor, function(m)log(m)end)
 -- adapter item
 local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["small-lamp"], "ufo-adapter")
 local order = ufo_adapter_item.order or "ufo"
-ufo_adapter_item.icon = "__space-age__/graphics/icons/fulgoran-ruin-attractor.png"
+ufo_adapter_item.icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png"
 ufo_adapter_item.order = order .. "-a"
+
+Log.logBlock(ufo_adapter_item, function(m)log(m)end)
 
 -- adapter entity
 local ufo_adapter_entity = data_util.copy_prototype(data.raw["lamp"]["small-lamp"], "ufo-adapter")
+Log.logBlock(ufo_adapter_entity, function(m)log(m)end)
 
 local ufo_adapter_recipe = data_util.copy_prototype(data.raw["recipe"]["small-lamp"], "ufo-adapter")
 ufo_adapter_recipe.ingredients = {
@@ -59,6 +63,7 @@ ufo_adapter_recipe.ingredients = {
     { type = "item", name = "advanced-circuit", amount = 2 },
     { type = "item", name = "processing-unit", amount = 1 },
 }
+Log.logBlock(ufo_adapter_recipe, function(m)log(m)end)
 
 -- effects for tech
 local effects = {{ type = 'unlock-recipe', recipe = 'ufo-adapter' }}
@@ -111,7 +116,7 @@ local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 local ufo_tech = {
     name = 'ufo-tech',
     type = 'technology',
-    icon = "__space-age__/graphics/icons/fulgoran-ruin-attractor.png",
+    icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png",
 
     prerequisites = { "planet-discovery-fulgora" },
     effects = effects,
