@@ -5,10 +5,7 @@ local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
 Log.setSeverity(Log.CONFIG)
 
----- der fulgorianische Blitzableiter
-Log.logBlock(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], function(m)log(m)end)
-
-
+-- adapted attractor entity
 local ufo_attractor = data_util.copy_prototype(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], "ufo-adapted-attractor")
 ufo_attractor.energy_source = {
     buffer_capacity = "2GJ",
@@ -43,27 +40,28 @@ ufo_attractor.stateless_visualisation.animation = {
     sheet = nil
 }
 Log.logBlock(ufo_attractor, function(m)log(m)end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- adapter item
-local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["small-lamp"], "ufo-adapter")
+local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["processing-unit"], "ufo-adapter")
 local order = ufo_adapter_item.order or "ufo"
-ufo_adapter_item.icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png"
+ufo_adapter_item.icon = "__ufo__/graphics/icons/ufo-adapter.png"
 ufo_adapter_item.order = order .. "-a"
-
 Log.logBlock(ufo_adapter_item, function(m)log(m)end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
--- adapter entity
-local ufo_adapter_entity = data_util.copy_prototype(data.raw["lamp"]["small-lamp"], "ufo-adapter")
-Log.logBlock(ufo_adapter_entity, function(m)log(m)end)
-
-local ufo_adapter_recipe = data_util.copy_prototype(data.raw["recipe"]["small-lamp"], "ufo-adapter")
+local ufo_adapter_recipe = data_util.copy_prototype(data.raw["recipe"]["processing-unit"], "ufo-adapter")
 ufo_adapter_recipe.ingredients = {
     { type = "item", name = "small-lamp", amount = 1 },
     { type = "item", name = "electronic-circuit", amount = 5 },
     { type = "item", name = "advanced-circuit", amount = 2 },
     { type = "item", name = "processing-unit", amount = 1 },
 }
+ufo_adapter_recipe.category="electronics"
+ufo_adapter_recipe.allow_quality=false
+ufo_adapter_recipe.energy_required=20
 Log.logBlock(ufo_adapter_recipe, function(m)log(m)end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- effects for tech
 local effects = {{ type = 'unlock-recipe', recipe = 'ufo-adapter' }}
@@ -75,7 +73,7 @@ local recipes = { [1] = ufo_adapter_recipe }
 local items = { [1] = ufo_adapter_item }
 
 -- all entities unlocked by tech
-local entities = { [1] = ufo_adapter_entity }
+local entities = {}
 
 --- @type SurfaceCondition only on fulgora
 local sc_only_fulgora = {{ property = "magnetic-field", min = 99 }}
