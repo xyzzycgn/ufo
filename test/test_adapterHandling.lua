@@ -167,7 +167,14 @@ function TestAdapterHandling:test_handleBuildOneRuinAttractor()
             adaptedBy = { [4711] = true },
             direction = 2,
             force = 1,
-            pos = { x = 2.5, y = 3.5 }
+            pos = { x = 2.5, y = 3.5 },
+            entity={
+                direction=2,
+                force={index=1},
+                name="ufo-adapted-attractor",
+                position={x=2.5, y=3.5},
+                unit_number=815
+            },
         }
     })
 end
@@ -351,13 +358,33 @@ function TestAdapterHandling:test_handleDestructionAdapter()
             adaptedBy = { [4711] = true, [4712] = true },
             direction = 2,
             force = 1,
-            pos = { x = 2.5, y = 3.5 }
+            pos = { x = 2.5, y = 3.5 },
+            entity={
+                direction=2,
+                force={index=1},
+                name="ufo-adapted-attractor",
+                position={x=2.5, y=3.5},
+                unit_number=815
+            },
         },
         [816] = {
             adaptedBy = { [4712] = true },
             direction = 2,
             force = 1,
-            pos = { x = 12.5, y = 13.5 }
+            pos = { x = 12.5, y = 13.5 },
+            entity={
+                direction=2,
+                force={index=1},
+                name="ufo-adapted-attractor",
+                position={x=12.5, y=13.5},
+                unit_number=816,
+                -- this will be destroyed
+                destroy = function(arg)
+                    arg2destroy = arg
+                    destroyCalled = destroyCalled + 1
+                    return true
+                end
+            },
         }
     }
 
@@ -400,7 +427,14 @@ function TestAdapterHandling:test_handleDestructionAdapter()
             adaptedBy = { [4711] = true, },
             direction = 2,
             force = 1,
-            pos = { x = 2.5, y = 3.5 }
+            pos = { x = 2.5, y = 3.5 },
+            entity={
+                direction=2,
+                force={index=1},
+                name="ufo-adapted-attractor",
+                position={x=2.5, y=3.5},
+                unit_number=815
+            },
         },
     })
 end

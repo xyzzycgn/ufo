@@ -137,7 +137,7 @@ local function checkPoles()
         end
     end
 
-    -- now new contain new pole types, remaining contains old types still in save
+    -- now new contains new pole types, remaining contains old types still in save
     -- known - new - remaining = removed types
     for name, _ in pairs(known) do
         if not (remaining[name] or new[name]) then
