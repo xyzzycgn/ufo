@@ -23,22 +23,23 @@ ufo_attractor.factoriopedia_description = { "factoriopedia-description.ufo-adapt
 ufo_attractor.render_no_network_icon = true
 -- blue light on top
 local sheet = ufo_attractor.stateless_visualisation.animation.sheet
-ufo_attractor.stateless_visualisation.animation = {
-    sheets = {
-        [1] = sheet,
-        [2] = {
-            filename = "__ufo__/graphics/entity//fulgoran-ruin-attractor-glow.png",
-            frame_count = 1,
+ufo_attractor.stateless_visualisation.nested_visualisations = {
+    { animation = sheet },
+    { animation = {
+            filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor-glow.png",
+            frame_count = 2,
             height = 96,
             line_length = 4,
             scale = 0.5,
             shift = { 1.609375, -3.8125 },
             variation_count = 4,
-            width = 448
+            width = 448,
+            animation_speed = 60,
+            run_mode = "forward-then-backward"
         }
-    },
-    sheet = nil
+    }
 }
+ufo_attractor.stateless_visualisation.animation = nil
 Log.logBlock(ufo_attractor, function(m)log(m)end)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
