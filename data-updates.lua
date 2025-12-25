@@ -22,12 +22,13 @@ ufo_attractor.factoriopedia_description = { "factoriopedia-description.ufo-adapt
 -- TODO if shown in factoriopedia change group where it's shown (not environment, but production)
 ufo_attractor.render_no_network_icon = true
 -- blue light on top
-local sheet = ufo_attractor.stateless_visualisation.animation.sheet
-ufo_attractor.stateless_visualisation.nested_visualisations = {
-    { animation = sheet },
-    { animation = {
+local oldsheet = ufo_attractor.stateless_visualisation.animation.sheet
+ufo_attractor.stateless_visualisation.animation = {
+    sheets = {
+        oldsheet,
+        {
             filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor-glow.png",
-            frame_count = 2,
+            frame_count = 1,
             height = 96,
             line_length = 4,
             scale = 0.5,
@@ -35,11 +36,11 @@ ufo_attractor.stateless_visualisation.nested_visualisations = {
             variation_count = 4,
             width = 448,
             animation_speed = 60,
-            run_mode = "forward-then-backward"
+            --run_mode = "forward-then-backward"
         }
-    }
+    },
+    sheet = nil
 }
-ufo_attractor.stateless_visualisation.animation = nil
 Log.logBlock(ufo_attractor, function(m)log(m)end)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
