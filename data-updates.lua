@@ -23,6 +23,7 @@ ufo_attractor.factoriopedia_description = { "factoriopedia-description.ufo-adapt
 ufo_attractor.render_no_network_icon = true
 -- blue light on top
 local oldsheet = ufo_attractor.stateless_visualisation.animation.sheet
+Log.logBlock(oldsheet, function(m)log(m)end)
 ufo_attractor.stateless_visualisation.animation = {
     sheets = {
         oldsheet,
