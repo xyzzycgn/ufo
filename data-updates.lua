@@ -21,22 +21,32 @@ ufo_attractor.localised_description = { "entity-description.ufo-adapted-attracto
 ufo_attractor.factoriopedia_description = { "factoriopedia-description.ufo-adapted-attractor" }
 -- TODO if shown in factoriopedia change group where it's shown (not environment, but production)
 ufo_attractor.render_no_network_icon = true
--- blue light on top
 local oldsheet = ufo_attractor.stateless_visualisation.animation.sheet
+oldsheet.filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor.png"
+oldsheet.line_length = 1
+oldsheet.frame_count = 1
+oldsheet.variation_count = 4
+oldsheet.width = 448
+oldsheet.height = 384
+oldsheet.repeat_count = 2
+oldsheet.animation_speed = 1/60,
+
 Log.logBlock(oldsheet, function(m)log(m)end)
 ufo_attractor.stateless_visualisation.animation = {
     sheets = {
+-- attractor
         oldsheet,
+-- blue light on top
         {
             filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor-glow.png",
-            frame_count = 1,
-            height = 96,
-            line_length = 4,
+            width = 96,
+            height = 448,
+            frame_count = 2,
+            line_length = 2,
             scale = 0.5,
             shift = { 1.609375, -3.8125 },
             variation_count = 4,
-            width = 448,
-            animation_speed = 60,
+            animation_speed = 1/60,
             --run_mode = "forward-then-backward"
         }
     },
