@@ -3,6 +3,8 @@
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
+local util = require('util') -- from lualib
+
 Log.setSeverity(Log.CONFIG)
 
 -- adapted attractor entity
@@ -21,15 +23,21 @@ ufo_attractor.localised_description = { "entity-description.ufo-adapted-attracto
 ufo_attractor.factoriopedia_description = { "factoriopedia-description.ufo-adapted-attractor" }
 -- TODO if shown in factoriopedia change group where it's shown (not environment, but production)
 ufo_attractor.render_no_network_icon = true
+
+-- parameters for animation
+local variation_count = 4
+local frame_count = 2
+local animation_speed = 1/60
+
 local oldsheet = ufo_attractor.stateless_visualisation.animation.sheet
 oldsheet.filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor.png"
 oldsheet.line_length = 1
 oldsheet.frame_count = 1
-oldsheet.variation_count = 4
+oldsheet.variation_count = variation_count
 oldsheet.width = 448
 oldsheet.height = 384
-oldsheet.repeat_count = 2
-oldsheet.animation_speed = 1/60,
+oldsheet.repeat_count = frame_count
+oldsheet.animation_speed = animation_speed,
 
 Log.logBlock(oldsheet, function(m)log(m)end)
 ufo_attractor.stateless_visualisation.animation = {
@@ -39,14 +47,15 @@ ufo_attractor.stateless_visualisation.animation = {
 -- blue light on top
         {
             filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor-glow.png",
-            width = 96,
-            height = 448,
-            frame_count = 2,
-            line_length = 2,
+            width = 120,
+            height = 96,
+            frame_count = frame_count,
+            line_length = frame_count,
             scale = 0.5,
-            shift = { 1.609375, -3.8125 },
-            variation_count = 4,
-            animation_speed = 1/60,
+            --shift = { 1.609375, -3.8125 }, -- 103 / 2 / 32, -244 / 2 / 32
+            shift = util.by_pixel(3, -127),
+            variation_count = variation_count,
+            animation_speed = animation_speed,
             --run_mode = "forward-then-backward"
         }
     },
