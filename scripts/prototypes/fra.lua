@@ -23,7 +23,7 @@ ufo_attractor.render_no_network_icon = true
 
 -- parameters for animation
 local variation_count = 4
-local frame_count = 2
+local frame_count = 8
 local animation_speed = 1/60
 
 local oldsheet = ufo_attractor.stateless_visualisation.animation.sheet
