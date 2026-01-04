@@ -23,8 +23,9 @@ ufo_attractor.render_no_network_icon = true
 
 -- parameters for animation
 local variation_count = 4
+local repeat_count = 14
 local frame_count = 8
-local animation_speed = 1/60
+local animation_speed = 1/25
 
 local oldsheet = ufo_attractor.stateless_visualisation.animation.sheet
 oldsheet.filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor.png"
@@ -33,7 +34,7 @@ oldsheet.frame_count = 1
 oldsheet.variation_count = variation_count
 oldsheet.width = 448
 oldsheet.height = 384
-oldsheet.repeat_count = frame_count
+oldsheet.repeat_count = repeat_count
 oldsheet.animation_speed = animation_speed,
 
 Log.logBlock(oldsheet, function(m)log(m)end)
@@ -49,11 +50,10 @@ ufo_attractor.stateless_visualisation.animation = {
             frame_count = frame_count,
             line_length = frame_count,
             scale = 0.5,
-            --shift = { 1.609375, -3.8125 }, -- 103 / 2 / 32, -244 / 2 / 32
             shift = util.by_pixel(3, -127),
             variation_count = variation_count,
             animation_speed = animation_speed,
-            --run_mode = "forward-then-backward"
+            run_mode = "forward-then-backward"
         }
     },
     sheet = nil
