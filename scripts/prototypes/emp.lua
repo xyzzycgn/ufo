@@ -15,6 +15,8 @@ local fields = {
 -- fields to ignore for scaling
 local ignored_fields = {
     working_sound = true,
+    pipe_covers = true,
+    pipe_picture = true,
 }
 
 -- Scales values within object
@@ -32,15 +34,15 @@ local function scale(object, factor)
 end
 
 -- used for shrinking the XXX entity
-local function rescale_entity(entity, factor)
-    if not entity then
+local function rescale_entity(prototype, factor)
+    if not prototype then
         return
     end
 
-    for key, value in pairs(entity) do
+    for key, value in pairs(prototype) do
         -- Check to see if we need to scale this key's value
         if fields[key] then
-            entity[key] = scale(value, factor)
+            prototype[key] = scale(value, factor)
             -- Check to see if we need to ignore this key
         elseif ignored_fields[key] then
             -- nothing to do
@@ -49,11 +51,17 @@ local function rescale_entity(entity, factor)
         end
     end
 
-    return entity
+    return prototype
+end
+-- ###############################################################
+
+local function move_pipe_connection(fb, ndx, pos)
+    fb[ndx].pipe_connections[1].position = pos
 end
 -- ###############################################################
 
 local tint = { r = 0.75, g = 0.75, b = 1, a = 0.6 }
+-- to use tint it must be icons
 local icons = {
     {
         icon = "__space-age__/graphics/icons/electromagnetic-plant.png",
@@ -63,14 +71,25 @@ local icons = {
 }
 -- ###############################################################
 
+local scale_factor = 0.75
+
 -- fulgoran electromagnetic plant
 local ufo_emp_entity = data_util.copy_prototype(data.raw["assembling-machine"]["electromagnetic-plant"], "ufo-electromagnetic-plant")
+Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.CONFIG)
+
 ufo_emp_entity.icons = icons
 
-rescale_entity(ufo_emp_entity, 1 / 4)
---ufo_emp_entity.collision_box = {{ -0.4, -0.4 }, { 0.4, 0.4 }}
---ufo_emp_entity.selection_box = {{ -0.5, -0.5 }, { 0.5, 0.5 }}
---ufo_emp_entity.fluid_boxes = ... TODO
+rescale_entity(ufo_emp_entity, scale_factor)
+ufo_emp_entity.collision_box = {{ -1.275, -1.275 }, { 1.275, 1.275 }}
+ufo_emp_entity.selection_box = {{ -1.5, -1.5 }, { 1.5, 1.5 }}
+move_pipe_connection(ufo_emp_entity.fluid_boxes, 1, { -1.125,  1 })
+move_pipe_connection(ufo_emp_entity.fluid_boxes, 2, {  1.125, -1 })
+move_pipe_connection(ufo_emp_entity.fluid_boxes, 3, {  1,  1.125 })
+move_pipe_connection(ufo_emp_entity.fluid_boxes, 4, { -1, -1.125 })
+
+-- scale icon of the production
+ufo_emp_entity.icon_draw_specification.scale = scale_factor
+ufo_emp_entity.icon_draw_specification.scale_for_many = scale_factor
 
 Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
