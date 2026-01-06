@@ -114,7 +114,7 @@ local entities = {}
 --- @type SurfaceCondition only on fulgora
 local sc_only_fulgora = {{ property = "magnetic-field", min = 99 }}
 
--- create recipes and so on for each electric-pole
+-- create recipes and so on for each adapted electric-pole
 for k, _ in pairs(data.raw["electric-pole"]) do
     local adapted_name = 'ufo-adapted-' .. k
     -- effect for tech
@@ -168,7 +168,7 @@ local ufo_tech = {
     research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", tostring(num_vaults)}},
     order = "c-e-b2",
 }
-
+-- ###############################################################
 
 local extensions = {
     [1] = ufo_attractor
