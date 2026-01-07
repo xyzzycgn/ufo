@@ -7,11 +7,58 @@ local events_force = require("scripts.events.force")
 local force_data = require("scripts.force_data")
 local global_data = require("scripts.global_data")
 local adapterHandling = require("scripts.adapterHandling")
+local consts = require("__ufo__.scripts.consts")
 
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 
 local function initLogging()
     Log.setSeverityFromSettings("ufo-logLevel")
+end
+-- ###############################################################
+
+--- @param force LuaForce
+local function dig4tech(force)
+    --- @type LuaTechnology
+    local lt = force.technologies["ufo-tech"]
+    if not (lt and lt.researched) then
+        -- TODO refactor -> own function
+        local fd = global_data.getForce_data(force.index)
+        if not fd then
+            -- just to be sure ;-)
+            Log.log("new force detected", function(m)log(m)end, Log.INFO)
+            fd = force_data.init_force_data()
+            global_data.addForce_data(force, fd)
+        end
+
+        fd.num_vaults = fd.num_vaults + 1
+        Log.logLine(fd.num_vaults, function(m)log(m)end, Log.FINE)
+
+        if fd.num_vaults >= num_vaults then
+            force.script_trigger_research("ufo-tech")
+            Log.log("triggered ufo-tech", function(m)log(m)end, Log.INFO)
+        end
+    elseif lt then
+        -- ufo-tech has been reseached => dig for alien-tech
+        local uat = force.technologies["ufo-fulgoran-know-how-tech"]
+        if not (uat and uat.researched) then
+            -- TODO refactor -> own function
+            local fd = global_data.getForce_data(force.index)
+            if not fd then
+                -- just to be sure ;-)
+                Log.log("new force detected", function(m)log(m)end, Log.INFO)
+                fd = force_data.init_force_data()
+                global_data.addForce_data(force, fd)
+            end
+
+            fd.num_vaults = fd.num_vaults + 1
+            Log.logLine(fd.num_vaults, function(m)log(m)end, Log.FINE)
+
+            if fd.num_vaults >= math.ceil(num_vaults * consts.fulgoran_know_how_factor) then
+                force.script_trigger_research("ufo-fulgoran-know-how-tech")
+                Log.log("triggered ufo-fulgoran-know-how-tech", function(m)log(m)end, Log.INFO)
+            end
+        end
+    end
 end
 -- ###############################################################
 
@@ -24,27 +71,7 @@ local function onMinedEntity(event)
     if entity.name == "fulgoran-ruin-vault" then
         -- player mined a vault
         local player = game.players[event.player_index]
-        local force = player.force
-
-        --- @type LuaTechnology
-        local lt = force.technologies["ufo-tech"]
-        if not (lt and lt.researched) then
-            local fd = global_data.getForce_data(force.index)
-            if not fd then
-                -- just to be sure ;-)
-                Log.log("new force detected", function(m)log(m)end, Log.INFO)
-                fd = force_data.init_force_data()
-                global_data.addForce_data(force, fd)
-            end
-
-            fd.num_vaults = fd.num_vaults + 1
-            Log.logLine(fd.num_vaults, function(m)log(m)end, Log.FINE)
-
-            if fd.num_vaults >= num_vaults then
-                force.script_trigger_research("ufo-tech")
-                Log.log("triggered ufo-tech", function(m)log(m)end, Log.INFO)
-            end
-        end
+        dig4tech(player.force)
     else
         -- player mined an adapter or an ufo-adapted-attractor
         Log.log(entity.name, function(m)log(m)end, Log.FINE)

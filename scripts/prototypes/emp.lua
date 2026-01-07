@@ -133,7 +133,7 @@ local ufo_emp_tech = {
         }
     },
 
-    prerequisites = { "electromagnetic-plant" , "ufo-tech" },
+    prerequisites = { "electromagnetic-plant" , "ufo-fulgoran-know-how-tech" },
     effects = {{ type = "unlock-recipe", recipe = "ufo-electromagnetic-plant" }},
 
     unit = {
@@ -145,20 +145,17 @@ local ufo_emp_tech = {
         },
         time = 35,
     },
-    --research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", tostring(num_vaults)}},
     order = "c-e-b2",
 }
 -- ###############################################################
 
-local extensions = {
-    ufo_emp_item,
-    ufo_emp_entity,
-    ufo_emp_recipe,
-    ufo_emp_tech
-}
-
 local emp = {
-    extensions = extensions
+    extensions = {
+        ufo_emp_item,
+        ufo_emp_entity,
+        ufo_emp_recipe,
+        ufo_emp_tech
+    }
 }
 
 return emp

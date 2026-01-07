@@ -3,7 +3,7 @@ local data_util = require('__flib__.data-util')
 local util = require('util') -- from lualib
 
 Log.setSeverity(Log.CONFIG)
--- tint for entitie and items
+-- tint for entities and items
 local tint = { r = 0.793, g = 0.625, b = 0.668, a = 0.3 }
 
 -- adapted attractor entity
