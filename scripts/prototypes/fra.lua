@@ -3,6 +3,8 @@ local data_util = require('__flib__.data-util')
 local util = require('util') -- from lualib
 
 Log.setSeverity(Log.CONFIG)
+-- tint for entitie and items
+local tint = { r = 0.793, g = 0.625, b = 0.668, a = 0.3 }
 
 -- adapted attractor entity
 local ufo_attractor = data_util.copy_prototype(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], "ufo-adapted-attractor")
@@ -66,7 +68,7 @@ local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["processing-u
 local order = ufo_adapter_item.order or "ufo"
 ufo_adapter_item.icon = "__ufo__/graphics/icons/ufo-adapter.png"
 ufo_adapter_item.order = order .. "-a"
-Log.logBlock(ufo_adapter_item, function(m)log(m)end)
+Log.logBlock(ufo_adapter_item, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_adapter_recipe = data_util.copy_prototype(data.raw["recipe"]["processing-unit"], "ufo-adapter")
@@ -79,7 +81,22 @@ ufo_adapter_recipe.ingredients = {
 ufo_adapter_recipe.category="electronics"
 ufo_adapter_recipe.allow_quality=false
 ufo_adapter_recipe.energy_required=20
-Log.logBlock(ufo_adapter_recipe, function(m)log(m)end)
+Log.logBlock(ufo_adapter_recipe, function(m)log(m)end, Log.FINE)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+local function add_tint(prototype)
+    local icon = prototype.icon
+    local icon_size = prototype.icon_size
+    prototype.icons =  {
+        {
+            icon = icon,
+            icon_size = icon_size,
+            tint = tint,
+        }
+    }
+    prototype.icon = nil
+    prototype.icon_size = nil
+end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- effects for tech
@@ -116,15 +133,25 @@ for k, _ in pairs(data.raw["electric-pole"]) do
 
     -- and item
     local ufo_adapted_item = data_util.copy_prototype(data.raw["item"][k], adapted_name)
-    -- ufo_adapted_entity.tint = ....
+    Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
+    -- set tint for ufo_adapted_item
+    add_tint(ufo_adapted_item)
+    Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
+
     items[#items + 1] = ufo_adapted_item
 
     -- and entity
     local ufo_adapted_entity = data_util.copy_prototype(data.raw["electric-pole"][k], adapted_name)
+    Log.logBlock(ufo_adapted_entity, function(m)log(m)end, Log.FINE)
     -- localised_name and localised_description are used for item and recipe too
     ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. k }}
     ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. k }}
     ufo_adapted_entity.surface_conditions = sc_only_fulgora
+    ufo_adapted_entity.pictures.layers[1].tint = tint
+    -- set tint for ufo_adapted_entity
+    add_tint(ufo_adapted_entity)
+    Log.logBlock(ufo_adapted_entity, function(m)log(m)end, Log.FINE)
+
     entities[#entities + 1] = ufo_adapted_entity
 end
 
