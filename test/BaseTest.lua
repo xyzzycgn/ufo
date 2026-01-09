@@ -18,11 +18,10 @@ end
 -- mock several global objects - normally provided by game
 settings = {
     global = {
-        ["dart-logLevel"] = { value = 5 }, -- == Log.INFO
+        ["ufo-logLevel"] = { value = 5 }, -- == Log.INFO
     },
     startup = {
-        ["dart-update-stock-period"] = { value = 10 },
-        ["dart-release-control"] = { value = false },
+        ["ufo-mined-ruin-vaults-needed"] = { value = 2 },
     }
 }
 
@@ -38,6 +37,12 @@ script = {
 }
 
 defines = {
+    events = {
+        on_runtime_mod_setting_changed = 7,
+        on_force_created = 8,
+        on_forces_merged = 9,
+        on_force_reset = 10
+    },
     print_sound = {
         use_player_settings = true
     },

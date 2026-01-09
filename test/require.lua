@@ -12,6 +12,7 @@ local alternatives = {
     starts_with = {
         ["__flib__"] = "lib.flib",
         ["__log4factorio__"] = "lib",
+        ["__ufo__"] = ".",
     }
 }
 

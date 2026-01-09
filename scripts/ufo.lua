@@ -290,14 +290,6 @@ ufo.events = {
     [defines.events.on_force_created]                = events_force.onForceCreated,
     [defines.events.on_forces_merged]                = events_force.onForcesMerged,
     [defines.events.on_force_reset]                  = events_force.onForceReset,
---
---    [defines.events.on_tick] = asyncHandler.dequeue,
---
 }
---
----- handling of business logic
---ufo.on_nth_tick = {
---    [60] = businessLogic,
---}
 
 return ufo

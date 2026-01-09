@@ -21,6 +21,12 @@ local DEFAULT = Log.CONFIG
 --- actual active log level (severity)
 local severity = DEFAULT
 
+--- returns the current severity level
+--- @return number current severity level
+function Log.getSeverity()
+    return severity
+end
+
 local MSG = {
     [Log.FINEST] = "[FINEST] ",
     [Log.FINER]  = "[FINER] ",
