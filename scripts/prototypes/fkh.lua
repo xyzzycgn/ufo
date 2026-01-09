@@ -1,13 +1,10 @@
 ---
 --- Created by xyzzycgn.
+--- fulgoran know how technology
 ---
 local consts = require("__ufo__.scripts.consts")
 
---- fulgoran know how technology
-
-local num_vaults = math.ceil(settings.startup["ufo-mined-ruin-vaults-needed"].value * consts.fulgoran_know_how_factor) -- TODO own setting????
-
--- ###############################################################
+local num_vaults = math.ceil(settings.startup["ufo-mined-ruin-vaults-needed"].value * consts.fulgoran_know_how_factor)
 
 -- technology
 local ufo_fulgoran_know_how_tech = {
@@ -28,10 +25,8 @@ local ufo_fulgoran_know_how_tech = {
 }
 -- ###############################################################
 
-local fkh = {
+return {
     extensions = {
         ufo_fulgoran_know_how_tech
     },
 }
-
-return fkh

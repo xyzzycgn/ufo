@@ -1,6 +1,6 @@
 ---
 --- Created by xyzzycgn.
---- improved electromagnetic plant
+--- improved recycler
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
@@ -62,12 +62,12 @@ local function move_pipe_connection(fb, ndx, pos)
 end
 -- ###############################################################
 
-local scale_factor = 0.75
+local scale_factor = 0.5
 local tint = { r = 0.75, g = 0.75, b = 1, a = 0.6 }
 -- to use tint it must be icons
 local icons = {
     {
-        icon = "__space-age__/graphics/icons/electromagnetic-plant.png",
+        icon = "__quality__/graphics/icons/recycler.png",
         icon_size = 64,
         tint = tint,
         scale = scale_factor,
@@ -75,57 +75,55 @@ local icons = {
 }
 -- ###############################################################
 
-local ufo_emp_entity = data_util.copy_prototype(data.raw["assembling-machine"]["electromagnetic-plant"], "ufo-electromagnetic-plant")
-Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.CONFIG)
-rescale_entity(ufo_emp_entity, scale_factor)
-ufo_emp_entity.icon = nil
-ufo_emp_entity.icons = icons
-ufo_emp_entity.collision_box = {{ -1.275, -1.275 }, { 1.275, 1.275 }}
-ufo_emp_entity.selection_box = {{ -1.5, -1.5 }, { 1.5, 1.5 }}
-move_pipe_connection(ufo_emp_entity.fluid_boxes, 1, { -1.125, 1 })
-move_pipe_connection(ufo_emp_entity.fluid_boxes, 2, { 1.125, -1 })
-move_pipe_connection(ufo_emp_entity.fluid_boxes, 3, { 1, 1.125 })
-move_pipe_connection(ufo_emp_entity.fluid_boxes, 4, { -1, -1.125 })
-ufo_emp_entity.crafting_speed = 2
-ufo_emp_entity.effect_receiver = {
+local ufo_recycler_entity = data_util.copy_prototype(data.raw["furnace"]["recycler"], "ufo-recycler")
+Log.logBlock(ufo_recycler_entity, function(m)log(m)end, Log.CONFIG)
+rescale_entity(ufo_recycler_entity, scale_factor)
+ufo_recycler_entity.icon = nil
+ufo_recycler_entity.icons = icons
+ufo_recycler_entity.collision_box = {{ -0.35, -0.85 }, { 0.35, 0.85  }}
+ufo_recycler_entity.selection_box = {{ -0.45, -0.925 }, { 0.45, 0.925 }}
+ufo_recycler_entity.vector_to_place_result={ -0.25, -1.15 }
+ufo_recycler_entity.result_inventory_size = 18
+ufo_recycler_entity.crafting_speed = 2
+ufo_recycler_entity.effect_receiver = {
     base_effect = {
       productivity = 1
     }
 }
-ufo_emp_entity.energy_usage = "1700kW"
-ufo_emp_entity.surface_conditions = sc_only_fulgora
+ufo_recycler_entity.energy_usage = "160kW"
+-- ufo_recycler_entity.surface_conditions = sc_only_fulgora -- TODO?
 -- scale icon of the production
-ufo_emp_entity.icon_draw_specification.scale = scale_factor
-ufo_emp_entity.icon_draw_specification.scale_for_many = scale_factor
+ufo_recycler_entity.icon_draw_specification.scale = scale_factor
+ufo_recycler_entity.icon_draw_specification.scale_for_many = scale_factor
 
-Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_recycler_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_emp_item = data_util.copy_prototype(data.raw["item"]["electromagnetic-plant"], "ufo-electromagnetic-plant")
-local order = ufo_emp_item.order or "ufo"
-ufo_emp_item.icon = nil
-ufo_emp_item.icons = icons
-ufo_emp_item.order = order .. "-a"
+local ufo_recycler_item = data_util.copy_prototype(data.raw["item"]["recycler"], "ufo-recycler")
+local order = ufo_recycler_item.order or "ufo"
+ufo_recycler_item.icon = nil
+ufo_recycler_item.icons = icons
+ufo_recycler_item.order = order .. "-a"
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_emp_recipe = data_util.copy_prototype(data.raw["recipe"]["electromagnetic-plant"], "ufo-electromagnetic-plant")
-ufo_emp_recipe.ingredients = {
+local ufo_recycler_recipe = data_util.copy_prototype(data.raw["recipe"]["recycler"], "ufo-recycler")
+ufo_recycler_recipe.ingredients = {
     -- TODO make realistic
     { type = "item", name = "electronic-circuit", amount = 4 },
     { type = "item", name = "advanced-circuit", amount = 2 },
     { type = "item", name = "processing-unit", amount = 1 },
 }
-ufo_emp_recipe.enabled = false
-ufo_emp_recipe.surface_conditions = sc_only_fulgora
+ufo_recycler_recipe.enabled = false
+ufo_recycler_recipe.surface_conditions = sc_only_fulgora
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technology
-local ufo_emp_tech = {
-    name = "ufo-emp-tech",
+local ufo_recycler_tech = {
+    name = "ufo-recycling-tech",
     type = "technology",
     icons = {
         {
-            icon = "__space-age__/graphics/technology/electromagnetic-plant.png",
+            icon = "__quality__/graphics/technology/recycling.png",
             icon_size = 256,
             icon_mipmaps = 4,
             tint = tint,
@@ -133,8 +131,8 @@ local ufo_emp_tech = {
         }
     },
 
-    prerequisites = { "electromagnetic-plant" , "ufo-fulgoran-know-how-tech" },
-    effects = {{ type = "unlock-recipe", recipe = "ufo-electromagnetic-plant" }},
+    prerequisites = { "recycling" , "ufo-fulgoran-know-how-tech" },
+    effects = {{ type = "unlock-recipe", recipe = "ufo-recycler" }},
 
     unit = {
         count = 10,
@@ -151,10 +149,10 @@ local ufo_emp_tech = {
 
 local emp = {
     extensions = {
-        ufo_emp_item,
-        ufo_emp_entity,
-        ufo_emp_recipe,
-        ufo_emp_tech
+        ufo_recycler_item,
+        ufo_recycler_entity,
+        ufo_recycler_recipe,
+        ufo_recycler_tech
     }
 }
 

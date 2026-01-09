@@ -1,3 +1,7 @@
+---
+--- Created by xyzzycgn.
+--- adapted fulguran ruin attractor
+---
 local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
 local util = require('util') -- from lualib
