@@ -10,6 +10,7 @@ BaseTest.hooked = true
 
 require('test.test_adapterHandling')
 require('test.test_ufo')
+require('test.test_scale')
 
 BaseTest.hooked = false
 BaseTest:hookTests()
