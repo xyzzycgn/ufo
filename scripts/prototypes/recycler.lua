@@ -5,9 +5,7 @@
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
 local scale = require("__ufo__.scripts.scale")
-
---- @type SurfaceCondition only on fulgora
-local sc_only_fulgora = {{ property = "magnetic-field", min = 99 }}
+local consts = require("__ufo__.scripts.consts")
 
 -- ###############################################################
 
@@ -56,14 +54,11 @@ ufo_recycler_item.order = order .. "-a"
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_recycler_recipe = data_util.copy_prototype(data.raw["recipe"]["recycler"], "ufo-recycler")
-ufo_recycler_recipe.ingredients = {
-    -- TODO make realistic
-    { type = "item", name = "electronic-circuit", amount = 4 },
-    { type = "item", name = "advanced-circuit", amount = 2 },
-    { type = "item", name = "processing-unit", amount = 1 },
-}
+local ingredients = ufo_recycler_recipe.ingredients
+ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-adapter', amount = 2 }
+ingredients[#ingredients + 1] = { type = 'item', name = 'holmium-plate', amount = 3 }
 ufo_recycler_recipe.enabled = false
-ufo_recycler_recipe.surface_conditions = sc_only_fulgora
+ufo_recycler_recipe.surface_conditions = consts.sc_only_fulgora
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technology

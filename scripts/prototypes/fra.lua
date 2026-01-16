@@ -5,6 +5,7 @@
 local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
 local util = require('util') -- from lualib
+local consts = require("__ufo__.scripts.consts")
 
 Log.setSeverity(Log.CONFIG)
 -- tint for entities and items
@@ -81,6 +82,7 @@ ufo_adapter_recipe.ingredients = {
     { type = "item", name = "electronic-circuit", amount = 5 },
     { type = "item", name = "advanced-circuit", amount = 2 },
     { type = "item", name = "processing-unit", amount = 1 },
+    { type = "item", name = "holmium-plate", amount = 1 },
 }
 ufo_adapter_recipe.category="electronics"
 ufo_adapter_recipe.allow_quality=false
@@ -115,9 +117,6 @@ local items = { [1] = ufo_adapter_item }
 -- all entities unlocked by tech
 local entities = {}
 
---- @type SurfaceCondition only on fulgora
-local sc_only_fulgora = {{ property = "magnetic-field", min = 99 }}
-
 -- create recipes and so on for each adapted electric-pole
 for k, _ in pairs(data.raw["electric-pole"]) do
     local adapted_name = 'ufo-adapted-' .. k
@@ -127,13 +126,12 @@ for k, _ in pairs(data.raw["electric-pole"]) do
     -- make recipe
     local recipe = data_util.copy_prototype(data.raw["recipe"][k], adapted_name)
     recipe.enabled = false
-    recipe.ingredients = {
-        {type = 'item', name = k, amount = 1},
-        {type = 'item', name = 'ufo-adapter', amount = 1},
-    }
-    recipe.results = {{ type = 'item', name = adapted_name, amount = 1}}
-    recipe.surface_conditions = sc_only_fulgora
+    -- add an adapter and 2 holmium plates
+    recipe.ingredients[#recipe.ingredients + 1] = {type = 'item', name = 'ufo-adapter', amount = 1}
+    recipe.ingredients[#recipe.ingredients + 1] = {type = 'item', name = 'holmium-plate', amount = 2}
+    recipe.surface_conditions = consts.sc_only_fulgora
     recipes[#recipes + 1] = recipe
+    Log.logBlock(recipe, function(m)log(m)end, Log.FINE)
 
     -- and item
     local ufo_adapted_item = data_util.copy_prototype(data.raw["item"][k], adapted_name)
@@ -150,7 +148,7 @@ for k, _ in pairs(data.raw["electric-pole"]) do
     -- localised_name and localised_description are used for item and recipe too
     ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. k }}
     ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. k }}
-    ufo_adapted_entity.surface_conditions = sc_only_fulgora
+    ufo_adapted_entity.surface_conditions = consts.sc_only_fulgora
     ufo_adapted_entity.pictures.layers[1].tint = tint
     -- set tint for ufo_adapted_entity
     add_tint(ufo_adapted_entity)

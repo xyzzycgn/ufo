@@ -5,9 +5,7 @@
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
 local scale = require("__ufo__.scripts.scale")
-
---- @type SurfaceCondition only on fulgora
-local sc_only_fulgora = {{ property = "magnetic-field", min = 99 }}
+local consts = require("__ufo__.scripts.consts")
 
 -- ###############################################################
 
@@ -47,7 +45,6 @@ ufo_emp_entity.effect_receiver = {
     }
 }
 ufo_emp_entity.energy_usage = "1700kW"
-ufo_emp_entity.surface_conditions = sc_only_fulgora
 -- scale icon of the production
 ufo_emp_entity.icon_draw_specification.scale = scale_factor
 ufo_emp_entity.icon_draw_specification.scale_for_many = scale_factor
@@ -63,14 +60,11 @@ ufo_emp_item.order = order .. "-a"
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_emp_recipe = data_util.copy_prototype(data.raw["recipe"]["electromagnetic-plant"], "ufo-electromagnetic-plant")
-ufo_emp_recipe.ingredients = {
-    -- TODO make realistic
-    { type = "item", name = "electronic-circuit", amount = 4 },
-    { type = "item", name = "advanced-circuit", amount = 2 },
-    { type = "item", name = "processing-unit", amount = 1 },
-}
+local ingredients = ufo_emp_recipe.ingredients
+ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-adapter', amount = 10 }
+ingredients[#ingredients + 1] = { type = 'fluid', name = 'holmium-solution', amount = 20 }
 ufo_emp_recipe.enabled = false
-ufo_emp_recipe.surface_conditions = sc_only_fulgora
+ufo_emp_recipe.surface_conditions = consts.sc_only_fulgora
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technology
