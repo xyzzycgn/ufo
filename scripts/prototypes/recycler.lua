@@ -38,7 +38,6 @@ ufo_recycler_entity.effect_receiver = {
     }
 }
 ufo_recycler_entity.energy_usage = "160kW"
--- ufo_recycler_entity.surface_conditions = sc_only_fulgora -- TODO?
 -- scale icon of the production
 ufo_recycler_entity.icon_draw_specification.scale = scale_factor
 ufo_recycler_entity.icon_draw_specification.scale_for_many = scale_factor
@@ -79,13 +78,15 @@ local ufo_recycler_tech = {
     effects = {{ type = "unlock-recipe", recipe = "ufo-recycler" }},
 
     unit = {
-        count = 10,
+        count = 60,
         ingredients = {
-            -- TODO more realistic values
-            { "automation-science-pack", 2 },
-            { "space-science-pack", 1 },
+            { "automation-science-pack", 1 },
+            { "logistic-science-pack", 2 },
+            { "production-science-pack", 1 },
+            { "utility-science-pack", 3 },
+            { "metallurgic-science-pack", 2 },
         },
-        time = 35,
+        time = 20,
     },
     order = "c-e-b2",
 }

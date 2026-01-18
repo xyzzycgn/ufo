@@ -44,7 +44,7 @@ ufo_emp_entity.effect_receiver = {
       productivity = 1
     }
 }
-ufo_emp_entity.energy_usage = "1700kW"
+ufo_emp_entity.energy_usage = "1600kW"
 -- scale icon of the production
 ufo_emp_entity.icon_draw_specification.scale = scale_factor
 ufo_emp_entity.icon_draw_specification.scale_for_many = scale_factor
@@ -85,11 +85,14 @@ local ufo_emp_tech = {
     effects = {{ type = "unlock-recipe", recipe = "ufo-electromagnetic-plant" }},
 
     unit = {
-        count = 10,
+        count = 40,
         ingredients = {
-            -- TODO more realistic values
             { "automation-science-pack", 2 },
-            { "space-science-pack", 1 },
+            { "logistic-science-pack", 3 },
+            { "production-science-pack", 1 },
+            { "utility-science-pack", 4 },
+            { "metallurgic-science-pack", 3 },
+            { "electromagnetic-science-pack", 2 },
         },
         time = 35,
     },
