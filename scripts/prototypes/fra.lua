@@ -157,14 +157,37 @@ for k, _ in pairs(data.raw["electric-pole"]) do
     entities[#entities + 1] = ufo_adapted_entity
 end
 
---- ufo technology
+--- ufo base technologies
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
+local ufo_arch_tech = {
+    name = 'ufo-archeological-tech',
+    type = 'technology',
+    icon = "__ufo__/graphics/icons/archeological-tech.png",
+    icon_size = 256,
+    icon_mipmaps = 4,
+
+    prerequisites = { "planet-discovery-fulgora" },
+    unit = {
+        count = 60,
+        ingredients = {
+            { "automation-science-pack", 1 },
+            { "logistic-science-pack", 1 },
+            { "chemical-science-pack", 2 },
+            { "utility-science-pack", 1 },
+            { "space-science-pack", 2 },
+            { "metallurgic-science-pack", 1 },
+        },
+        time = 35,
+    },
+    order = "c-e-b2",
+}
+
 local ufo_tech = {
     name = 'ufo-tech',
     type = 'technology',
     icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png",
 
-    prerequisites = { "planet-discovery-fulgora" },
+    prerequisites = { "ufo-archeological-tech" },
     effects = effects,
 
     research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", tostring(num_vaults)}},
@@ -185,8 +208,8 @@ for _, recipe in pairs(recipes) do
     extensions[#extensions + 1] = recipe
 end
 
+extensions[#extensions + 1] = ufo_arch_tech
 extensions[#extensions + 1] = ufo_tech
-
 
 local fra = {
     extensions = extensions

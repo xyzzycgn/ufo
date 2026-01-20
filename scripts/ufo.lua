@@ -17,46 +17,46 @@ end
 -- ###############################################################
 
 --- @param force LuaForce
+--- @param tech string techname
+--- @param threshold number
+local function checkTechAndTrigger(force, tech, threshold)
+    local fd = global_data.getForce_data(force.index)
+    if not fd then
+        -- just to be sure ;-)
+        Log.log("new force detected", function(m)log(m)end, Log.INFO)
+        fd = force_data.init_force_data()
+        global_data.addForce_data(force, fd)
+    end
+
+    fd.num_vaults = fd.num_vaults + 1
+    Log.logLine(fd.num_vaults, function(m)log(m)end, Log.FINE)
+
+    if fd.num_vaults >= threshold then
+        force.script_trigger_research(tech)
+        Log.logMsg(function(m)log(m)end, Log.INFO, "triggered %s", tech)
+    end
+end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+--- @param force LuaForce
 local function dig4tech(force)
     --- @type LuaTechnology
-    local lt = force.technologies["ufo-tech"]
-    if not (lt and lt.researched) then
-        -- TODO refactor -> own function
-        local fd = global_data.getForce_data(force.index)
-        if not fd then
-            -- just to be sure ;-)
-            Log.log("new force detected", function(m)log(m)end, Log.INFO)
-            fd = force_data.init_force_data()
-            global_data.addForce_data(force, fd)
-        end
+    local uat = force.technologies["ufo-archeological-tech"]
+    if not (uat and uat.researched) then
+        -- archeological-tech not researched yet
+        Log.logLine(uat, function(m)log(m)end, Log.FINE)
+        return
+    end
 
-        fd.num_vaults = fd.num_vaults + 1
-        Log.logLine(fd.num_vaults, function(m)log(m)end, Log.FINE)
-
-        if fd.num_vaults >= num_vaults then
-            force.script_trigger_research("ufo-tech")
-            Log.log("triggered ufo-tech", function(m)log(m)end, Log.INFO)
-        end
-    elseif lt then
-        -- ufo-tech has been reseached => dig for alien-tech
-        local uat = force.technologies["ufo-fulgoran-know-how-tech"]
-        if not (uat and uat.researched) then
-            -- TODO refactor -> own function
-            local fd = global_data.getForce_data(force.index)
-            if not fd then
-                -- just to be sure ;-)
-                Log.log("new force detected", function(m)log(m)end, Log.INFO)
-                fd = force_data.init_force_data()
-                global_data.addForce_data(force, fd)
-            end
-
-            fd.num_vaults = fd.num_vaults + 1
-            Log.logLine(fd.num_vaults, function(m)log(m)end, Log.FINE)
-
-            if fd.num_vaults >= math.ceil(num_vaults * consts.fulgoran_know_how_factor) then
-                force.script_trigger_research("ufo-fulgoran-know-how-tech")
-                Log.log("triggered ufo-fulgoran-know-how-tech", function(m)log(m)end, Log.INFO)
-            end
+    local ut = force.technologies["ufo-tech"]
+    if not (ut and ut.researched) then
+        checkTechAndTrigger(force,"ufo-tech", num_vaults)
+    elseif ut then
+        -- ufo-tech has been researched => dig for fulgoran-know-how-tech
+        local fkht = force.technologies["ufo-fulgoran-know-how-tech"]
+        Log.logLine(fkht, function(m)log(m)end, Log.FINE)
+        if not (fkht and fkht.researched) then
+            checkTechAndTrigger(force,"ufo-fulgoran-know-how-tech", math.ceil(num_vaults * consts.fulgoran_know_how_factor))
         end
     end
 end
@@ -69,9 +69,14 @@ local function onMinedEntity(event)
 
     local entity = event.entity
     if entity.name == "fulgoran-ruin-vault" then
-        -- player mined a vault
-        local player = game.players[event.player_index]
-        dig4tech(player.force)
+        if event.player_index then
+            -- player mined a vault
+            local player = game.players[event.player_index]
+            dig4tech(player.force)
+        elseif event.robot then
+            Log.log("mined by robot", function(m)log(m)end, Log.FINE)
+            -- TODO???
+        end
     else
         -- player mined an adapter or an ufo-adapted-attractor
         Log.log(entity.name, function(m)log(m)end, Log.FINE)
