@@ -54,7 +54,14 @@ local function rescale_entity(prototype, factor)
     return prototype
 end
 
+-- ###############################################################
+
+local function move_pipe_connection(fb, ndx, pos)
+    fb[ndx].pipe_connections[1].position = pos
+end
+
 
 return {
     rescale_entity = rescale_entity,
+    move_pipe_connection = move_pipe_connection,
 }

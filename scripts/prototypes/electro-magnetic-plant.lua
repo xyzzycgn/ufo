@@ -9,11 +9,6 @@ local consts = require("__ufo__.scripts.consts")
 
 -- ###############################################################
 
-local function move_pipe_connection(fb, ndx, pos)
-    fb[ndx].pipe_connections[1].position = pos
-end
--- ###############################################################
-
 local scale_factor = 0.75
 local tint = { r = 0.75, g = 0.75, b = 1, a = 0.6 }
 -- to use tint it must be icons
@@ -34,10 +29,10 @@ ufo_emp_entity.icon = nil
 ufo_emp_entity.icons = icons
 ufo_emp_entity.collision_box = {{ -1.275, -1.275 }, { 1.275, 1.275 }}
 ufo_emp_entity.selection_box = {{ -1.5, -1.5 }, { 1.5, 1.5 }}
-move_pipe_connection(ufo_emp_entity.fluid_boxes, 1, { -1.125, 1 })
-move_pipe_connection(ufo_emp_entity.fluid_boxes, 2, { 1.125, -1 })
-move_pipe_connection(ufo_emp_entity.fluid_boxes, 3, { 1, 1.125 })
-move_pipe_connection(ufo_emp_entity.fluid_boxes, 4, { -1, -1.125 })
+scale.move_pipe_connection(ufo_emp_entity.fluid_boxes, 1, { -1.125, 1 })
+scale.move_pipe_connection(ufo_emp_entity.fluid_boxes, 2, { 1.125, -1 })
+scale.move_pipe_connection(ufo_emp_entity.fluid_boxes, 3, { 1, 1.125 })
+scale.move_pipe_connection(ufo_emp_entity.fluid_boxes, 4, { -1, -1.125 })
 ufo_emp_entity.crafting_speed = 2
 ufo_emp_entity.effect_receiver = {
     base_effect = {
