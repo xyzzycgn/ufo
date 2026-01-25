@@ -7,6 +7,7 @@ local events_force = require("scripts.events.force")
 local force_data = require("scripts.force_data")
 local global_data = require("scripts.global_data")
 local adapterHandling = require("scripts.adapterHandling")
+local vaultHandling = require("scripts.vaultHandling")
 local consts = require("__ufo__.scripts.consts")
 
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
@@ -73,7 +74,7 @@ local function onMinedEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
 
     local entity = event.entity
-    if entity.name == "fulgoran-ruin-vault" then
+    if entity.name == "fulgoran-ruin-vault" or (fe_mod_active() and entity.name == "ufo-fulgoran-ruin-vault" )then
         if event.player_index then
             -- player mined a vault
             local player = game.players[event.player_index]
@@ -98,8 +99,8 @@ local function onBuiltEntity(event)
     local entity = event.entity
     Log.logEntity(entity, function(m)log(m)end, Log.FINE)
 
-    if fe_mod_active() then
-        Log.log("shard placed", function(m)log(m)end, Log.FINE)
+    if fe_mod_active() and entity.name == "fe_resonance_shard" then
+        vaultHandling.handleBuild(entity)
     else
         adapterHandling.handleBuild(entity)
     end
@@ -144,6 +145,7 @@ local function registerEvents()
         local vg_disabled = settings.startup["ufo-fe-resonance-shard-disables-vault-guardian"]
         if vg_disabled and vg_disabled.value then
             filters_adapters_only[#filters_adapters_only + 1] = { filter = 'name', name = "fe_resonance_shard" }
+            filters_mining[#filters_mining + 1] = { filter = 'name', name = "ufo-fulgoran-ruin-vault" }
         end
     end
 
