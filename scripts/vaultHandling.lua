@@ -4,6 +4,14 @@
 local Log = require("__log4factorio__.Log")
 local global_data = require("scripts.global_data")
 
+---
+--- @class ProtectedVault
+--- @field entity LuaEntity the protected vault (ufo-fulgoran-ruin-vault)
+--- @field pos MapPosition its location
+--- @field direction defines.direction
+--- @field force ForceID id of the owning force
+
+
 --- handles the build of a resonace shard near by a fulguran vault
 --- @param entity LuaEntity
 local function handleBuild(entity)
@@ -23,35 +31,73 @@ local function handleBuild(entity)
     Log.logBlock(vaults, function(m)log(m)end, Log.FINE)
 
     for _, vault in pairs(vaults) do
-            -- save for later use
-            local vaultposition = vault.position
-            local vaultdirection = vault.direction
-            local vaultforce = vault.force.index
-            Log.logLine(vault.destroy(), function(m)log(m)end, Log.FINE)
-            -- and then create the protected vault
-            local pvault = surface.create_entity({ name = "ufo-fulgoran-ruin-vault",
-                                                   position = vaultposition,
-                                                   direction = vaultdirection,
-                                                   force = vaultforce,
-            })
+        local vaultposition = vault.position
+        local vaultdirection = vault.direction
+        local vaultforce = vault.force.index
+        -- destroy the original vault
+        Log.logLine(vault.destroy(), function(m)log(m)end, Log.FINER)
+        -- create the protected vault
+        local pvault = surface.create_entity({ name = "ufo-fulgoran-ruin-vault",
+                                               position = vaultposition,
+                                               direction = vaultdirection,
+                                               force = vaultforce,
+        })
 
-        -- TODO save vault* for handling mine of shard before mining the vault
+        --- @type ProtectedVault
+        local pv = {
+            entity = pvault,
+            pos = vaultposition,
+            direction = vaultdirection,
+            force = vaultforce,
+        }
+        global_data.getProtectedVaults()[un] = pv
     end
 end
 -- ###############################################################
 
---- @param entity LuaEntity
-local function handleDestruction(entity)
+--- handles mining the shard before the vault
+--- @param entity LuaEntity the shard
+local function handleShardBeforeVault(entity)
     local un = entity.unit_number
-    if entity.name == "fe_resonance_shard" then
-        -- TODO handle mine of shard before mining the vault
+    local surface = entity.surface
+    --- @type ProtectedVault
+    local pv = global_data.getProtectedVaults()[un]
+    if pv then
+        -- handle mine of shard before mining the vault
+        local pvault = pv.entity
+        if pvault.valid then
+            pvault.destroy()
+        end
+        -- recreate (unprotected) vault
+        surface.create_entity({ name = "fulgoran-ruin-vault",
+                                position = pv.pos,
+                                direction = pv.direction,
+                                force = pv.force,
+        })
+        global_data.getProtectedVaults()[un] = nil
+    end
+end
+-- ###############################################################
+
+--- handles mining the (protected) vault before the shard
+--- @param entity LuaEntity the (protected) vault
+local function handleVaultBeforeShard(entity)
+    local un = entity.unit_number
+
+    for ndx, pvault in pairs(global_data.getProtectedVaults()) do
+        if pvault.unit_number == un then
+            -- found the protecting shard - remove its data
+            global_data.getProtectedVaults()[ndx] = nil
+            return
+        end
     end
 end
 -- ###############################################################
 
 local adapterHandling = {
     handleBuild = handleBuild,
-    handleDestruction = handleDestruction,
+    handleShardBeforeVault = handleShardBeforeVault,
+    handleVaultBeforeShard = handleVaultBeforeShard,
 }
 
 return adapterHandling

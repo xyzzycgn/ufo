@@ -45,9 +45,12 @@ function TestUfo:setUp()
 
     -- Mock script.on_event
     self.events = {}
-    script.on_event = function(event_id, handler, filters)
-        self.events[event_id] = { handler = handler, filters = filters }
-    end
+    script = {
+        on_event = function(event_id, handler, filters)
+            self.events[event_id] = { handler = handler, filters = filters }
+        end,
+        active_mods = {}
+    }
 
     -- Mock prototypes
     prototypes = {

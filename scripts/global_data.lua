@@ -13,6 +13,7 @@ function global_data.init()
     storage.adapterPrototypes = storage.adapterPrototypes or {}
     storage.adapterData = storage.adapterData or {}
     storage.adaptees = storage.adaptees or {}
+    storage.protectedVaults = storage.protectedVaults or {}
 end
 -- ###############################################################
 
@@ -46,13 +47,19 @@ end
 function global_data.getAdapterPrototypes()
     return storage.adapterPrototypes
 end
-
 -- ###############################################################
 
 --- List of known adapted electric poles
 --- @return AdapterData indexed by name of prototype
 function global_data.getAdapterData()
     return storage.adapterData
+end
+-- ###############################################################
+
+--- List of known protected vaults
+--- @return table<number, ProtectedVault> indexed by unit_number of protecting shard
+function global_data.getProtectedVaults()
+    return storage.protectedVaults
 end
 -- ###############################################################
 

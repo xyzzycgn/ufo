@@ -22,6 +22,11 @@ local function fe_mod_active()
 end
 -- ###############################################################
 
+local function fe_mod_active_entity(entity, name)
+    return fe_mod_active() and entity.name == name
+end
+-- ###############################################################
+
 --- @param force LuaForce
 --- @param tech string techname
 --- @param threshold number
@@ -74,15 +79,23 @@ local function onMinedEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
 
     local entity = event.entity
-    if entity.name == "fulgoran-ruin-vault" or (fe_mod_active() and entity.name == "ufo-fulgoran-ruin-vault" )then
+    local is_vault = entity.name == "fulgoran-ruin-vault"
+    if is_vault or fe_mod_active_entity(entity,"ufo-fulgoran-ruin-vault") then
         if event.player_index then
-            -- player mined a vault
+            -- player mined a vault (or protected vault)
             local player = game.players[event.player_index]
             dig4tech(player.force)
+            if not is_vault then
+                -- must be an protected vault (ufo-fulgoran-ruin-vault)
+                vaultHandling.handleVaultBeforeShard(entity)
+            end
         elseif event.robot then
             Log.log("mined by robot", function(m)log(m)end, Log.FINE)
             -- TODO???
         end
+    elseif fe_mod_active_entity(entity, "fe_resonance_shard") then
+        -- mined shard before vault
+        vaultHandling.handleShardBeforeVault(entity)
     else
         -- player mined an adapter or an ufo-adapted-attractor
         Log.log(entity.name, function(m)log(m)end, Log.FINE)
@@ -99,7 +112,7 @@ local function onBuiltEntity(event)
     local entity = event.entity
     Log.logEntity(entity, function(m)log(m)end, Log.FINE)
 
-    if fe_mod_active() and entity.name == "fe_resonance_shard" then
+    if fe_mod_active_entity(entity, "fe_resonance_shard") then
         vaultHandling.handleBuild(entity)
     else
         adapterHandling.handleBuild(entity)
@@ -124,39 +137,46 @@ end
 
 --- register complexer events, i.e. with additional filters
 local function registerEvents()
+    -- filter for all known ufo-adapted-attractors
     local uaa = { filter = 'name', name = 'ufo-adapted-attractor' }
-    -- filter for all known adapter of electric-poles
-    local filters_adapters_only = {}
-    -- filter for all known adapter of electric-poles + fulgoran-ruin-vault + ufo-adapted-attractor
+    -- filter for all known adapters of electric-poles (+ fe_resonance_shard if mod Electric_flying_enemies is active)
+    local filters_building = {}
+    -- filter for fulgoran-ruin-vault + ufo-adapted-attractor + all known adapters of electric-poles
+    -- (+ ufo-fulgoran-ruin-vault + fe_resonance_shard if mod Electric_flying_enemies is active)
     local filters_mining = { { filter = 'name', name = 'fulgoran-ruin-vault' }, uaa }
-    -- filter for all known adapter of electric-poles + ufo-adapted-attractor
+    -- filter for ufo-adapted-attractor + all known adapter of electric-poles
     local filters_died = { uaa }
 
     local poles = adapterHandling.getAdapterPrototypes()
     for name, _ in pairs(poles) do
         local filter = { filter = 'name', name = name }
-        filters_mining[#filters_mining + 1] = { filter = 'name', name = name }
-        filters_adapters_only[#filters_adapters_only + 1] = { filter = 'name', name = name }
-        filters_died[#filters_died + 1] = { filter = 'name', name = name }
+        filters_mining[#filters_mining + 1] = filter
+        filters_building[#filters_building + 1] = filter
+        filters_died[#filters_died + 1] = filter
+        --filters_mining[#filters_mining + 1] = { filter = 'name', name = name }
+        --filters_adapters_only[#filters_adapters_only + 1] = { filter = 'name', name = name }
+        --filters_died[#filters_died + 1] = { filter = 'name', name = name }
     end
 
     if fe_mod_active() then
         Log.log("fe detected", function(m)log(m)end, Log.CONFIG)
         local vg_disabled = settings.startup["ufo-fe-resonance-shard-disables-vault-guardian"]
         if vg_disabled and vg_disabled.value then
-            filters_adapters_only[#filters_adapters_only + 1] = { filter = 'name', name = "fe_resonance_shard" }
+            local rsfilter = { filter = 'name', name = "fe_resonance_shard" }
+            filters_building[#filters_building + 1] = rsfilter
+            filters_mining[#filters_mining + 1] = rsfilter
             filters_mining[#filters_mining + 1] = { filter = 'name', name = "ufo-fulgoran-ruin-vault" }
         end
     end
 
-    Log.logLine(filters_adapters_only, function(m)log(m)end, Log.FINE)
+    Log.logLine(filters_building, function(m)log(m)end, Log.FINE)
     Log.logLine(filters_mining, function(m)log(m)end, Log.FINE)
 
     script.on_event(defines.events.on_player_mined_entity, onMinedEntity, filters_mining)
     script.on_event(defines.events.on_robot_mined_entity,  onMinedEntity, filters_mining)
-    script.on_event(defines.events.on_built_entity,        onBuiltEntity, filters_adapters_only)
-    script.on_event(defines.events.on_robot_built_entity,  onBuiltEntity, filters_adapters_only)
-    script.on_event(defines.events.on_entity_cloned,       onEntityCloned, filters_adapters_only)
+    script.on_event(defines.events.on_built_entity,        onBuiltEntity, filters_building)
+    script.on_event(defines.events.on_robot_built_entity,  onBuiltEntity, filters_building)
+    script.on_event(defines.events.on_entity_cloned,       onEntityCloned, filters_building)
     script.on_event(defines.events.on_entity_died,         entityDied, filters_died)
 end
 -- ###############################################################
