@@ -16,6 +16,11 @@ local function initLogging()
 end
 -- ###############################################################
 
+local function fe_mod_active()
+    return script.active_mods["Electric_flying_enemies"]
+end
+-- ###############################################################
+
 --- @param force LuaForce
 --- @param tech string techname
 --- @param threshold number
@@ -86,12 +91,18 @@ end
 -- ###############################################################
 
 --- triggered if an adapter has been built
+--- or a resonance shard if mod Electric_flying_enemies is active
 --- @param event EventData
 local function onBuiltEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
     local entity = event.entity
     Log.logEntity(entity, function(m)log(m)end, Log.FINE)
-    adapterHandling.handleBuild(entity)
+
+    if fe_mod_active() then
+        Log.log("shard placed", function(m)log(m)end, Log.FINE)
+    else
+        adapterHandling.handleBuild(entity)
+    end
 end
 -- ###############################################################
 
@@ -126,6 +137,14 @@ local function registerEvents()
         filters_mining[#filters_mining + 1] = { filter = 'name', name = name }
         filters_adapters_only[#filters_adapters_only + 1] = { filter = 'name', name = name }
         filters_died[#filters_died + 1] = { filter = 'name', name = name }
+    end
+
+    if fe_mod_active() then
+        Log.log("fe detected", function(m)log(m)end, Log.CONFIG)
+        local vg_disabled = settings.startup["ufo-fe-resonance-shard-disables-vault-guardian"]
+        if vg_disabled and vg_disabled.value then
+            filters_adapters_only[#filters_adapters_only + 1] = { filter = 'name', name = "fe_resonance_shard" }
+        end
     end
 
     Log.logLine(filters_adapters_only, function(m)log(m)end, Log.FINE)

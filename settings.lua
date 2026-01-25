@@ -1,4 +1,4 @@
-data:extend({
+local settings = {
     -- Startup
     {
         type = 'int-setting',
@@ -28,4 +28,18 @@ data:extend({
             "FINEST",
         }
     },
-})
+}
+
+if mods["Electric_flying_enemies"] then
+    settings[#settings + 1] = {
+        -- Startup
+        type = 'bool-setting',
+        name = 'ufo-fe-resonance-shard-disables-vault-guardian',
+        setting_type = 'startup',
+        default_value = true,
+        order = 'b',
+    }
+end
+
+
+data:extend(settings)

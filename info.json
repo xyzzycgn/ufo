@@ -9,7 +9,8 @@
     "space-age >= 2.0.72",
     "flib >= 0.16.2",
     "log4factorio >= 0.2.2",
-    "? liquid_recycler >= 1.0.4"
+    "? liquid_recycler >= 1.0.4",
+    "? Electric_flying_enemies >= 0.1.9"
   ],
   "space_travel_required": true
 }
