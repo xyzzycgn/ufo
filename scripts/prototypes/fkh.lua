@@ -25,8 +25,4 @@ local ufo_fulgoran_know_how_tech = {
 }
 -- ###############################################################
 
-return {
-    extensions = {
-        ufo_fulgoran_know_how_tech
-    },
-}
+data:extend({ ufo_fulgoran_know_how_tech })

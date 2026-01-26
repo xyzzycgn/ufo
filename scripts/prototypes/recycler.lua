@@ -92,13 +92,11 @@ local ufo_recycler_tech = {
 }
 -- ###############################################################
 
-local emp = {
-    extensions = {
-        ufo_recycler_item,
-        ufo_recycler_entity,
-        ufo_recycler_recipe,
-        ufo_recycler_tech
-    }
-}
+data:extend({
+    ufo_recycler_item,
+    ufo_recycler_entity,
+    ufo_recycler_recipe,
+    ufo_recycler_tech
+})
 
 return emp

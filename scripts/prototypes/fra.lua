@@ -211,8 +211,4 @@ end
 extensions[#extensions + 1] = ufo_arch_tech
 extensions[#extensions + 1] = ufo_tech
 
-local fra = {
-    extensions = extensions
-}
-
-return fra
+data:extend(extensions)
