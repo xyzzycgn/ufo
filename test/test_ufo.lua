@@ -102,6 +102,7 @@ function TestUfo:test_onMinedEntity_Vault()
     local force = {
         index = 1,
         technologies = {
+            ["ufo-archeological-tech"] = { researched = true },
             ["ufo-tech"] = { researched = false },
             ["ufo-fulgoran-know-how-tech"] = { researched = false }
         },
@@ -203,6 +204,7 @@ function TestUfo:test_dig4tech_SecondStage()
     local force = {
         index = 1,
         technologies = {
+            ["ufo-archeological-tech"] = { researched = true },
             ["ufo-tech"] = { researched = true },
             ["ufo-fulgoran-know-how-tech"] = { researched = false }
         },
