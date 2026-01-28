@@ -143,7 +143,15 @@ for k, _ in pairs(data.raw["electric-pole"]) do
     items[#items + 1] = ufo_adapted_item
 
     -- and entity
-    local ufo_adapted_entity = data_util.copy_prototype(data.raw["electric-pole"][k], adapted_name)
+    local orig_pole = data.raw["electric-pole"][k]
+    local ufo_adapted_entity = data_util.copy_prototype(orig_pole, adapted_name)
+    local flags = orig_pole.flags
+    -- orig_pole must not already have a next_upgrade or flag "not-upgradable" set
+    if not (orig_pole.next_upgrade or (flags and flags["not-upgradable"])) then
+        -- set adapted pole as possible upgrade
+        orig_pole.next_upgrade = adapted_name
+    end
+
     Log.logBlock(ufo_adapted_entity, function(m)log(m)end, Log.FINE)
     -- localised_name and localised_description are used for item and recipe too
     ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. k }}
