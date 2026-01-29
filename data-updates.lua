@@ -8,6 +8,7 @@ require("__ufo__.scripts.prototypes.fulguran-ruin-attractor")
 require("__ufo__.scripts.prototypes.fulgoran-know-how")
 require("__ufo__.scripts.prototypes.electro-magnetic-plant")
 require("__ufo__.scripts.prototypes.recycler")
+require("__ufo__.scripts.prototypes.car")
 
 if mods['liquid_recycler'] then
     local olr = require("__ufo__.scripts.prototypes.olr")
