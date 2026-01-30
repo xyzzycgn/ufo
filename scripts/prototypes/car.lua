@@ -41,14 +41,14 @@ end
 
 
 
--- TODO detector (tech, recipe, equipment, item)
+-- TODO detector tech
 data:extend({
     {
         type = "item",
         name = "detector-equipment",
-        icon = "__ufo__/graphics/icons/compass.png",
-        icon_size = 64,
-        scale = 0.5,
+        icon = "__ufo__/graphics/icons/sensor.png",
+        icon_size = 128,
+        icon_mipmaps = 4,
         subgroup = "equipment",
         order = "b[personal-transport]-c[detector]",
         --inventory_move_sound = item_sounds.vehicle_inventory_move,
@@ -75,10 +75,8 @@ data:extend({
         type = "battery-equipment",
         name = "detector-equipment",
         sprite = {
-            filename = "__ufo__/graphics/icons/compass.png",
-            width = 160,
-            height = 160,
-            scale = 0.5,
+            filename = "__ufo__/graphics/icons/sensor.png",
+            size = 128,
         },
         shape = {
             width = 1,
@@ -101,3 +99,6 @@ Log.logBlock(data.raw["battery-equipment"], function(m)log(m)end, Log.CONFIG)
 -- TODO upgrade tech and new item/entity
 local car = data.raw.car.car
 car.equipment_grid = "small-car-equipment"
+
+Log.logLine(data.raw.car.tank.equipment_grid, function(m)log(m)end, Log.CONFIG)
+-- "medium-equipment-grid"
