@@ -11,6 +11,7 @@
     "log4factorio >= 0.2.2",
     "? liquid_recycler >= 1.0.4",
     "? Electric_flying_enemies >= 0.1.9"
+    , "? Hovercrafts >= 2.0.4"
   ],
   "space_travel_required": true
 }
