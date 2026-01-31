@@ -81,7 +81,7 @@ local detector_equipment_recipe = {
     enabled = false,
     energy_required = 4,
     ingredients = {
-        { type = "item", name = "iron-gear-wheel", amount = 2 },
+        { type = "item", name = "iron-gear-wheel", amount = 2 }, -- TODO
         { type = "item", name = "iron-plate", amount = 1 },
     },
     results = { { type = "item", name = "ufo-detector-equipment", amount = 1 } }
@@ -108,10 +108,65 @@ local detector_equipment = {
 
 Log.logBlock(data.raw["battery-equipment"], function(m)log(m)end, Log.CONFIG)
 
--- TODO upgrade tech and new item/entity
+-- technology for pimped car
+local pimp_my_car_tech = data_util.copy_prototype(data.raw["technology"]["automobilism"], "ufo-pimp-my-car-tech")
+local icon = pimp_my_car_tech.icon
+local icon_size = pimp_my_car_tech.icon_size
+local icons = {
+    {
+        icon = icon,
+        icon_size = icon_size
+    },
+    {
+        icon = "__ufo__/graphics/technology/tech_up.png",
+        icon_size = 256,
+        icon_mipmaps = 4,
+    }
+}
+pimp_my_car_tech.icons = icons
+pimp_my_car_tech.icon = nil
+pimp_my_car_tech.icon_size = nil
+pimp_my_car_tech.prerequisites = { "ufo-detector-equipment-tech", "automobilism" }
+pimp_my_car_tech.effects = {{ type = "unlock-recipe", recipe = "ufo-pimp-my-car" }}
+pimp_my_car_tech.unit = {
+    count = 50,
+    ingredients = {
+        { "automation-science-pack", 2 },
+        { "logistic-science-pack", 2 },
+        { "production-science-pack", 1 },
+        { "utility-science-pack", 3 },
+    },
+    time = 25,
+}
+pimp_my_car_tech.order = "c-e-b4"
 
--- add small grid to car
-data.raw.car.car.equipment_grid = "small-car-equipment"
+-- recipe for pimped car
+local pimp_my_car_recipe = {
+    type = "recipe",
+    name = "ufo-pimp-my-car",
+    enabled = false,
+    energy_required = 4,
+    ingredients = {
+        { type = "item", name = "iron-gear-wheel", amount = 2 }, -- TODO
+        { type = "item", name = "car", amount = 1 },
+    },
+    results = { { type = "item", name = "ufo-pimp-my-car", amount = 1 } },
+    icons = icons
+}
+
+-- item for pimped car
+local my_pimped_car_item = data_util.copy_prototype(data.raw["item-with-entity-data"]["car"], "ufo-pimp-my-car")
+my_pimped_car_item.icons = icons
+my_pimped_car_item.icon = nil
+my_pimped_car_item.icon_size = nil
+
+-- and entity
+-- add small grid to pimped car
+local my_pimped_car_entity = data_util.copy_prototype(data.raw["car"]["car"], "ufo-pimp-my-car")
+my_pimped_car_entity.equipment_grid = "small-car-equipment"
+my_pimped_car_entity.icons = icons
+my_pimped_car_entity.icon = nil
+my_pimped_car_entity.icon_size = nil
 
 -- add detector to tank
 local tank_equipment_grid = data_util.copy_prototype(data.raw["equipment-grid"]["medium-equipment-grid"], "tank-equipment-grid")
@@ -132,8 +187,12 @@ data:extend({
     equipment_category,
     equipment_grid,
     tank_equipment_grid,
+    my_pimped_car_item,
+    my_pimped_car_entity,
     detector_equipment_item,
     detector_equipment_recipe,
+    pimp_my_car_recipe,
     detector_equipment,
     detector_equipment_tech,
+    pimp_my_car_tech
 })
