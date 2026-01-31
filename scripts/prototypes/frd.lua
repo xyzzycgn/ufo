@@ -183,6 +183,26 @@ if mods["Hovercrafts"] then
     table.insert(data.raw["equipment-grid"]["missile-hovercraft-equipment"].equipment_categories, "vehicle")
 end
 
+-- hotkey to open/close FRD-gui.
+local custom_input =  {
+    type         = 'custom-input',
+    name         = 'ufo-toggle-gui-key',
+    key_sequence = 'CONTROL + T',
+}
+
+-- shortcut
+local shortcut =  {
+    type = 'shortcut',
+    name = 'ufo-toggle-gui',
+    associated_control_input = "ufo-toggle-gui-key",
+    action = "lua",
+    icon = '__ufo__/graphics/icons/sensor.png',
+    icon_size = 128,
+    toggleable = true,
+    technology_to_unlock = "ufo-detector-equipment-tech",
+    unavailable_until_unlocked = true,
+}
+
 data:extend({
     equipment_category,
     equipment_grid,
@@ -194,5 +214,7 @@ data:extend({
     pimp_my_car_recipe,
     detector_equipment,
     detector_equipment_tech,
-    pimp_my_car_tech
+    pimp_my_car_tech,
+    custom_input,
+    shortcut
 })

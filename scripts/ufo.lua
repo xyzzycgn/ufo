@@ -135,6 +135,12 @@ local function entityDied(event)
 end
 -- ###############################################################
 
+-- event handler for custom input
+local function toggle_frd_gui(e)
+    Log.logEvent(e, function(m)log(m)end, Log.FINE)
+end
+-- ###############################################################
+
 --- register complexer events, i.e. with additional filters
 local function registerEvents()
     -- filter for all known ufo-adapted-attractors
@@ -178,6 +184,9 @@ local function registerEvents()
     script.on_event(defines.events.on_robot_built_entity,  onBuiltEntity, filters_building)
     script.on_event(defines.events.on_entity_cloned,       onEntityCloned, filters_building)
     script.on_event(defines.events.on_entity_died,         entityDied, filters_died)
+
+    -- The event handlers glues function and the hotkey together.
+    script.on_event({ defines.events.on_lua_shortcut, 'ufo-toggle-gui-key' }, toggle_frd_gui)
 end
 -- ###############################################################
 
