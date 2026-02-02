@@ -198,9 +198,21 @@ local shortcut =  {
     action = "lua",
     icon = '__ufo__/graphics/icons/sensor.png',
     icon_size = 128,
+    small_icon = '__ufo__/graphics/icons/sensor.png',
+    small_icon_size = 64,
     toggleable = true,
     technology_to_unlock = "ufo-detector-equipment-tech",
     unavailable_until_unlocked = true,
+}
+
+local sprite = {
+  type = "sprite",
+  name = "frd-sprite",
+  filename = "__ufo__/graphics/crosshairs.png",
+  priority = "extra-high",
+  width = 170,
+  height = 148,
+  --shift = {0.7, -0.2}
 }
 
 data:extend({
@@ -216,5 +228,6 @@ data:extend({
     detector_equipment_tech,
     pimp_my_car_tech,
     custom_input,
-    shortcut
+    shortcut,
+    sprite
 })

@@ -14,6 +14,7 @@ function global_data.init()
     storage.adapterData = storage.adapterData or {}
     storage.adaptees = storage.adaptees or {}
     storage.protectedVaults = storage.protectedVaults or {}
+    storage.playerData = storage.playerData or {}
 end
 -- ###############################################################
 
@@ -67,6 +68,19 @@ end
 --- @return table<number, AdaptedAttractor> indexed by unit_number of adapted attractor entity
 function global_data.getAdaptees()
     return storage.adaptees
+end
+-- ###############################################################
+
+--- @return @PlayerData
+function global_data.getPlayerData()
+    return storage.playerData
+end
+-- ###############################################################
+
+--- @param p LuaPlayer
+--- @param pd PlayerData
+function global_data.addPlayer_data(p, pd)
+    storage.playerData[p.index] = pd
 end
 -- ###############################################################
 

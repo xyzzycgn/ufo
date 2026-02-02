@@ -9,6 +9,8 @@ local global_data = require("scripts.global_data")
 local adapterHandling = require("scripts.adapterHandling")
 local vaultHandling = require("scripts.vaultHandling")
 local consts = require("__ufo__.scripts.consts")
+local PlayerData = require("scripts.player_data")
+local frdgui = require("scripts.gui")
 
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 
@@ -138,6 +140,24 @@ end
 -- event handler for custom input
 local function toggle_frd_gui(e)
     Log.logEvent(e, function(m)log(m)end, Log.FINE)
+    if (e.prototype_name == "ufo-toggle-gui") then
+        local p = game.get_player(e.player_index)
+        if p.force.technologies["ufo-detector-equipment-tech"].researched then
+            local pd = global_data.getPlayerData(e.player_index)
+            Log.logBlock(pd, function(m)log(m)end, Log.FINER)
+
+            if (pd == nil) then
+                pd = PlayerData.init_player_data(p)
+                global_data.addPlayer_data(p, pd)
+            end
+
+            local gui = frdgui.getGui(p, pd)
+
+            if gui then
+                gui:toggle()
+            end
+        end
+    end
 end
 -- ###############################################################
 
