@@ -187,7 +187,7 @@ end
 local custom_input =  {
     type         = 'custom-input',
     name         = 'ufo-toggle-gui-key',
-    key_sequence = 'CONTROL + T',
+    key_sequence = 'SHIFT + T',
 }
 
 -- shortcut
