@@ -212,7 +212,6 @@ local sprite = {
   priority = "extra-high",
   width = 170,
   height = 148,
-  --shift = {0.7, -0.2}
 }
 
 data:extend({

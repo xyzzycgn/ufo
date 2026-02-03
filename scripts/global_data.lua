@@ -4,6 +4,7 @@
 ---
 
 local Log = require("__log4factorio__.Log")
+local PlayerData = require("scripts.player_data")
 
 local global_data = {}
 
@@ -71,16 +72,18 @@ function global_data.getAdaptees()
 end
 -- ###############################################################
 
+--- @param pid number index of LuaPlayer
 --- @return @PlayerData
-function global_data.getPlayerData()
-    return storage.playerData
-end
--- ###############################################################
+function global_data.getPlayerData(pid)
+    local pd = storage.playerData
+    local pdp = pd[pid]
 
---- @param p LuaPlayer
---- @param pd PlayerData
-function global_data.addPlayer_data(p, pd)
-    storage.playerData[p.index] = pd
+    if (pdp == nil) then
+        pdp = PlayerData.init_player_data(pid)
+        pd[pid] = pdp
+    end
+
+    return pdp
 end
 -- ###############################################################
 

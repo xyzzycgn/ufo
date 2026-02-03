@@ -137,25 +137,95 @@ local function entityDied(event)
 end
 -- ###############################################################
 
+--- checks if ufo-detector-equipment-tech has been researched
+--- @param EventData
+--- @return LuaPlayer, boolean
+local function checkTech(e)
+   local p = game.get_player(e.player_index)
+   return p, p and p.force.technologies["ufo-detector-equipment-tech"].researched
+end
+-- ###############################################################
+
+--- @param p LuaPlayer
+--- @param pd PlayerData
+local function toggleGui(p, pd)
+    Log.logLine(pd, function(m)log(m)end, Log.FINE)
+    local gui = pd.gui
+    if pd.frdOn and pd.inVehicleWithFRD then
+        -- must show FRDgui
+        gui = gui or frdgui.getGui(p, pd)
+        Log.logBlock(gui, function(m)log(m)end, Log.FINE)
+        gui:open()
+    elseif gui then
+        gui:close()
+    end
+end
+-- ###############################################################
+
 -- event handler for custom input
 local function toggle_frd_gui(e)
     Log.logEvent(e, function(m)log(m)end, Log.FINE)
     if (e.prototype_name == "ufo-toggle-gui") or (e.input_name == "ufo-toggle-gui-key") then
-        local p = game.get_player(e.player_index)
-        if p.force.technologies["ufo-detector-equipment-tech"].researched then
+        local p, researched = checkTech(e)
+        if researched then
+            --- @type PlayerData
             local pd = global_data.getPlayerData(e.player_index)
             Log.logBlock(pd, function(m)log(m)end, Log.FINER)
 
-            if (pd == nil) then
-                pd = PlayerData.init_player_data(p)
-                global_data.addPlayer_data(p, pd)
+            pd.frdOn = not pd.frdOn
+            toggleGui(p, pd)
+        end
+    end
+end
+-- ###############################################################
+
+--- @param characterOrPlayer LuaPlayer|LuaEntity
+local function getIndex(characterOrPlayer)
+    -- @wube why simple if it can be complicated?
+    return characterOrPlayer
+            and (characterOrPlayer.is_player() and characterOrPlayer.index
+            or characterOrPlayer.player.index)
+end
+-- ###############################################################
+
+--- @param e EventData
+local function driving_changed_state(e)
+    Log.logEvent(e, function(m)log(m)end, Log.FINE)
+    local p, researched = checkTech(e)
+    if researched then
+        local entity = e.entity
+        if entity and entity.valid then
+            --- @type PlayerData
+            local pd = global_data.getPlayerData(e.player_index)
+
+            local driver = entity.get_driver()
+            Log.logLine(driver, function(m)log(m)end, Log.FINE)
+
+            local un = getIndex(driver)
+            Log.logLine({ un = un , pid = e.player_index }, function(m)log(m)end, Log.FINE)
+
+            if driver and (un == e.player_index) then
+                -- driven by player
+                local grid = entity.grid
+                if grid and grid.valid then
+                    local equipments = grid.equipment
+                    local hasFrd = false
+                    Log.logBlock(equipment, function(m)log(m)end, Log.FINE)
+                    for _, equipment in pairs(equipments) do
+                        if equipment.name == "ufo-detector-equipment" then
+                            hasFrd = true
+                            break
+                        end
+                    end
+
+                    pd.inVehicleWithFRD = hasFrd
+                end
+            else
+                -- not (== no longer) driven by player
+                pd.inVehicleWithFRD = false
             end
 
-            local gui = frdgui.getGui(p, pd)
-
-            if gui then
-                gui:toggle()
-            end
+            toggleGui(p, pd)
         end
     end
 end
@@ -363,7 +433,8 @@ ufo.events = {
     [defines.events.on_forces_merged]                = events_force.onForcesMerged,
     [defines.events.on_force_reset]                  = events_force.onForceReset,
     ["ufo-toggle-gui-key"]                           = toggle_frd_gui,
-    [defines.events.on_lua_shortcut]                 = toggle_frd_gui
+    [defines.events.on_lua_shortcut]                 = toggle_frd_gui,
+    [defines.events.on_player_driving_changed_state] = driving_changed_state,
 }
 
 return ufo

@@ -1,21 +1,24 @@
 ---
 --- Created by xyzzycgn.
---- DateTime: 23.12.24 16:16
 ---
 
---- convenience class for handling player_data
+--- class for handling player data
 --- @class PlayerData any
 --- @field gui LuaGuiElement
---- @field player LuaPlayer
+--- @field pid number index of LuaPlayer
+--- @field frdOn boolean true if FRD-Gui should be shown
+--- @field inVehicleWithFRD boolean true if driving a vehicle with FRD
 local PlayerData = {}
 
----@param player LuaPlayer
+---@param pid number index of LuaPlayer
 ---@return PlayerData
-function PlayerData.init_player_data(player)
+function PlayerData.init_player_data(pid)
     -- Player data used during game
     local pd = {
         guis = nil,
-        player = player,
+        pid = pid,
+        frdOn = false,
+        inVehicleWithFRD = false,
     }
 
     return pd
