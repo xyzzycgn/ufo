@@ -150,14 +150,14 @@ end
 --- @param pd PlayerData
 local function toggleGui(p, pd)
     Log.logLine(pd, function(m)log(m)end, Log.FINE)
-    local gui = pd.gui
+    local guiModel = pd.guiModel
     if pd.frdOn and pd.inVehicleWithFRD then
         -- must show FRDgui
-        gui = gui or frdgui.getGui(p, pd)
-        Log.logBlock(gui, function(m)log(m)end, Log.FINE)
-        gui:open()
-    elseif gui then
-        gui:close()
+        guiModel = guiModel or frdgui.getGui(p, pd)
+        Log.logBlock(guiModel, function(m)log(m)end, Log.FINE)
+        guiModel:open()
+    elseif guiModel then
+        guiModel:close()
     end
 end
 -- ###############################################################
@@ -204,25 +204,29 @@ local function driving_changed_state(e)
             local un = getIndex(driver)
             Log.logLine({ un = un , pid = e.player_index }, function(m)log(m)end, Log.FINE)
 
+            local hasFrd = false
             if driver and (un == e.player_index) then
                 -- driven by player
                 local grid = entity.grid
                 if grid and grid.valid then
                     local equipments = grid.equipment
-                    local hasFrd = false
                     Log.logBlock(equipment, function(m)log(m)end, Log.FINE)
                     for _, equipment in pairs(equipments) do
                         if equipment.name == "ufo-detector-equipment" then
                             hasFrd = true
+                            pd.frd = equipment
                             break
                         end
                     end
 
                     pd.inVehicleWithFRD = hasFrd
                 end
-            else
-                -- not (== no longer) driven by player
+            end
+
+            if not hasFrd then
+                -- not (or no longer) driven by player or no grid with FRD
                 pd.inVehicleWithFRD = false
+                pd.frd = nil
             end
 
             toggleGui(p, pd)
@@ -403,6 +407,23 @@ local function changeSettings(e)
 end
 --###############################################################
 
+local function guiUpdates()
+    Log.log("guiUpdates()", function(m)log(m)end, Log.FINE)
+    for _, player in pairs(game.players) do
+        Log.logLine(player, function(m)log(m)end, Log.FINE)
+         --- @type PlayerData
+        local pd = global_data.getPlayerData(player.index)
+        Log.logBlock(pd, function(m)log(m)end, Log.FINE)
+        local gui = pd and pd.guiModel and pd.guiModel.gui
+        if gui and gui.valid then
+            local frd = pd.frd
+            local energy = frd and frd.energy or 0
+            Log.logBlock({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINE)
+        end
+    end
+end
+--###############################################################
+
 -- mod initialization/configuration of handlers
 local ufo = {}
 
@@ -435,6 +456,11 @@ ufo.events = {
     ["ufo-toggle-gui-key"]                           = toggle_frd_gui,
     [defines.events.on_lua_shortcut]                 = toggle_frd_gui,
     [defines.events.on_player_driving_changed_state] = driving_changed_state,
+}
+
+-- handling of gui updates
+ufo.on_nth_tick = {
+    [60] = guiUpdates,
 }
 
 return ufo

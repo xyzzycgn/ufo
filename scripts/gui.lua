@@ -93,18 +93,11 @@ function frdgui.load()
 end
 --###########################################################################
 
-function frdgui.changed()
-    Log.log('changed RLDman', function(m)log(m)end, Log.FINE)
-end
---###########################################################################
-
--- ---@class GuiModel: any @
--- ---@field player LuaPlayer@
--- ---@field player_data player_data@
--- ---@field gui LuaGuiElement@top level GUI object
--- ---@field refs table<string, LuaGuiElement>@ certain referenced children of top level object
--- ---@field tabs table<string, LuaGuiElement>@ list of top frames for tabs
--- ---@field tabs any@state informations of the gui
+---@class GuiModel: any
+---@field gui LuaGuiElement top level GUI object
+---@field player LuaPlayer
+---@field refs table<string, LuaGuiElement> certain referenced children of top level object
+---@field state any state of gui
 
 ---@param player LuaPlayer
 ---@return LuaGuiElement
@@ -131,11 +124,8 @@ function frdgui.build(player, pd)
 
     Log.logBlock({ elems = elems, gui=gui }, function(m)log(m)end, Log.FINEST)
 
-    --gui.force_auto_center() -- only valid for screen
-
     local GuiModel = {
         player = player,
-        player_data = pd,
         gui = gui,
         refs = elems,
         state = {},
@@ -147,23 +137,24 @@ end
 
 ---@param player LuaPlayer
 ---@param pd PlayerData
+---@return GuiModel
 function frdgui.getGui(player, pd)
-    local gui
+    local guiModel
 
     Log.logBlock(pd, function(m)log(m)end, Log.FINE)
 
-    gui = pd and pd.gui
-    if (gui == nil) then
-        gui = frdgui.build(player, pd)
-        pd.gui = gui
+    guiModel = pd and pd.guiModel
+    if (guiModel == nil) then
+        guiModel = frdgui.build(player, pd)
+        pd.guiModel = guiModel
     end
 
-    local mt = getmetatable(gui)
+    local mt = getmetatable(guiModel)
     if (mt == nil) then
-        setmetatable(gui, { __index = Common })
+        setmetatable(guiModel, { __index = Common })
     end
 
-    return gui
+    return guiModel
 end
 --###########################################################################
 

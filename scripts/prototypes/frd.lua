@@ -5,11 +5,6 @@
 local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
 
-Log.logBlock(defines.prototypes["equipment-category"]["equipment-category"], function(m)log(m)end, Log.CONFIG)
-Log.logBlock(data.raw["battery-equipment"], function(m)log(m)end, Log.CONFIG)
-Log.logBlock(data.raw.item["battery-equipment"], function(m)log(m)end, Log.CONFIG)
-Log.logBlock(data.raw["equipment-category"]["armor"], function(m)log(m)end, Log.CONFIG)
-
 -- new equipment-category
 local equipment_category = {
     type = "equipment-category",
@@ -88,7 +83,7 @@ local detector_equipment_recipe = {
 }
 
 local detector_equipment = {
-    type = "battery-equipment",
+    type = "night-vision-equipment",
     name = "ufo-detector-equipment",
     sprite = {
         filename = "__ufo__/graphics/icons/sensor.png",
@@ -99,14 +94,15 @@ local detector_equipment = {
         type = "electric",
         buffer_capacity = "20kJ",
         input_flow_limit = "10kW",
-        output_flow_limit = "10kW",
         usage_priority = "primary-input"
     },
+    color_lookup = {{1, "identity"}}, -- needed to avoid runtime error
+    energy_input = "10kW",
     categories = { "vehicle" },
     factoriopedia_description = { "factoriopedia-description.ufo-detector-equipment" }
 }
 
-Log.logBlock(data.raw["battery-equipment"], function(m)log(m)end, Log.CONFIG)
+Log.logBlock(data.raw["night-vision-equipment"], function(m)log(m)end, Log.CONFIG)
 
 -- technology for pimped car
 local pimp_my_car_tech = data_util.copy_prototype(data.raw["technology"]["automobilism"], "ufo-pimp-my-car-tech")
