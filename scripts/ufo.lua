@@ -1,6 +1,5 @@
 ---
 --- Created by xyzzycgn.
---- DateTime: 20.11.25 08:47
 ---
 local Log = require("__log4factorio__.Log")
 local events_force = require("scripts.events.force")
@@ -178,13 +177,6 @@ local function guiUpdates4Player(player)
 end
 --###############################################################
 
-local function guiUpdates()
-    for _, player in pairs(game.players) do
-        guiUpdates4Player(player)
-    end
-end
--- ###############################################################
-
 --- @param p LuaPlayer
 --- @param pd PlayerData
 local function toggleGui(p, pd)
@@ -257,6 +249,7 @@ local function driving_changed_state(e)
                         if equipment.name == "ufo-detector-equipment" then
                             hasFrd = true
                             pd.frd = equipment
+                            pd.grid = grid
                             break
                         end
                     end
@@ -269,6 +262,7 @@ local function driving_changed_state(e)
                 -- not (or no longer) driven by player or no grid with FRD
                 pd.inVehicleWithFRD = false
                 pd.frd = nil
+                pd.grid = nil
             end
 
             toggleGui(p, pd)
@@ -409,6 +403,7 @@ local function onLoad()
         -- this has to be done in on_configuration_changed as this implies also a change in mods
         registerEvents()
     end
+    frdgui.load()
 end
 --###############################################################
 
@@ -443,6 +438,53 @@ local function changeSettings(e)
     local _ =
         alterSetting(e, "ufo-logLevel", function(newval) Log.setSeverity(Log[newval]) end)
 --     or alterSetting(e, "ufo-xyz")
+end
+--###############################################################
+
+local fr_names = script.active_mods["Electric_flying_enemies"] and {
+    "fulgoran-ruin-vault",
+    "fulgoran-ruin-colossal",
+    "fe_resonance_shard",
+} or {
+    "fulgoran-ruin-vault",
+}
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+local function businessLogic()
+    for _, player in pairs(game.players) do
+        if checkTech4Player(player) then -- update only if tech is researched
+            --- @type PlayerData
+            local pd = global_data.getPlayerData(player.index)
+            Log.logBlock(pd, function(m)log(m)end, Log.FINER)
+            local guiModel = pd and pd.guiModel
+            local gui = guiModel and guiModel.gui
+            if guiModel and guiModel.state.visible and gui and gui.valid then
+                -- @type LuaEquipment
+                local frd = pd.frd
+                local grid = pd.grid
+                if grid and grid.valid and frd and frd.valid then
+                    local owningVehicle = grid.entity_owner
+                    Log.logEntity(owningVehicle, function(m)log(m)end, Log.FINE)
+                    if owningVehicle and owningVehicle.valid then
+                        local energy = frd and frd.energy or 0
+                        Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINE)
+                        if energy > util.parse_energy(consts.frd_energy) then
+                            --- @type LuaSurface
+                            local surface = owningVehicle.surface
+                            if surface.name == "fulgora" then
+                                local relics = surface.find_entities_filtered( { position = owningVehicle.position, radius = 500, name = fr_names })
+
+                                Log.logBlock(relics, function(m)log(m)end, Log.FINE)
+                            end
+
+                        end
+                    end
+                end
+
+                guiUpdates4Player(player)
+            end
+        end
+    end
 end
 --###############################################################
 
@@ -482,7 +524,7 @@ ufo.events = {
 
 -- handling of gui updates
 ufo.on_nth_tick = {
-    [60] = guiUpdates,
+    [60] = businessLogic,
 }
 
 return ufo

@@ -87,4 +87,10 @@ function global_data.getPlayerData(pid)
 end
 -- ###############################################################
 
+--- @return PlayerData[]
+function global_data.getAllPlayerData()
+    return storage.playerData
+end
+-- ###############################################################
+
 return global_data

@@ -5,6 +5,7 @@
 local Log = require("__log4factorio__.Log")
 local dump = require("__log4factorio__.dump")
 local guibuilder = require("__flib__.gui")
+local global_data = require("scripts.global_data")
 
 
 local frdgui = {}
@@ -69,30 +70,6 @@ function Common:update()
 end
 --###########################################################################
 
-function frdgui.init()
-    Log.log('init FRD gui', function(m)log(m)end, Log.FINE)
-    frdgui.setupEventhandler()
-end
---###########################################################################
-
-function frdgui.load()
-    -- TODO ??
-    --local all_pd = global_data.getAllPlayer_data()
-    --for _, pd in ipairs(all_pd) do
-    --    if (pd and pd.gui) then
-    --        local gui = pd.gui
-    --        Log.log('reload metatable for player data', function(m)log(m)end, Log.FINE)
-    --        local mt = getmetatable(gui)
-    --        if (mt == nil) then
-    --            setmetatable(gui, { __index = Common })
-    --        end
-    --    end
-    --end
-    --
-    --frdgui.setupEventhandler()
-end
---###########################################################################
-
 ---@class GuiModel: any
 ---@field gui LuaGuiElement top level GUI object
 ---@field player LuaPlayer
@@ -143,6 +120,14 @@ function frdgui.build(player)
 end
 --###########################################################################
 
+local function addMetaTable(guiModel)
+    local mt = getmetatable(guiModel)
+    if (mt == nil) then
+        setmetatable(guiModel, { __index = Common })
+    end
+end
+--###########################################################################
+
 ---@param player LuaPlayer
 ---@param pd PlayerData
 ---@return GuiModel
@@ -157,53 +142,31 @@ function frdgui.getGui(player, pd)
         pd.guiModel = guiModel
     end
 
-    local mt = getmetatable(guiModel)
-    if (mt == nil) then
-        setmetatable(guiModel, { __index = Common })
-    end
+    addMetaTable(guiModel)
 
     return guiModel
 end
 --###########################################################################
 
---
--- (GUI-)EVENTS
---
+function frdgui.load()
+    local all_pd = global_data.getAllPlayerData()
+    for _, pd in ipairs(all_pd) do
+        if (pd and pd.guiModel) then
+            local guiModel = pd.guiModel
+            Log.log('reload metatable for player data', function(m)log(m)end, Log.FINE)
+            addMetaTable(guiModel)
+        end
+    end
+    --
+    --frdgui.setupEventhandler()
+end
+--###########################################################################
 
---local function clicked(event)
---    Log.logBlock(event, function(m)log(m)end, Log.FINE)
---    if event.element.name == "gui_close_button" then
---        --local player_global = global.players[event.player_index]
---        --control_toggle.caption = (player_global.controls_active) and {"ugg.deactivate"} or {"ugg.activate"}
---
---        local p = game.get_player(event.player_index)
---        local pd = global_data.getPlayer_data(event.player_index)
---        local gui = frdgui.getGui(p, pd)
---
---        gui:close()
---    end
---end
-----###########################################################################
---
---local function closed(event)
---    Log.logBlock(event, function(m)log(m)end, Log.FINE)
---
---    local what = event.element and event.element.name
---    Log.logBlock(what, function(m)log(m)end, Log.FINE)
---
---    local p = game.get_player(event.player_index)
---    local pd = global_data.getPlayer_data(event.player_index)
---    local gui = frdgui.getGui(p, pd)
---    gui:close()
---end
-----###########################################################################
---
---function frdgui.setupEventhandler()
---    Log.log('setupEventhandler', function(m)log(m)end, Log.FINER)
---    script.on_event(defines.events.on_gui_click, clicked)
---    script.on_event(defines.events.on_gui_closed, closed)
---end
-----###########################################################################
+function frdgui.init()
+    Log.log('init FRD gui', function(m)log(m)end, Log.FINE)
+    --frdgui.setupEventhandler()
+end
+--###########################################################################
 
 
 return frdgui
