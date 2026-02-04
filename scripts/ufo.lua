@@ -9,8 +9,8 @@ local global_data = require("scripts.global_data")
 local adapterHandling = require("scripts.adapterHandling")
 local vaultHandling = require("scripts.vaultHandling")
 local consts = require("__ufo__.scripts.consts")
-local PlayerData = require("scripts.player_data")
 local frdgui = require("scripts.gui")
+local util = require("util")
 
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 
@@ -138,11 +138,50 @@ end
 -- ###############################################################
 
 --- checks if ufo-detector-equipment-tech has been researched
---- @param EventData
+--- @param pid LuaPlayer
+--- @return LuaPlayer, boolean
+local function checkTech4Player(p)
+   return p and p.force.technologies["ufo-detector-equipment-tech"].researched
+end
+-- ###############################################################
+
+--- checks if ufo-detector-equipment-tech has been researched
+--- @param e EventData
 --- @return LuaPlayer, boolean
 local function checkTech(e)
    local p = game.get_player(e.player_index)
-   return p, p and p.force.technologies["ufo-detector-equipment-tech"].researched
+   return p, checkTech4Player(p)
+end
+--###############################################################
+
+--- @param player LuaPlayer
+local function guiUpdates4Player(player)
+    Log.logLine(player, function(m)log(m)end, Log.FINER)
+    if checkTech4Player(player) then -- update only if tech is researched
+        --- @type PlayerData
+        local pd = global_data.getPlayerData(player.index)
+        Log.logBlock(pd, function(m)log(m)end, Log.FINER)
+        local gui = pd and pd.guiModel and pd.guiModel.gui
+        if gui and gui.valid then
+            local frd = pd.frd
+            local energy = frd and frd.energy or 0
+            Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINER)
+            if energy > util.parse_energy(consts.frd_energy) then
+                pd.guiModel.refs["sprite-high"].visible = true
+                pd.guiModel.refs["sprite-low"].visible = false
+            else
+                pd.guiModel.refs["sprite-high"].visible = false
+                pd.guiModel.refs["sprite-low"].visible = true
+            end
+        end
+    end
+end
+--###############################################################
+
+local function guiUpdates()
+    for _, player in pairs(game.players) do
+        guiUpdates4Player(player)
+    end
 end
 -- ###############################################################
 
@@ -156,13 +195,15 @@ local function toggleGui(p, pd)
         guiModel = guiModel or frdgui.getGui(p, pd)
         Log.logBlock(guiModel, function(m)log(m)end, Log.FINE)
         guiModel:open()
+        guiUpdates4Player(p)
     elseif guiModel then
         guiModel:close()
     end
 end
 -- ###############################################################
 
--- event handler for custom input
+-- event handler
+--- @param e EventData
 local function toggle_frd_gui(e)
     Log.logEvent(e, function(m)log(m)end, Log.FINE)
     if (e.prototype_name == "ufo-toggle-gui") or (e.input_name == "ufo-toggle-gui-key") then
@@ -181,7 +222,6 @@ end
 
 --- @param characterOrPlayer LuaPlayer|LuaEntity
 local function getIndex(characterOrPlayer)
-    -- @wube why simple if it can be complicated?
     return characterOrPlayer
             and (characterOrPlayer.is_player() and characterOrPlayer.index
             or characterOrPlayer.player.index)
@@ -201,6 +241,8 @@ local function driving_changed_state(e)
             local driver = entity.get_driver()
             Log.logLine(driver, function(m)log(m)end, Log.FINE)
 
+            -- driver can be LuaPlayer or LuaEntity
+            -- @wube why simple if it can be complicated?
             local un = getIndex(driver)
             Log.logLine({ un = un , pid = e.player_index }, function(m)log(m)end, Log.FINE)
 
@@ -288,16 +330,13 @@ end
 --- checks if there changes to the set of electric-poles known by the game
 --- @return any<string>, any<string> the names of the formerly unknown and of the no longer known adpters for poles
 local function checkPoles()
-    local poles = prototypes.get_entity_filtered({ { filter = "type", type = "electric-pole" }})
-    Log.logBlock(poles, function(m)log(m)end, Log.FINE)
-
     local known = adapterHandling.getAdapterPrototypes()
     Log.logBlock(known, function(m)log(m)end, Log.FINE)
     local remaining = {}
     local new = {}
     local removed = {}
 
-    for name, prot in pairs(poles) do
+    for name, prot in pairs(prototypes.get_entity_filtered({ { filter = "type", type = "electric-pole" }})) do
         if name:startswith("ufo-adapted-") then
             local type = prot.type
             Log.logLine({ name = name, type = type}, function(m)log(m)end, Log.FINE)
@@ -404,23 +443,6 @@ local function changeSettings(e)
     local _ =
         alterSetting(e, "ufo-logLevel", function(newval) Log.setSeverity(Log[newval]) end)
 --     or alterSetting(e, "ufo-xyz")
-end
---###############################################################
-
-local function guiUpdates()
-    Log.log("guiUpdates()", function(m)log(m)end, Log.FINE)
-    for _, player in pairs(game.players) do
-        Log.logLine(player, function(m)log(m)end, Log.FINE)
-         --- @type PlayerData
-        local pd = global_data.getPlayerData(player.index)
-        Log.logBlock(pd, function(m)log(m)end, Log.FINE)
-        local gui = pd and pd.guiModel and pd.guiModel.gui
-        if gui and gui.valid then
-            local frd = pd.frd
-            local energy = frd and frd.energy or 0
-            Log.logBlock({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINE)
-        end
-    end
 end
 --###############################################################
 

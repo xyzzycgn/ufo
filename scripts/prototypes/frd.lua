@@ -4,6 +4,7 @@
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
+local consts = require('__ufo__.scripts.consts')
 
 -- new equipment-category
 local equipment_category = {
@@ -93,11 +94,11 @@ local detector_equipment = {
     energy_source = {
         type = "electric",
         buffer_capacity = "20kJ",
-        input_flow_limit = "10kW",
+        input_flow_limit = consts.frd_energy,
         usage_priority = "primary-input"
     },
     color_lookup = {{1, "identity"}}, -- needed to avoid runtime error
-    energy_input = "10kW",
+    energy_input = consts.frd_energy,
     categories = { "vehicle" },
     factoriopedia_description = { "factoriopedia-description.ufo-detector-equipment" }
 }
@@ -201,14 +202,20 @@ local shortcut =  {
     unavailable_until_unlocked = true,
 }
 
-local sprite = {
-  type = "sprite",
-  name = "frd-sprite",
-  filename = "__ufo__/graphics/crosshairs.png",
-  priority = "extra-high",
-  width = 170,
-  height = 148,
-}
+local function sprite_def(name)
+    return {
+        type = "sprite",
+        name = name,
+        filename = "__ufo__/graphics/crosshairs.png",
+        priority = "extra-high",
+        width = 170,
+        height = 148,
+    }
+end
+
+local sprite = sprite_def("frd-sprite")
+local sprite_low = sprite_def("frd-sprite-low")
+sprite_low.tint = { r = 0.2, g = 0.5, b = 0.2, a = 1 }
 
 data:extend({
     equipment_category,
@@ -224,5 +231,6 @@ data:extend({
     pimp_my_car_tech,
     custom_input,
     shortcut,
-    sprite
+    sprite,
+    sprite_low,
 })

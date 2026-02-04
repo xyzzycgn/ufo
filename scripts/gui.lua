@@ -101,7 +101,7 @@ end
 
 ---@param player LuaPlayer
 ---@return LuaGuiElement
-function frdgui.build(player, pd)
+function frdgui.build(player)
     local pg = player.gui
     Log.logBlock(function()
         return { top = dump.dumpLuaGuiElement(pg.top),
@@ -117,7 +117,15 @@ function frdgui.build(player, pd)
             visible = false,
             {
                 type = "sprite",
-                sprite = "frd-sprite"
+                sprite = "frd-sprite",
+                name = "sprite-high",
+                visible = false,
+            },
+            {
+                type = "sprite",
+                sprite = "frd-sprite-low",
+                name = "sprite-low",
+                visible = false,
             },
         }
     })
@@ -145,7 +153,7 @@ function frdgui.getGui(player, pd)
 
     guiModel = pd and pd.guiModel
     if (guiModel == nil) then
-        guiModel = frdgui.build(player, pd)
+        guiModel = frdgui.build(player)
         pd.guiModel = guiModel
     end
 
