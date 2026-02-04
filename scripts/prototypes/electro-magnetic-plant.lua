@@ -23,7 +23,7 @@ local icons = {
 -- ###############################################################
 
 local ufo_emp_entity = data_util.copy_prototype(data.raw["assembling-machine"]["electromagnetic-plant"], "ufo-electromagnetic-plant")
-Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.FINER)
 scale.rescale_entity(ufo_emp_entity, scale_factor)
 ufo_emp_entity.icon = nil
 ufo_emp_entity.icons = icons
@@ -44,7 +44,7 @@ ufo_emp_entity.energy_usage = "1600kW"
 ufo_emp_entity.icon_draw_specification.scale = scale_factor
 ufo_emp_entity.icon_draw_specification.scale_for_many = scale_factor
 
-Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.FINER)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_emp_item = data_util.copy_prototype(data.raw["item"]["electromagnetic-plant"], "ufo-electromagnetic-plant")

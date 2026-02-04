@@ -44,7 +44,7 @@ oldsheet.height = 384
 oldsheet.repeat_count = repeat_count
 oldsheet.animation_speed = animation_speed,
 
-Log.logBlock(oldsheet, function(m)log(m)end)
+Log.logBlock(oldsheet, function(m)log(m)end, Log.FINER)
 ufo_attractor.stateless_visualisation.animation = {
     sheets = {
         -- attractor
@@ -65,7 +65,7 @@ ufo_attractor.stateless_visualisation.animation = {
     },
     sheet = nil
 }
-Log.logBlock(ufo_attractor, function(m)log(m)end)
+Log.logBlock(ufo_attractor, function(m)log(m)end, Log.FINER)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- adapter item
