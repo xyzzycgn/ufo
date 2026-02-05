@@ -364,7 +364,6 @@ local function updatePoles()
 
     for name, _ in pairs(removed) do
         adapterHandling.removeAdapterPrototype(name)
-        -- TODO clean up further structures (not yet existing, but coming)
     end
 end
 -- ###############################################################
@@ -449,7 +448,7 @@ local fr_names = script.active_mods["Electric_flying_enemies"] and {
 }
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local function sortRelics(unsorted)
+local function sortRelics(unsorted, owningVehicle)
     local sorted = {}
 
     -- split by type of relic
@@ -461,7 +460,17 @@ local function sortRelics(unsorted)
         sorted[name] = byname
     end
 
-    -- TODO sort lists by distance
+    -- sort lists by distance
+    local vpos = owningVehicle.position
+    for name, list in pairs(sorted) do
+        table.sort(list, function(a, b)
+            -- position of vehicle as center point
+            return util.distance(vpos, a.position) < util.distance(vpos, b.position)
+        end)
+    end
+
+    Log.logBlock(sorted, function(m)log(m)end, Log.FINER)
+
     return sorted
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -483,14 +492,14 @@ local function businessLogic()
                     Log.logEntity(owningVehicle, function(m)log(m)end, Log.FINE)
                     if owningVehicle and owningVehicle.valid then
                         local energy = frd and frd.energy or 0
-                        Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINE)
+                        Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINER)
                         if energy > util.parse_energy(consts.frd_energy) then
                             --- @type LuaSurface
                             local surface = owningVehicle.surface
                             if surface.name == "fulgora" then
                                 local relics = surface.find_entities_filtered( { position = owningVehicle.position, radius = 500, name = fr_names })
-                                relics = sortRelics(relics)
                                 Log.logBlock(relics, function(m)log(m)end, Log.FINE)
+                                relics = sortRelics(relics, owningVehicle)
                                 pd.relics = relics
                             end
                         end
