@@ -180,12 +180,12 @@ end
 --- @param p LuaPlayer
 --- @param pd PlayerData
 local function toggleGui(p, pd)
-    Log.logLine(pd, function(m)log(m)end, Log.FINE)
+    Log.logBlock(pd, function(m)log(m)end, Log.FINER)
     local guiModel = pd.guiModel
     if pd.frdOn and pd.inVehicleWithFRD then
         -- must show FRDgui
         guiModel = guiModel or frdgui.getGui(p, pd)
-        Log.logBlock(guiModel, function(m)log(m)end, Log.FINE)
+        Log.logBlock(guiModel, function(m)log(m)end, Log.FINER)
         guiModel:open()
         guiUpdates4Player(p)
     elseif guiModel then
@@ -236,7 +236,7 @@ local function driving_changed_state(e)
             -- driver can be LuaPlayer or LuaEntity
             -- @wube why simple if it can be complicated?
             local un = getIndex(driver)
-            Log.logLine({ un = un , pid = e.player_index }, function(m)log(m)end, Log.FINE)
+            Log.logLine({ un = un , pid = e.player_index }, function(m)log(m)end, Log.FINER)
 
             local hasFrd = false
             if driver and (un == e.player_index) then
@@ -443,11 +443,27 @@ end
 
 local fr_names = script.active_mods["Electric_flying_enemies"] and {
     "fulgoran-ruin-vault",
-    "fulgoran-ruin-colossal",
     "fe_resonance_shard",
 } or {
     "fulgoran-ruin-vault",
 }
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+local function sortRelics(unsorted)
+    local sorted = {}
+
+    -- split by type of relic
+    for _, relic in pairs(unsorted) do
+        local name = relic.name
+        local byname = sorted[name] or {}
+        byname[#byname + 1] = relic
+
+        sorted[name] = byname
+    end
+
+    -- TODO sort lists by distance
+    return sorted
+end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local function businessLogic()
@@ -473,10 +489,10 @@ local function businessLogic()
                             local surface = owningVehicle.surface
                             if surface.name == "fulgora" then
                                 local relics = surface.find_entities_filtered( { position = owningVehicle.position, radius = 500, name = fr_names })
-
+                                relics = sortRelics(relics)
                                 Log.logBlock(relics, function(m)log(m)end, Log.FINE)
+                                pd.relics = relics
                             end
-
                         end
                     end
                 end
@@ -497,12 +513,6 @@ ufo.on_configuration_changed = onConfigurationChanged
 
 -- events without filters
 ufo.events = {
---    -- vvv mostly/only used in editor mode
---    [defines.events.on_surface_deleted]              = onSurfaceDeleted,
---    [defines.events.on_surface_cleared]              = onSurfaceCleared,
---    [defines.events.on_surface_imported]             = onSurfaceImported,
---    -- ^^^ mostly/only used in editor mode
---
 --    [defines.events.on_object_destroyed ]            = onObjectDestroyed,
 --    [defines.events.script_raised_destroy]           = entityRemoved,
 --    [defines.events.on_player_created]               = events_player.playerJoinedOrCreated,

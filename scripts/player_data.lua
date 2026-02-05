@@ -10,6 +10,7 @@
 --- @field inVehicleWithFRD boolean true if driving a vehicle with FRD
 --- @field grid LuaEquipmentGrid
 --- @field frd LuaEquipment
+--- @field relics table<string, LuaEntity[]>
 local PlayerData = {}
 
 ---@param pid number index of LuaPlayer

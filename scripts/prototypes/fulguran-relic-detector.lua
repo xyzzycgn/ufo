@@ -1,6 +1,6 @@
 ---
 --- Created by xyzzycgn.
---- prototypes related to F.R.D.
+--- prototypes related to fulguran relic detector (F.R.D.)
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')

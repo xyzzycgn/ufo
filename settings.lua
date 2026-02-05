@@ -16,7 +16,7 @@ local settings = {
         name = "ufo-logLevel",
         order = "zz",
         setting_type = "runtime-global",
-        default_value = "INFO",
+        default_value = "CONFIG",
         allowed_values = {
             "FATAL",
             "ERROR",
@@ -28,9 +28,25 @@ local settings = {
             "FINEST",
         }
     },
+
+    {
+        type = 'color-setting',
+        name = 'ufo-frd-vaults-color',
+        setting_type = "runtime-global",
+        default_value = { r = 0.8, g = 0, b = 0, a = 1 },
+        order = 'a',
+    },
 }
 
 if mods["Electric_flying_enemies"] then
+    settings[#settings + 1] = {
+        type = 'color-setting',
+        name = 'ufo-frd-shard-color',
+        setting_type = "runtime-global",
+        default_value = { r = 0.5, g = 0.5, b = 1, a = 1 },
+        order = 'b',
+    }
+
     settings[#settings + 1] = {
         -- Startup
         type = 'bool-setting',
