@@ -29,20 +29,6 @@ function TestUfo:setUp()
     settings.startup["ufo-mined-ruin-vaults-needed"] = { value = 2 }
     settings.global["ufo-logLevel"] = { value = "INFO" }
 
-    -- Mock defines
-    defines.events = {
-        on_player_mined_entity = 1,
-        on_robot_mined_entity = 2,
-        on_built_entity = 3,
-        on_robot_built_entity = 4,
-        on_entity_cloned = 5,
-        on_entity_died = 6,
-        on_runtime_mod_setting_changed = 7,
-        on_force_created = 8,
-        on_forces_merged = 9,
-        on_force_reset = 10
-    }
-
     -- Mock script.on_event
     self.events = {}
     script = {
