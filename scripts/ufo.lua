@@ -10,8 +10,10 @@ local vaultHandling = require("scripts.vaultHandling")
 local consts = require("__ufo__.scripts.consts")
 local frdgui = require("scripts.gui")
 local util = require("util")
+local math2d = require("math2d")
 
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
+local frd_radius = 500 -- TODO setting
 
 local function initLogging()
     Log.setSeverityFromSettings("ufo-logLevel")
@@ -153,6 +155,35 @@ local function checkTech(e)
 end
 --###############################################################
 
+local function drawDot(parent, x, y, type)
+    -- Create a circle
+    local circle = parent.add {
+        type = "sprite",
+        sprite = type == "fulgoran-ruin-vault" and "dot-vault" or "dot-shard",
+    }
+
+    -- Position the circle specifically
+    local style = circle.style
+    style.left_padding = x
+    style.top_padding = y
+end
+--###############################################################
+
+-- 148 == height of F.R.D. sprite
+-- 170 == width of F.R.D. sprite
+local hofrd = 148 / 2
+local wofrd = 170 / 2
+local scalar = hofrd / frd_radius
+local offset = { wofrd, hofrd }
+
+--- @param relic LuaEntity
+--- @param owningVehicle LuaEntity
+local function normalizePosition(relic, owningVehicle)
+    local diff = math2d.position.subtract(relic.position, owningVehicle.position)
+    return math2d.position.add(math2d.position.multiply_scalar(diff, scalar), offset)
+end
+--###############################################################
+
 --- @param player LuaPlayer
 local function guiUpdates4Player(player)
     Log.logLine(player, function(m)log(m)end, Log.FINER)
@@ -166,12 +197,34 @@ local function guiUpdates4Player(player)
             local energy = frd and frd.energy or 0
             Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINER)
             if energy > util.parse_energy(consts.frd_energy) then
-                pd.guiModel.refs["sprite-high"].visible = true
+                local high = pd.guiModel.refs["sprite-high"]
+                high.visible = true
                 pd.guiModel.refs["sprite-low"].visible = false
+
+                -- clear all previous drawn dots
+                high.clear()
+
+                --drawDot(high, 30, 10)
+                --drawDot(high, 40, 10)
+                --
+                local grid = pd.grid
+                if grid and grid.valid then
+                    local owningVehicle = grid.entity_owner
+                    Log.logLine(owningVehicle.position, function(m)log(m)end, Log.FINER)
+
+                    for type, list in pairs(pd.relics) do
+                        for _, relic in pairs(list) do
+                            local normalized = normalizePosition(relic, owningVehicle)
+                            Log.logLine({ relic = relic.position, norm = normalized }, function(m)log(m)end, Log.FINER)
+                            drawDot(high, normalized.x, normalized.y, type)
+                        end
+                    end
+                end
             else
                 pd.guiModel.refs["sprite-high"].visible = false
                 pd.guiModel.refs["sprite-low"].visible = true
             end
+
         end
     end
 end
@@ -440,6 +493,7 @@ local function changeSettings(e)
 end
 --###############################################################
 
+-- name of relics shown in F.R.D.
 local fr_names = script.active_mods["Electric_flying_enemies"] and {
     "fulgoran-ruin-vault",
     "fe_resonance_shard",
@@ -462,10 +516,10 @@ local function sortRelics(unsorted, owningVehicle)
 
     -- sort lists by distance
     local vpos = owningVehicle.position
-    for name, list in pairs(sorted) do
+    for _, list in pairs(sorted) do
         table.sort(list, function(a, b)
             -- position of vehicle as center point
-            return util.distance(vpos, a.position) < util.distance(vpos, b.position)
+            return math2d.position.distance_squared(vpos, a.position) < math2d.position.distance_squared(vpos, b.position)
         end)
     end
 
@@ -489,7 +543,7 @@ local function businessLogic()
                 local grid = pd.grid
                 if grid and grid.valid and frd and frd.valid then
                     local owningVehicle = grid.entity_owner
-                    Log.logEntity(owningVehicle, function(m)log(m)end, Log.FINE)
+                    Log.logEntity(owningVehicle, function(m)log(m)end, Log.FINER)
                     if owningVehicle and owningVehicle.valid then
                         local energy = frd and frd.energy or 0
                         Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINER)
@@ -497,14 +551,15 @@ local function businessLogic()
                             --- @type LuaSurface
                             local surface = owningVehicle.surface
                             if surface.name == "fulgora" then
-                                local relics = surface.find_entities_filtered( { position = owningVehicle.position, radius = 500, name = fr_names })
-                                Log.logBlock(relics, function(m)log(m)end, Log.FINE)
+                                local relics = surface.find_entities_filtered( { position = owningVehicle.position, radius = frd_radius, name = fr_names })
+                                Log.logBlock(relics, function(m)log(m)end, Log.FINEST)
                                 relics = sortRelics(relics, owningVehicle)
                                 pd.relics = relics
                             end
                         end
                     end
                 end
+                Log.logBlock(pd, function(m)log(m)end, Log.FINER)
 
                 guiUpdates4Player(player)
             end

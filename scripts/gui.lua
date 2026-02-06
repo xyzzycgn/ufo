@@ -80,13 +80,7 @@ end
 ---@return LuaGuiElement
 function frdgui.build(player)
     local pg = player.gui
-    Log.logBlock(function()
-        return { top = dump.dumpLuaGuiElement(pg.top),
-                 left = dump.dumpLuaGuiElement(pg.left),
-                 center = dump.dumpLuaGuiElement(pg.center),
-                 screen = dump.dumpLuaGuiElement(pg.screen),
-                 relative = dump.dumpLuaGuiElement(pg.relative) }
-    end, function(m)log(m)end, Log.FINER)
+
     local elems, gui = guibuilder.add(pg.left, {
         {
             type = "frame",

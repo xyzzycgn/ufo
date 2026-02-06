@@ -167,7 +167,7 @@ my_pimped_car_entity.icon_size = nil
 
 -- add detector to tank
 local tank_equipment_grid = data_util.copy_prototype(data.raw["equipment-grid"]["medium-equipment-grid"], "tank-equipment-grid")
--- need an own equipment_category, otherwise detector can be mounted in armor
+-- tanks needs an own equipment_category, otherwise detector can be mounted in armor
 table.insert(tank_equipment_grid.equipment_categories, "vehicle")
 data.raw.car.tank.equipment_grid = "tank-equipment-grid"
 
@@ -202,7 +202,8 @@ local shortcut =  {
     unavailable_until_unlocked = true,
 }
 
-local function sprite_def(name)
+-- sprites for F.R.D. GUI (background)
+local function gui_sprite_def(name)
     return {
         type = "sprite",
         name = name,
@@ -213,11 +214,27 @@ local function sprite_def(name)
     }
 end
 
-local sprite = sprite_def("frd-sprite")
-local sprite_low = sprite_def("frd-sprite-low")
-sprite_low.tint = { r = 0.2, g = 0.5, b = 0.2, a = 1 }
+local sprite = gui_sprite_def("frd-sprite")
+local sprite_low = gui_sprite_def("frd-sprite-low")
+sprite_low.tint = { r = 0.2, g = 0.5, b = 0.2, a = 1 } -- dim brightness
 
-data:extend({
+-- sprites for F.R.D. GUI (small dots)
+local function dot_sprite_def(name, settingname)
+    return {
+        type = "sprite",
+        name = name,
+        filename = "__base__/graphics/icons/list-dot.png",
+        priority = "extra-high",
+        width = 48,
+        height = 48,
+        scale = 1 / 24,
+        tint = settings.startup[settingname].value
+    }
+end
+
+local dot_sprite_vault = dot_sprite_def("dot-vault", "ufo-frd-vaults-color")
+
+local extensions = {
     equipment_category,
     equipment_grid,
     tank_equipment_grid,
@@ -233,4 +250,13 @@ data:extend({
     shortcut,
     sprite,
     sprite_low,
-})
+    dot_sprite_vault,
+}
+
+-- add sprite for shard (if mod is loaded)
+if mods["Electric_flying_enemies"] then
+    local dot_sprite_shard = dot_sprite_def("dot-shard", "ufo-frd-shard-color")
+    extensions[#extensions + 1] = dot_sprite_shard
+end
+
+data:extend(extensions)
