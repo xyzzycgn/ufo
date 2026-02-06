@@ -13,7 +13,7 @@ local util = require("util")
 local math2d = require("math2d")
 
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
-local frd_radius = 500 -- TODO setting
+local frd_radius = settings.global["ufo-frd-scan-radius"].value
 
 local function initLogging()
     Log.setSeverityFromSettings("ufo-logLevel")
@@ -489,7 +489,7 @@ local function changeSettings(e)
     -- local var to make lua happy
     local _ =
         alterSetting(e, "ufo-logLevel", function(newval) Log.setSeverity(Log[newval]) end)
---     or alterSetting(e, "ufo-xyz")
+     or alterSetting(e, "ufo-frd-scan-radius")
 end
 --###############################################################
 

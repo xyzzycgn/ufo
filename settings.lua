@@ -19,6 +19,15 @@ local settings = {
 
     -- runtime
     {
+        type = 'int-setting',
+        name = 'ufo-frd-scan-radius',
+        setting_type = 'runtime-global',
+        minimum_value = 300,
+        maximum_value = 700,
+        default_value = 500,
+        order = 'a',
+    },
+    {
         type = "string-setting",
         name = "ufo-logLevel",
         order = "zz",
