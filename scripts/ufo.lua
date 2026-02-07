@@ -281,7 +281,9 @@ local function driving_changed_state(e)
     local p, researched = checkTech(e)
     if researched then
         local entity = e.entity
-        if entity and entity.valid then
+        -- planet-hopper raises this event, but without a vehicle as entity - so restrict to real vehicles
+        -- car includes tank and hovercrafts
+        if entity and entity.valid and (entity.type == "car" or entity.type == "spider-vehicle") then
             --- @type PlayerData
             local pd = global_data.getPlayerData(e.player_index)
 
