@@ -204,19 +204,21 @@ local function guiUpdates4Player(player)
                 -- clear all previous drawn dots
                 high.clear()
 
-                --drawDot(high, 30, 10)
-                --drawDot(high, 40, 10)
-                --
                 local grid = pd.grid
                 if grid and grid.valid then
                     local owningVehicle = grid.entity_owner
                     Log.logLine(owningVehicle.position, function(m)log(m)end, Log.FINER)
 
-                    for type, list in pairs(pd.relics) do
-                        for _, relic in pairs(list) do
-                            local normalized = normalizePosition(relic, owningVehicle)
-                            Log.logLine({ relic = relic.position, norm = normalized }, function(m)log(m)end, Log.FINER)
-                            drawDot(high, normalized.x, normalized.y, type)
+                    for type, list in pairs(pd.relics or {}) do
+                        for ndx, relic in pairs(list) do
+                            if relic.valid then
+                                local normalized = normalizePosition(relic, owningVehicle)
+                                Log.logLine({ relic = relic.position, norm = normalized }, function(m)log(m)end, Log.FINER)
+                                drawDot(high, normalized.x, normalized.y, type)
+                            else
+                                -- remove invalid (probably mined) relic
+                                list[ndx] = nil
+                            end
                         end
                     end
                 end
