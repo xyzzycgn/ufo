@@ -237,6 +237,8 @@ end
 local function toggleGui(p, pd)
     Log.logBlock(pd, function(m)log(m)end, Log.FINER)
     local guiModel = pd.guiModel
+    Log.logLine( { frdOn = pd.frdOn, ivwfrd = pd.inVehicleWithFRD }, function(m)log(m)end, Log.FINE)
+
     if pd.frdOn and pd.inVehicleWithFRD then
         -- must show FRDgui
         guiModel = guiModel or frdgui.getGui(p, pd)
@@ -272,6 +274,87 @@ local function getIndex(characterOrPlayer)
     return characterOrPlayer
             and (characterOrPlayer.is_player() and characterOrPlayer.index
             or characterOrPlayer.player.index)
+end
+-- ###############################################################
+
+--- @param e EventData
+local function player_placed_equipment(e)
+    Log.logEvent(e, function(m)log(m)end, Log.FINE)
+
+    if e.equipment.name == "ufo-detector-equipment" then
+        -- FRD has been added to grid
+        --- @type PlayerData
+        local pd = global_data.getPlayerData(e.player_index)
+        local grid = e.grid
+        local go = grid.entity_owner
+        Log.logLine(go, function(m)log(m)end, Log.FINE)
+
+        if go and go.valid and (go.type == "car" or go.type == "spider-vehicle") then
+            -- FRD has been added to grid of vehicle
+            local driver = go.get_driver()
+            Log.logLine(driver, function(m)log(m)end, Log.FINE)
+
+            local un = getIndex(driver)
+            Log.logLine({ un = un , pid = e.player_index }, function(m)log(m)end, Log.FINE)
+
+            if not un or (un ~= e.player_index) then
+                -- no or different player is sitting in
+                return
+            end
+
+            local equipments = grid.equipment
+            local hasFrd = false
+            for _, equipment in pairs(equipments) do
+                if equipment.name == "ufo-detector-equipment" then
+                    hasFrd = true
+                    break
+                end
+            end
+
+            if hasFrd and not pd.frd then
+                Log.log("new FRD in grid in vehicle driven", function(m)log(m)end, Log.FINE)
+                -- FRD new in grid
+                pd.inVehicleWithFRD = true
+                pd.frd = e.equipment
+                pd.grid = grid
+                local player = game.players[e.player_index]
+                toggleGui(player, pd)
+            end
+        end
+    end
+end
+-- ###############################################################
+
+--- @param e EventData
+local function player_removed_equipment(e)
+    Log.logEvent(e, function(m)log(m)end, Log.FINE)
+
+    if e.equipment == "ufo-detector-equipment" then
+        -- FRD has been removed from grid
+        --- @type PlayerData
+        local pd = global_data.getPlayerData(e.player_index)
+        local grid = pd.grid
+        if grid and grid.valid and (grid.unique_id == e.grid.unique_id) then
+            -- equipment has been removed from grid of vehicle the player is sitting in
+            local equipments = grid.equipment
+            local hasFrd = false
+            for _, equipment in pairs(equipments) do
+                if equipment.name == "ufo-detector-equipment" then
+                    hasFrd = true
+                    break
+                end
+            end
+
+            if not hasFrd then
+                -- no FRD in grid
+                pd.inVehicleWithFRD = false
+                pd.frd = nil
+                pd.grid = nil
+                local player = game.players[e.player_index]
+                toggleGui(player, pd)
+            end
+        end
+    end
 end
 -- ###############################################################
 
@@ -598,6 +681,9 @@ ufo.events = {
     ["ufo-toggle-gui-key"]                           = toggle_frd_gui,
     [defines.events.on_lua_shortcut]                 = toggle_frd_gui,
     [defines.events.on_player_driving_changed_state] = driving_changed_state,
+    [defines.events.on_player_removed_equipment]     = player_removed_equipment,
+    [defines.events.on_player_placed_equipment]      = player_placed_equipment,
+
 }
 
 -- handling of gui updates
