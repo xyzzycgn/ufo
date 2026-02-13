@@ -103,7 +103,7 @@ local detector_equipment = {
     factoriopedia_description = { "factoriopedia-description.ufo-detector-equipment" }
 }
 
-Log.logBlock(data.raw["night-vision-equipment"], function(m)log(m)end, Log.CONFIG)
+Log.logBlock(data.raw["night-vision-equipment"], function(m)log(m)end, Log.FINE)
 
 -- technology for pimped car
 local pimp_my_car_tech = data_util.copy_prototype(data.raw["technology"]["automobilism"], "ufo-pimp-my-car-tech")

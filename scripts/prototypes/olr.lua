@@ -25,7 +25,7 @@ local icons = {
 -- ###############################################################
 
 local ufo_liquid_recycler_entity = data_util.copy_prototype(data.raw["furnace"]["fluid-recycler"], "ufo-fluid-recycler")
-Log.logBlock(ufo_liquid_recycler_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_liquid_recycler_entity, function(m)log(m)end, Log.FINE)
 scale.rescale_entity(ufo_liquid_recycler_entity, scale_factor)
 ufo_liquid_recycler_entity.icon = nil
 ufo_liquid_recycler_entity.icons = icons
@@ -40,7 +40,7 @@ ufo_liquid_recycler_entity.effect_receiver = {
 }
 ufo_liquid_recycler_entity.energy_usage = "760kW"
 
-Log.logBlock(ufo_liquid_recycler_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_liquid_recycler_entity, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_liquid_recycler_item = data_util.copy_prototype(data.raw["item"]["fluid-recycler"], "ufo-fluid-recycler")
