@@ -41,6 +41,8 @@ ufo_recycler_entity.energy_usage = "160kW"
 -- scale icon of the production
 ufo_recycler_entity.icon_draw_specification.scale = scale_factor
 ufo_recycler_entity.icon_draw_specification.scale_for_many = scale_factor
+ufo_recycler_entity.factoriopedia_description = { "factoriopedia-description.ufo-recycler" }
+
 
 Log.logBlock(ufo_recycler_entity, function(m)log(m)end, Log.FINER)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

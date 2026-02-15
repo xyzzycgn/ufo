@@ -11,8 +11,7 @@ require("__ufo__.scripts.prototypes.recycler")
 require("__ufo__.scripts.prototypes.fulguran-relic-detector")
 
 if mods['liquid_recycler'] then
-    local olr = require("__ufo__.scripts.prototypes.olr")
-    data:extend(olr.extensions)
+    require("__ufo__.scripts.prototypes.liquid-recycler")
 end
 
 if mods["Electric_flying_enemies"] then

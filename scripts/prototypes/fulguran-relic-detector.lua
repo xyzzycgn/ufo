@@ -164,6 +164,8 @@ my_pimped_car_entity.equipment_grid = "small-car-equipment"
 my_pimped_car_entity.icons = icons
 my_pimped_car_entity.icon = nil
 my_pimped_car_entity.icon_size = nil
+my_pimped_car_entity.factoriopedia_description = { "factoriopedia-description.ufo-pimp-my-car" }
+
 
 -- add detector to tank
 local tank_equipment_grid = data_util.copy_prototype(data.raw["equipment-grid"]["medium-equipment-grid"], "tank-equipment-grid")

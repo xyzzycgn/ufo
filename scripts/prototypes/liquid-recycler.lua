@@ -39,6 +39,7 @@ ufo_liquid_recycler_entity.effect_receiver = {
     }
 }
 ufo_liquid_recycler_entity.energy_usage = "760kW"
+ufo_liquid_recycler_entity.factoriopedia_description = { "factoriopedia-description.ufo-fluid-recycler" }
 
 Log.logBlock(ufo_liquid_recycler_entity, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -90,12 +91,10 @@ local ufo_liquid_recycler_tech = {
 }
 -- ###############################################################
 
-return {
-    extensions = {
-        ufo_liquid_recycler_item,
-        ufo_liquid_recycler_entity,
-        ufo_liquid_recycler_recipe,
-        ufo_liquid_recycler_tech
-    }
-}
+data:extend({
+    ufo_liquid_recycler_item,
+    ufo_liquid_recycler_entity,
+    ufo_liquid_recycler_recipe,
+    ufo_liquid_recycler_tech
+})
 
