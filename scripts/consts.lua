@@ -7,4 +7,5 @@ return {
     --- @type SurfaceCondition only on fulgora
     sc_only_fulgora = {{ property = "magnetic-field", min = 99 }},
     frd_energy = "10kW",
+    frd_drain = "4kW",
 }

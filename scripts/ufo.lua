@@ -15,6 +15,9 @@ local math2d = require("math2d")
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 local frd_radius = settings.global["ufo-frd-scan-radius"].value
 
+local const_energy = util.parse_energy(consts.frd_energy) * 60 -- frd_energy is returned per tick, but needed per second
+Log.logLine(const_energy, function(m)log(m)end, Log.CONFIG)
+
 local function initLogging()
     Log.setSeverityFromSettings("ufo-logLevel")
 end
@@ -184,6 +187,15 @@ local function normalizePosition(relic, owningVehicle)
 end
 --###############################################################
 
+--- @param frd LuaEquipment
+--- @return boolean
+local function check_energy(frd)
+    local energy = (frd and frd.energy or 0)
+    Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINE)
+    return energy >= const_energy
+end
+--###############################################################
+
 --- @param player LuaPlayer
 local function guiUpdates4Player(player)
     Log.logLine(player, function(m)log(m)end, Log.FINER)
@@ -194,9 +206,8 @@ local function guiUpdates4Player(player)
         local gui = pd and pd.guiModel and pd.guiModel.gui
         if gui and gui.valid then
             local frd = pd.frd
-            local energy = frd and frd.energy or 0
-            Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINER)
-            if energy > util.parse_energy(consts.frd_energy) then
+            if check_energy(frd) then
+                Log.log("##### high", function(m)log(m)end, Log.FINER)
                 local high = pd.guiModel.refs["sprite-high"]
                 high.visible = true
                 pd.guiModel.refs["sprite-low"].visible = false
@@ -223,6 +234,7 @@ local function guiUpdates4Player(player)
                     end
                 end
             else
+                Log.log("##### low", function(m)log(m)end, Log.FINER)
                 pd.guiModel.refs["sprite-high"].visible = false
                 pd.guiModel.refs["sprite-low"].visible = true
             end
@@ -632,9 +644,10 @@ local function businessLogic()
                     local owningVehicle = grid.entity_owner
                     Log.logEntity(owningVehicle, function(m)log(m)end, Log.FINER)
                     if owningVehicle and owningVehicle.valid then
-                        local energy = frd and frd.energy or 0
-                        Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINER)
-                        if energy > util.parse_energy(consts.frd_energy) then
+                        Log.logLine({ frd = frd, energy = frd.energy, maxe = frd.max_energy, gen = frd.generator_power }, function(m)log(m)end, Log.FINER)
+                        Log.logLine({ grid = grid, maxs = grid.max_solar_energy, bc = grid.battery_capacity, aib = grid.available_in_batteries, gen = grid.get_generator_energy() },
+                                      function(m)log(m)end, Log.FINER)
+                        if check_energy(frd) then
                             --- @type LuaSurface
                             local surface = owningVehicle.surface
                             if surface.name == "fulgora" then

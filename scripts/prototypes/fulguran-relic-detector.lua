@@ -91,19 +91,19 @@ local detector_equipment = {
         size = 128,
     },
     shape = { width = 1, height = 1, type = "full", },
+    energy_input = consts.frd_energy,
     energy_source = {
         type = "electric",
         buffer_capacity = "20kJ",
         input_flow_limit = consts.frd_energy,
+        drain = consts.frd_drain,
         usage_priority = "primary-input"
     },
-    color_lookup = {{1, "identity"}}, -- needed to avoid runtime error
-    energy_input = consts.frd_energy,
+    color_lookup = {{ 1, "identity" }}, -- mandantory for type = "night-vision-equipment"
+    darkness_to_turn_on = 1, -- to make it constantly consuming electricity
     categories = { "vehicle" },
     factoriopedia_description = { "factoriopedia-description.ufo-detector-equipment" }
 }
-
-Log.logBlock(data.raw["night-vision-equipment"], function(m)log(m)end, Log.FINE)
 
 -- technology for pimped car
 local pimp_my_car_tech = data_util.copy_prototype(data.raw["technology"]["automobilism"], "ufo-pimp-my-car-tech")
@@ -260,3 +260,5 @@ if mods["Electric_flying_enemies"] then
 end
 
 data:extend(extensions)
+
+Log.logBlock(data.raw["night-vision-equipment"], function(m)log(m)end, Log.FINE)
