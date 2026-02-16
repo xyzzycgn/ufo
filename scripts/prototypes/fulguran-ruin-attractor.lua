@@ -73,6 +73,7 @@ local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["processing-u
 local order = ufo_adapter_item.order or "ufo"
 ufo_adapter_item.icon = "__ufo__/graphics/icons/ufo-adapter.png"
 ufo_adapter_item.order = order .. "-a"
+ufo_adapter_item.factoriopedia_description = { "factoriopedia-description.ufo-adapter" }
 Log.logBlock(ufo_adapter_item, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -200,6 +201,7 @@ local ufo_tech = {
 
     research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", tostring(num_vaults)}},
     order = "c-e-b2",
+    factoriopedia_description = { "factoriopedia-description.ufo-tech" }
 }
 -- ###############################################################
 

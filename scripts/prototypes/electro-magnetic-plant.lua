@@ -92,6 +92,7 @@ local ufo_emp_tech = {
         time = 35,
     },
     order = "c-e-b2",
+    factoriopedia_description = { "factoriopedia-description.ufo-electromagnetic-plant" }
 }
 -- ###############################################################
 
