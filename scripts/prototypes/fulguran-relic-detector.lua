@@ -204,8 +204,33 @@ local shortcut =  {
     unavailable_until_unlocked = true,
 }
 
+
+
+local function bg_color_from_settings()
+    local choosen = settings.startup["ufo-frd-bg-color"].value
+    -- 00a606
+    local color = { r = 0, g = 0.65, b = 0.024, a = 1 } -- GREEN
+
+    if choosen == "AMBER" then
+        color = { r = 1, g = 0.75, b = 0, a = 1 }
+    elseif choosen == "FREE" then
+        color = settings.startup["ufo-frd-free-bg-color"].value
+    end
+
+    return color
+end
+
+local function multiply_color(c1, n)
+  return {
+    (c1.r or c1[1] or 0) * (n or 0),
+    (c1.g or c1[2] or 0) * (n or 0),
+    (c1.b or c1[3] or 0) * (n or 0),
+    (c1.a or c1[4] or 1)
+  }
+end
+
 -- sprites for F.R.D. GUI (background)
-local function gui_sprite_def(name)
+local function gui_sprite_def(name, tint)
     return {
         type = "sprite",
         name = name,
@@ -213,12 +238,15 @@ local function gui_sprite_def(name)
         priority = "extra-high",
         width = 170,
         height = 148,
+        tint = tint
     }
 end
 
-local sprite = gui_sprite_def("frd-sprite")
-local sprite_low = gui_sprite_def("frd-sprite-low")
-sprite_low.tint = { r = 0.2, g = 0.5, b = 0.2, a = 1 } -- dim brightness
+local bg_frd_color = bg_color_from_settings()
+local bg_frd_color_dark = multiply_color(bg_frd_color, 0.5)
+
+local sprite = gui_sprite_def("frd-sprite", bg_frd_color)
+local sprite_low = gui_sprite_def("frd-sprite-low", bg_frd_color_dark)
 
 -- sprites for F.R.D. GUI (small dots)
 local function dot_sprite_def(name, settingname)

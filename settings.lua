@@ -10,11 +10,30 @@ local settings = {
         order = 'a',
     },
     {
+        type = "string-setting",
+        name = 'ufo-frd-bg-color',
+        setting_type = "startup",
+        order = 'c',
+        default_value = "GREEN",
+        allowed_values = {
+            "GREEN",
+            "AMBER",
+            "FREE",
+        }
+    },
+    {
+        type = 'color-setting',
+        name = 'ufo-frd-free-bg-color',
+        setting_type = "startup",
+        default_value = { r = 0.7, g = 0.7, b = 0.7, a = 1 },
+        order = 'd',
+    },
+    {
         type = 'color-setting',
         name = 'ufo-frd-vaults-color',
         setting_type = "startup",
         default_value = { r = 0.8, g = 0, b = 0, a = 1 },
-        order = 'b',
+        order = 'e',
     },
 
     -- runtime
@@ -49,19 +68,19 @@ local settings = {
 
 if mods["Electric_flying_enemies"] then
     settings[#settings + 1] = {
-        type = 'color-setting',
-        name = 'ufo-frd-shard-color',
-        setting_type = "startup",
-        default_value = { r = 0, g = 0.8, b = 1, a = 1 },
-        order = 'c',
-    }
-
-    settings[#settings + 1] = {
         type = 'bool-setting',
         name = 'ufo-fe-resonance-shard-disables-vault-guardian',
         setting_type = 'startup',
         default_value = true,
-        order = 'd',
+        order = 'b',
+    }
+
+    settings[#settings + 1] = {
+        type = 'color-setting',
+        name = 'ufo-frd-shard-color',
+        setting_type = "startup",
+        default_value = { r = 0, g = 0.8, b = 1, a = 1 },
+        order = 'f',
     }
 end
 
