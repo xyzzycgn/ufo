@@ -38,11 +38,12 @@ ufo_recycler_entity.effect_receiver = {
     }
 }
 ufo_recycler_entity.energy_usage = "160kW"
+ufo_recycler_entity.factoriopedia_description = { "factoriopedia-description.ufo-recycler" }
 -- scale icon of the production
 ufo_recycler_entity.icon_draw_specification.scale = scale_factor
 ufo_recycler_entity.icon_draw_specification.scale_for_many = scale_factor
-ufo_recycler_entity.factoriopedia_description = { "factoriopedia-description.ufo-recycler" }
-
+-- to make big-beautiful-module-icons working
+ufo_recycler_entity.icons_positioning = nil
 
 Log.logBlock(ufo_recycler_entity, function(m)log(m)end, Log.FINER)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

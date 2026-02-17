@@ -9,6 +9,7 @@
     "space-age >= 2.0.72",
     "flib >= 0.16.2",
     "log4factorio >= 0.2.2",
+    "big-beautiful-module-icons >= 1.0.3",
     "? liquid_recycler >= 1.0.4",
     "? Electric_flying_enemies >= 0.1.9"
     , "? Hovercrafts >= 2.0.4"

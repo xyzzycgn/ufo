@@ -35,7 +35,7 @@ scale.move_pipe_connection(ufo_liquid_recycler_entity.fluid_boxes, 1, { -1, 2 })
 ufo_liquid_recycler_entity.crafting_speed = 2
 ufo_liquid_recycler_entity.effect_receiver = {
     base_effect = {
-        productivity = 1
+        productivity = 1.2
     }
 }
 ufo_liquid_recycler_entity.energy_usage = "760kW"
