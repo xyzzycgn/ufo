@@ -447,7 +447,6 @@ local function registerEvents()
     end
 
     if fe_mod_active() then
-        Log.log("fe detected", function(m)log(m)end, Log.CONFIG)
         local vg_disabled = settings.startup["ufo-fe-resonance-shard-disables-vault-guardian"]
         if vg_disabled and vg_disabled.value then
             local rsfilter = { filter = 'name', name = "fe_resonance_shard" }

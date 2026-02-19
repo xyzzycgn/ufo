@@ -4,6 +4,7 @@
 ---
 local data_util = require("__flib__.data-util")
 
+Log.log("mod Electric_flying_enemies detected", function(m)log(m)end, Log.CONFIG)
 -- ###############################################################
 
 local vg_disabled = settings.startup["ufo-fe-resonance-shard-disables-vault-guardian"]
