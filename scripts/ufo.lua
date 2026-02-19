@@ -55,13 +55,19 @@ local function checkTechAndTrigger(force, tech, threshold)
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
---- @param force LuaForce
-local function dig4tech(force)
+local function archeologyReseached(force)
     --- @type LuaTechnology
     local uat = force.technologies["ufo-archeological-tech"]
-    if not (uat and uat.researched) then
+    return uat and uat.researched
+end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+--- handles digging a vault for tech
+--- @param force LuaForce
+local function digVault4tech(force)
+    if not archeologyReseached(force) then
         -- archeological-tech not researched yet
-        Log.logLine(uat, function(m)log(m)end, Log.FINE)
+        Log.log("no arch", function(m)log(m)end, Log.FINE)
         return
     end
 
@@ -77,6 +83,24 @@ local function dig4tech(force)
         end
     end
 end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+--- handles digging a shard for tech
+--- @param force LuaForce
+local function digShard4tech(force)
+    if not archeologyReseached(force) then
+        -- archeological-tech not researched yet
+        Log.log("no arch", function(m)log(m)end, Log.FINE)
+        return
+    end
+
+    local tech = "ufo-inhibitor-tech"
+    local ut = force.technologies[tech]
+    if not (ut and ut.researched) then
+        force.script_trigger_research(tech)
+        Log.logMsg(function(m)log(m)end, Log.INFO, "triggered %s", tech)
+    end
+end
 -- ###############################################################
 
 --- triggered if a fulgoran-ruin-vault or an adapter has been mined
@@ -88,9 +112,9 @@ local function onMinedEntity(event)
     local is_vault = entity.name == "fulgoran-ruin-vault"
     if is_vault or fe_mod_active_entity(entity,"ufo-fulgoran-ruin-vault") then
         if event.player_index then
-            -- player mined a vault (or protected vault)
+            -- player mined a vault or a protected vault
             local player = game.players[event.player_index]
-            dig4tech(player.force)
+            digVault4tech(player.force)
             if not is_vault then
                 -- must be an protected vault (ufo-fulgoran-ruin-vault)
                 vaultHandling.handleVaultBeforeShard(entity)
@@ -100,6 +124,11 @@ local function onMinedEntity(event)
             -- TODO???
         end
     elseif fe_mod_active_entity(entity, "fe_resonance_shard") then
+        if event.player_index then
+            -- player mined a shard
+            local player = game.players[event.player_index]
+            digShard4tech(player.force)
+        end
         -- mined shard before vault
         vaultHandling.handleShardBeforeVault(entity)
     else
@@ -447,13 +476,10 @@ local function registerEvents()
     end
 
     if fe_mod_active() then
-        local vg_disabled = settings.startup["ufo-fe-resonance-shard-disables-vault-guardian"]
-        if vg_disabled and vg_disabled.value then
-            local rsfilter = { filter = 'name', name = "fe_resonance_shard" }
-            filters_building[#filters_building + 1] = rsfilter
-            filters_mining[#filters_mining + 1] = rsfilter
-            filters_mining[#filters_mining + 1] = { filter = 'name', name = "ufo-fulgoran-ruin-vault" }
-        end
+        local rsfilter = { filter = 'name', name = "fe_resonance_shard" }
+        filters_building[#filters_building + 1] = rsfilter
+        filters_mining[#filters_mining + 1] = rsfilter
+        filters_mining[#filters_mining + 1] = { filter = 'name', name = "ufo-fulgoran-ruin-vault" }
     end
 
     Log.logLine(filters_building, function(m)log(m)end, Log.FINE)
@@ -472,7 +498,7 @@ function string:startswith(start)
     return self:sub(1, #start) == start
 end
 
---- checks if there changes to the set of electric-poles known by the game
+--- checks if there are changes to the set of electric-poles known by the game
 --- @return any<string>, any<string> the names of the formerly unknown and of the no longer known adpters for poles
 local function checkPoles()
     local known = adapterHandling.getAdapterPrototypes()
@@ -484,7 +510,7 @@ local function checkPoles()
     for name, prot in pairs(prototypes.get_entity_filtered({ { filter = "type", type = "electric-pole" }})) do
         if name:startswith("ufo-adapted-") then
             local type = prot.type
-            Log.logLine({ name = name, type = type}, function(m)log(m)end, Log.FINE)
+            Log.logLine({ name = name, type = type}, function(m)log(m)end, Log.FINER)
             if known[name] then
                 remaining[name] = true
             else

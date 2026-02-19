@@ -68,14 +68,6 @@ local settings = {
 
 if mods["Electric_flying_enemies"] then
     settings[#settings + 1] = {
-        type = 'bool-setting',
-        name = 'ufo-fe-resonance-shard-disables-vault-guardian',
-        setting_type = 'startup',
-        default_value = true,
-        order = 'b',
-    }
-
-    settings[#settings + 1] = {
         type = 'color-setting',
         name = 'ufo-frd-shard-color',
         setting_type = "startup",
