@@ -45,8 +45,7 @@ ufo_inhibitor_recipe.surface_conditions = consts.sc_only_fulgora
 local ufo_inhibitor_tech = {
     name = 'ufo-inhibitor-tech',
     type = 'technology',
-    icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png",
-
+    icon = "__mferrari_graphics_pack_1__/graphics/entities/conduit/conduit-icon.png",
     prerequisites = { "ufo-archeological-tech" },
     effects = {{ type = "unlock-recipe", recipe = "ufo-inhibitor-shard" }},
 
