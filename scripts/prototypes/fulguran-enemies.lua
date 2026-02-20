@@ -3,6 +3,7 @@
 --- adapter to mod Electric_flying_enemies
 ---
 local data_util = require("__flib__.data-util")
+local Log = require("__log4factorio__.Log")
 
 Log.log("mod Electric_flying_enemies detected", function(m)log(m)end, Log.CONFIG)
 -- ###############################################################

@@ -3,15 +3,14 @@
   "title": "Use Fulgoran Objects",
   "description": "Use fulgoran objects or technologies to improve your factory",
   "author": "xyzzycgn",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "factorio_version": "2.0",
   "dependencies": [
-    "space-age >= 2.0.72",
-    "flib >= 0.16.2",
-    "log4factorio >= 0.2.2",
-    "big-beautiful-module-icons >= 1.0.3",
-    "? liquid_recycler >= 1.0.4",
-    "? Electric_flying_enemies >= 0.1.9"
+    "space-age >= 2.0.72"
+    , "flib >= 0.16.2"
+    , "log4factorio >= 0.2.2"
+    , "big-beautiful-module-icons >= 1.0.3"
+    , "? Electric_flying_enemies >= 0.1.9"
     , "? Hovercrafts >= 2.0.4"
   ],
   "space_travel_required": true

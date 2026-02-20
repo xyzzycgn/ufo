@@ -11,10 +11,6 @@ require("__ufo__.scripts.prototypes.recycler")
 require("__ufo__.scripts.prototypes.fulguran-relic-detector")
 require("__ufo__.scripts.prototypes.beacon")
 
-if mods['liquid_recycler'] then
-    require("__ufo__.scripts.prototypes.liquid-recycler")
-end
-
 if mods["Electric_flying_enemies"] then
     require("__ufo__.scripts.prototypes.fulguran-enemies")
 end
