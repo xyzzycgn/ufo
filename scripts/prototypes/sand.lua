@@ -24,9 +24,16 @@ ufo_crusher_item.order = order .. "-a"
 Log.logBlock(ufo_crusher_item, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_crusher_recipe = data_util.copy_prototype(data.raw["recipe"]["crusher"], "ufo-crusher")
-ufo_crusher_recipe.enabled = true -- TODO ??
+local crusher = data.raw["recipe"]["crusher"]
+local ufo_crusher_recipe = data_util.copy_prototype(crusher, "ufo-crusher")
+ufo_crusher_recipe.enabled = false
 Log.logBlock(ufo_crusher_recipe, function(m)log(m)end, Log.CONFIG)
+
+-- enabled it with space-platform (like normal crusher)
+local sppe = data.raw["technology"]["space-platform"].effects
+sppe[#sppe + 1] = { type = "unlock-recipe", recipe = "ufo-crusher" }
+Log.logBlock(sppe, function(m)log(m)end, Log.CONFIG)
+
 -- ###############################################################
 
 local sand_item = {
@@ -54,7 +61,6 @@ local sand_recipe =   {
     auto_recycle = false,
     category = "crushing",
     hide_from_player_crafting = true,
-    --icon = "TODO ?"
 }
 -- ###############################################################
 
