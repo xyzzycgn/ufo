@@ -8,25 +8,26 @@ local scale = require("__ufo__.scripts.scale")
 local consts = require("__ufo__.scripts.consts")
 
 -- ###############################################################
-
+-- protected ruin vault
 local ufo_vault = data_util.copy_prototype(data.raw["simple-entity"]["fulgoran-ruin-vault"], "ufo-fulgoran-ruin-vault")
 ufo_vault.hidden_in_factoriopedia = true
 
 -- ###############################################################
 
-local ufo_inhibitor_shard_item = data_util.copy_prototype(data.raw["item"]["iron-plate"], "ufo-inhibitor-shard")
+-- part of the ufo-inhibitor
+local ufo_inhibitor_shard_item = data_util.copy_prototype(data.raw["item"]["iron-plate"], "ufo-resonance-shard")
 ufo_inhibitor_shard_item.icon = "__ufo__/graphics/icons/pink-crystal.png"
 ufo_inhibitor_shard_item.icon_size = 256
 ufo_inhibitor_shard_item.icon_mipmaps = 4
 
-local ufo_inhibitor_shard_recipe = data_util.copy_prototype(data.raw["recipe"]["iron-plate"], "ufo-inhibitor-shard")
+local ufo_inhibitor_shard_recipe = data_util.copy_prototype(data.raw["recipe"]["iron-plate"], "ufo-resonance-shard")
 ufo_inhibitor_shard_recipe.category = "metallurgy"
--- TODO icon
+-- TODO
 ufo_inhibitor_shard_recipe.ingredients = {
-    { type = 'item', name = 'sand', amount = 50 },
-    { type = 'item', name = 'holmium-ore', amount = 15 }
+    { type = 'item', name = 'ufo-resonance-raw-shard', amount = 1 },
+    { type = 'item', name = 'holmium-ore', amount = 1 }
 }
-ufo_inhibitor_shard_recipe.results = { { type = "item", name = "ufo-inhibitor-shard", amount = 1 } }
+ufo_inhibitor_shard_recipe.results = { { type = "item", name = "ufo-resonance-shard", amount = 1 } }
 ufo_inhibitor_shard_recipe.surface_conditions = consts.sc_only_fulgora
 ufo_inhibitor_shard_recipe.allow_productivity = false
 ufo_inhibitor_shard_recipe.auto_recycle = false
@@ -57,8 +58,6 @@ gs.animation_list[2].animation = {
     blend_mode="additive"
 }
 
-
-
 Log.logBlock(ufo_inhibitor_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -70,7 +69,7 @@ ufo_inhibitor_item.stack_size = 40
 local ufo_inhibitor_recipe = data_util.copy_prototype(data.raw["recipe"]["beacon"], "ufo-inhibitor")
 local ingredients = ufo_inhibitor_recipe.ingredients
 -- TODO
-ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-inhibitor-shard', amount = 1 }
+ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-resonance-shard', amount = 1 }
 ingredients[#ingredients + 1] = { type = 'item', name = 'holmium-plate', amount = 3 }
 ufo_inhibitor_recipe.enabled = false
 ufo_inhibitor_recipe.surface_conditions = consts.sc_only_fulgora
@@ -78,6 +77,28 @@ ufo_inhibitor_recipe.surface_conditions = consts.sc_only_fulgora
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technologies
+
+local ufo_inhibitor_shard_tech = {
+    name = "ufo-resonance-shard-tech",
+    type = "technology",
+    icons = {
+        {
+            icon = "__ufo__/graphics/icons/pink-crystal.png",
+            icon_size = 256,
+            icon_mipmaps = 4,
+            scale = scale_factor,
+        }
+    },
+
+    prerequisites = { "ufo-archeological-tech" },
+    effects = {{ type = "unlock-recipe", recipe = "ufo-resonance-shard" }},
+    research_trigger = { type = "scripted", trigger_description = { "description.ufo-resonance-shard-tech" }},
+
+    order = "c-e-b4",
+    factoriopedia_description = { "factoriopedia-description.ufo-resonance-shard" }
+}
+Log.logBlock(ufo_inhibitor_shard_tech, function(m)log(m)end, Log.CONFIG)
+
 local ufo_inhibitor_tech = {
     name = 'ufo-inhibitor-tech',
     type = 'technology',
@@ -89,32 +110,7 @@ local ufo_inhibitor_tech = {
             scale = scale_factor,
         }
     },
-    prerequisites = { "ufo-archeological-tech" },
-    effects = {{ type = "unlock-recipe", recipe = "ufo-inhibitor" }},
-
-    research_trigger = { type = "scripted", trigger_description = { "description.ufo-inhibitor-tech" }},
-    order = "c-e-b2",
-    factoriopedia_description = { "factoriopedia-description.ufo-inhibitor-tech" }
-}
-
-local ufo_inhibitor_shard_tech = {
-    name = "ufo-inhibitor_shard-tech",
-    type = "technology",
-    icons = {
-        {
-            icon = "__quality__/graphics/technology/recycling.png", -- TODO
-            icon_size = 256,
-            icon_mipmaps = 4,
-            scale = scale_factor,
-        }
-    },
-
-    prerequisites = { "ufo-inhibitor-tech", "ufo-fulgoran-know-how-tech" },
-    effects = {
-        { type = "unlock-recipe", recipe = "ufo-inhibitor-shard" },
-        { type = "unlock-recipe", recipe = "ufo-inhibitor" }
-    },
-
+    prerequisites = { "ufo-resonance-shard-tech" },
     unit = {
         count = 100,
         ingredients = {
@@ -126,10 +122,12 @@ local ufo_inhibitor_shard_tech = {
         },
         time = 25,
     },
-    order = "c-f-b2",
-    factoriopedia_description = { "factoriopedia-description.ufo-inhibitor-shard" }
+
+    effects = {{ type = "unlock-recipe", recipe = "ufo-inhibitor" }},
+
+    order = "c-e-b3",
+    factoriopedia_description = { "factoriopedia-description.ufo-inhibitor-tech" }
 }
-Log.logBlock(ufo_inhibitor_shard_tech, function(m)log(m)end, Log.CONFIG)
 -- ###############################################################
 
 

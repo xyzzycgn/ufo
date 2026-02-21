@@ -4,6 +4,7 @@
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
 local item_sounds = require("__base__.prototypes.item_sounds")
+local consts = require("__ufo__.scripts.consts")
 local scale = require("__ufo__.scripts.scale")
 
 local scale_factor = 1.5
@@ -64,10 +65,33 @@ local sand_recipe =   {
 }
 -- ###############################################################
 
+local ufo_resonance_raw_shard_item = data_util.copy_prototype(data.raw["item"]["iron-plate"], "ufo-resonance-raw-shard")
+ufo_resonance_raw_shard_item.icon = "__ufo__/graphics/icons/raw-pink-crystal.png"
+ufo_resonance_raw_shard_item.icon_size = 256
+ufo_resonance_raw_shard_item.icon_mipmaps = 4
+
+local ufo_resonance_raw_shard_recipe = data_util.copy_prototype(data.raw["recipe"]["iron-plate"], "ufo-resonance-raw-shard")
+ufo_resonance_raw_shard_recipe.category = "metallurgy"
+
+ufo_resonance_raw_shard_recipe.ingredients = {
+    { type = 'item', name = 'sand', amount = 50 },
+    { type = 'item', name = 'holmium-ore', amount = 15 }
+}
+ufo_resonance_raw_shard_recipe.results = { { type = "item", name = "ufo-resonance-raw-shard", amount = 1 } }
+ufo_resonance_raw_shard_recipe.surface_conditions = consts.sc_only_fulgora
+ufo_resonance_raw_shard_recipe.enabled = false
+ufo_resonance_raw_shard_recipe.allow_productivity = false
+ufo_resonance_raw_shard_recipe.auto_recycle = false
+Log.logBlock(ufo_resonance_raw_shard_recipe, function(m)log(m)end, Log.CONFIG)
+
+-- ###############################################################
+
 data:extend( {
     ufo_crusher_entity,
     ufo_crusher_item,
     ufo_crusher_recipe,
     sand_item,
-    sand_recipe
+    sand_recipe,
+    ufo_resonance_raw_shard_item,
+    ufo_resonance_raw_shard_recipe
 })

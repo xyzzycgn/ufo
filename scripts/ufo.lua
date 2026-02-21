@@ -94,7 +94,7 @@ local function digShard4tech(force)
         return
     end
 
-    local tech = "ufo-inhibitor-tech"
+    local tech = "ufo-inhibitor-shard-tech"
     local ut = force.technologies[tech]
     if not (ut and ut.researched) then
         force.script_trigger_research(tech)

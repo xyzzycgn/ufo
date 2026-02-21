@@ -54,7 +54,7 @@ local detector_equipment_tech = {
         },
         time = 25,
     },
-    order = "c-e-b3",
+    order = "c-e-b2",
     factoriopedia_description = { "factoriopedia-description.ufo-detector-equipment" }
 }
 

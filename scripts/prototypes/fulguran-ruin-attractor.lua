@@ -84,6 +84,7 @@ ufo_adapter_recipe.ingredients = {
     { type = "item", name = "advanced-circuit", amount = 2 },
     { type = "item", name = "processing-unit", amount = 1 },
     { type = "item", name = "holmium-plate", amount = 1 },
+    { type = "item", name = "ufo-resonance-raw-shard", amount = 1 },
 }
 ufo_adapter_recipe.category="electronics"
 ufo_adapter_recipe.allow_quality=false
@@ -107,7 +108,10 @@ end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- effects for tech
-local effects = {{ type = 'unlock-recipe', recipe = 'ufo-adapter' }}
+local effects = {
+    { type = 'unlock-recipe', recipe = 'ufo-resonance-raw-shard' },
+    { type = 'unlock-recipe', recipe = 'ufo-adapter' }
+}
 
 -- all recipes unlocked by tech
 local recipes = { [1] = ufo_adapter_recipe }
@@ -188,7 +192,7 @@ local ufo_arch_tech = {
         },
         time = 35,
     },
-    order = "c-e-b2",
+    order = "c-e-b3",
 }
 
 local ufo_tech = {
