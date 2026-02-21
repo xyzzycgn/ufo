@@ -74,7 +74,7 @@ local ufo_recycler_tech = {
         }
     },
 
-    prerequisites = { "recycling" , "ufo-fulgoran-know-how-tech" },
+    prerequisites = { "recycling", "ufo-fulgoran-know-how-tech" },
     effects = {{ type = "unlock-recipe", recipe = "ufo-recycler" }},
 
     unit = {
