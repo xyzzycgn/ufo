@@ -55,7 +55,7 @@ local function checkTechAndTrigger(force, tech, threshold)
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local function archeologyReseached(force)
+local function archeologyResearched(force)
     --- @type LuaTechnology
     local uat = force.technologies["ufo-archeological-tech"]
     return uat and uat.researched
@@ -65,7 +65,7 @@ end
 --- handles digging a vault for tech
 --- @param force LuaForce
 local function digVault4tech(force)
-    if not archeologyReseached(force) then
+    if not archeologyResearched(force) then
         -- archeological-tech not researched yet
         Log.log("no arch", function(m)log(m)end, Log.FINE)
         return
@@ -88,7 +88,7 @@ end
 --- handles digging a shard for tech
 --- @param force LuaForce
 local function digShard4tech(force)
-    if not archeologyReseached(force) then
+    if not archeologyResearched(force) then
         -- archeological-tech not researched yet
         Log.log("no arch", function(m)log(m)end, Log.FINE)
         return
@@ -123,7 +123,7 @@ local function onMinedEntity(event)
             Log.log("mined by robot", function(m)log(m)end, Log.FINE)
             -- TODO???
         end
-    elseif fe_mod_active_entity(entity, "fe_resonance_shard") then
+    elseif fe_mod_active_entity(entity, "ufo-inhibitor") then
         if event.player_index then
             -- player mined a shard
             local player = game.players[event.player_index]
@@ -147,7 +147,7 @@ local function onBuiltEntity(event)
     local entity = event.entity
     Log.logEntity(entity, function(m)log(m)end, Log.FINE)
 
-    if fe_mod_active_entity(entity, "fe_resonance_shard") then
+    if fe_mod_active_entity(entity, "ufo-inhibitor") then
         vaultHandling.handleBuild(entity)
     else
         adapterHandling.handleBuild(entity)
@@ -476,9 +476,9 @@ local function registerEvents()
     end
 
     if fe_mod_active() then
-        local rsfilter = { filter = 'name', name = "fe_resonance_shard" }
-        filters_building[#filters_building + 1] = rsfilter
-        filters_mining[#filters_mining + 1] = rsfilter
+        local inhibitor_filter = { filter = 'name', name = "ufo-inhibitor" }
+        filters_building[#filters_building + 1] = inhibitor_filter
+        filters_mining[#filters_mining + 1] = inhibitor_filter
         filters_mining[#filters_mining + 1] = { filter = 'name', name = "ufo-fulgoran-ruin-vault" }
     end
 

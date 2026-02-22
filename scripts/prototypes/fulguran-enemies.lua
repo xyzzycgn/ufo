@@ -94,7 +94,7 @@ local ufo_inhibitor_shard_tech = {
     effects = {{ type = "unlock-recipe", recipe = "ufo-resonance-shard" }},
     research_trigger = { type = "scripted", trigger_description = { "description.ufo-resonance-shard-tech" }},
 
-    order = "c-e-b4",
+    order = "c-e-b3",
     factoriopedia_description = { "factoriopedia-description.ufo-resonance-shard" }
 }
 Log.logBlock(ufo_inhibitor_shard_tech, function(m)log(m)end, Log.CONFIG)
@@ -125,7 +125,7 @@ local ufo_inhibitor_tech = {
 
     effects = {{ type = "unlock-recipe", recipe = "ufo-inhibitor" }},
 
-    order = "c-e-b3",
+    order = "c-f-b3",
     factoriopedia_description = { "factoriopedia-description.ufo-inhibitor-tech" }
 }
 -- ###############################################################

@@ -203,7 +203,7 @@ local ufo_tech = {
     effects = effects,
 
     research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", tostring(num_vaults)}},
-    order = "c-e-b2",
+    order = "c-e-b4",
     factoriopedia_description = { "factoriopedia-description.ufo-tech" }
 }
 -- ###############################################################
