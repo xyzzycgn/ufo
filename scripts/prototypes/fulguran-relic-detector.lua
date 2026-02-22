@@ -41,7 +41,7 @@ local detector_equipment_tech = {
     icon_size = 128,
     icon_mipmaps = 4,
 
-    prerequisites = { "ufo-archeological-tech" },
+    prerequisites = { "ufo-resonance-raw-shard-tech" },
     effects = {{ type = "unlock-recipe", recipe = "ufo-detector-equipment" }},
 
     unit = {
@@ -77,7 +77,10 @@ local detector_equipment_recipe = {
     enabled = false,
     energy_required = 4,
     ingredients = {
-        { type = "item", name = "iron-gear-wheel", amount = 2 }, -- TODO
+        { type = "item", name = "ufo-resonance-raw-shard", amount = 1 },
+        { type = "item", name = "electronic-circuit", amount = 5 },
+        { type = "item", name = "advanced-circuit", amount = 2 },
+        { type = "item", name = "copper-cable", amount = 3 },
         { type = "item", name = "iron-plate", amount = 1 },
     },
     results = { { type = "item", name = "ufo-detector-equipment", amount = 1 } }

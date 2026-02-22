@@ -72,7 +72,6 @@ ufo_resonance_raw_shard_item.icon_mipmaps = 4
 
 local ufo_resonance_raw_shard_recipe = data_util.copy_prototype(data.raw["recipe"]["iron-plate"], "ufo-resonance-raw-shard")
 ufo_resonance_raw_shard_recipe.category = "metallurgy"
-
 ufo_resonance_raw_shard_recipe.ingredients = {
     { type = 'item', name = 'sand', amount = 50 },
     { type = 'item', name = 'holmium-ore', amount = 15 }
@@ -84,6 +83,23 @@ ufo_resonance_raw_shard_recipe.allow_productivity = false
 ufo_resonance_raw_shard_recipe.auto_recycle = false
 Log.logBlock(ufo_resonance_raw_shard_recipe, function(m)log(m)end, Log.CONFIG)
 
+
+local ufo_resonance_raw_shard_tech = {
+    name = 'ufo-resonance-raw-shard-tech',
+    type = 'technology',
+    icon = "__ufo__/graphics/icons/raw-pink-crystal.png",
+    icon_size = 256,
+    icon_mipmaps = 4,
+
+    prerequisites = { "ufo-archeological-tech" },
+    effects = {{ type = 'unlock-recipe', recipe = 'ufo-resonance-raw-shard' }},
+
+    research_trigger = { type = "mine-entity", entity = "fulgoran-ruin-colossal"},
+    order = "c-e-a",
+    factoriopedia_description = { "factoriopedia-description.ufo-resonance-raw-shard-tech" }
+}
+
+
 -- ###############################################################
 
 data:extend( {
@@ -93,5 +109,6 @@ data:extend( {
     sand_item,
     sand_recipe,
     ufo_resonance_raw_shard_item,
-    ufo_resonance_raw_shard_recipe
+    ufo_resonance_raw_shard_recipe,
+    ufo_resonance_raw_shard_tech
 })

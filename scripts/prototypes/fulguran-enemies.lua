@@ -90,7 +90,7 @@ local ufo_inhibitor_shard_tech = {
         }
     },
 
-    prerequisites = { "ufo-archeological-tech" },
+    prerequisites = { "ufo-resonance-raw-shard-tech" },
     effects = {{ type = "unlock-recipe", recipe = "ufo-resonance-shard" }},
     research_trigger = { type = "scripted", trigger_description = { "description.ufo-resonance-shard-tech" }},
 

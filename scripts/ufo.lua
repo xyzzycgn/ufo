@@ -94,7 +94,7 @@ local function digShard4tech(force)
         return
     end
 
-    local tech = "ufo-inhibitor-shard-tech"
+    local tech = "ufo-resonance-shard-tech"
     local ut = force.technologies[tech]
     if not (ut and ut.researched) then
         force.script_trigger_research(tech)
@@ -220,7 +220,7 @@ end
 --- @return boolean
 local function check_energy(frd)
     local energy = (frd and frd.energy or 0)
-    Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINE)
+    Log.logLine({ frd = frd, energy = energy }, function(m)log(m)end, Log.FINER)
     return energy >= const_energy
 end
 --###############################################################

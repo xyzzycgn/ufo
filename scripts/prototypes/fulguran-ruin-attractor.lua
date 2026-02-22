@@ -109,7 +109,6 @@ end
 
 -- effects for tech
 local effects = {
-    { type = 'unlock-recipe', recipe = 'ufo-resonance-raw-shard' },
     { type = 'unlock-recipe', recipe = 'ufo-adapter' }
 }
 
@@ -200,7 +199,7 @@ local ufo_tech = {
     type = 'technology',
     icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png",
 
-    prerequisites = { "ufo-archeological-tech" },
+    prerequisites = { "ufo-resonance-raw-shard-tech" },
     effects = effects,
 
     research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", tostring(num_vaults)}},
