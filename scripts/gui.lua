@@ -3,7 +3,6 @@
 --- DateTime: 02.02.26 07:36
 ---
 local Log = require("__log4factorio__.Log")
-local dump = require("__log4factorio__.dump")
 local guibuilder = require("__flib__.gui")
 local global_data = require("scripts.global_data")
 
