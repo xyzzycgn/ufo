@@ -27,8 +27,6 @@ Log.logBlock(ufo_beacon_entity, function(m)log(m)end, Log.FINE)
 scale.rescale_entity(ufo_beacon_entity, scale_factor)
 ufo_beacon_entity.icon = nil
 ufo_beacon_entity.icons = icons
-ufo_beacon_entity.collision_box = {{ -0.35, -0.85 }, { 0.35, 0.85  }}
-ufo_beacon_entity.selection_box = {{ -0.45, -0.925 }, { 0.45, 0.925 }}
 ufo_beacon_entity.energy_usage = "360kW"
 ufo_beacon_entity.module_slots = 4
 ufo_beacon_entity.distribution_effectivity = ufo_beacon_entity.distribution_effectivity * 1.2

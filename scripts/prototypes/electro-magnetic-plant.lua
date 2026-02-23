@@ -27,8 +27,6 @@ Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.FINER)
 scale.rescale_entity(ufo_emp_entity, scale_factor)
 ufo_emp_entity.icon = nil
 ufo_emp_entity.icons = icons
-ufo_emp_entity.collision_box = {{ -1.275, -1.275 }, { 1.275, 1.275 }}
-ufo_emp_entity.selection_box = {{ -1.5, -1.5 }, { 1.5, 1.5 }}
 scale.move_pipe_connection(ufo_emp_entity.fluid_boxes, 1, { -1.125, 1 })
 scale.move_pipe_connection(ufo_emp_entity.fluid_boxes, 2, { 1.125, -1 })
 scale.move_pipe_connection(ufo_emp_entity.fluid_boxes, 3, { 1, 1.125 })

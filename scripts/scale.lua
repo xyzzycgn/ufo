@@ -3,10 +3,40 @@
 --- tiny scaling function for prototypes
 ---
 
--- fields for scaling within object (as long as we have only this 2 possibilities the neat trick in scale() works)
+--- Scales values within object
+--- @param factor float scaling factor
+local function scale_number(object, factor)
+    return object * factor
+end
+
+--- Scales values within object
+--- @param factor float scaling factor
+local function scale_vector(object, factor)
+    object[1] = object[1] * factor
+    object[2] = object[2] * factor
+
+    return object
+end
+
+--- Scales an area within object
+--- @param factor float scaling factor
+local function area(object, factor)
+    object[1][1] = object[1][1] * factor
+    object[1][2] = object[1][2] * factor
+    object[2][1] = object[2][1] * factor
+    object[2][2] = object[2][2] * factor
+
+    return object
+end
+-- ###############################################################
+
+-- supported fields for scaling within object
 local fields = {
-    shift = true,
-    scale = true,
+    shift = scale_vector,
+    vector_to_place_result = scale_vector,
+    scale = scale_number,
+    collision_box = area,
+    selection_box = area,
 }
 
 -- fields to ignore for scaling
@@ -15,23 +45,9 @@ local ignored_fields = {
     pipe_covers = true,
     pipe_picture = true,
 }
+-- ###############################################################
 
---- Scales values within object
---- @param factor float scaling factor
-local function scale(object, factor)
-    -- Check if we have a number (i.e. it's scale)
-    if type(object) == "number" then
-        return object * factor
-    else
-        -- must be shift - neat trick as we have only 2 possibilities ;)
-        object[1] = object[1] * factor
-        object[2] = object[2] * factor
-
-        return object
-    end
-end
-
---- used for shrinking the XXX prototype
+--- used for shrinking a prototype
 --- @param prototype any prototype to be scaled
 --- @param factor float scaling factor
 local function rescale_entity(prototype, factor)
@@ -41,8 +57,10 @@ local function rescale_entity(prototype, factor)
 
     for key, value in pairs(prototype) do
         -- Check to see if we need to scale this key's value (currently only recognized scale or shift)
-        if fields[key] then
-            prototype[key] = scale(value, factor)
+        local func = fields[key]
+
+        if func then
+            prototype[key] = func(value, factor)
             -- Check to see if we need to ignore this key
         elseif ignored_fields[key] then
             -- nothing to do
@@ -53,7 +71,6 @@ local function rescale_entity(prototype, factor)
 
     return prototype
 end
-
 -- ###############################################################
 
 local function move_pipe_connection(fb, ndx, pos)

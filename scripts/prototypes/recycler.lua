@@ -27,9 +27,6 @@ Log.logBlock(ufo_recycler_entity, function(m)log(m)end, Log.FINER)
 scale.rescale_entity(ufo_recycler_entity, scale_factor)
 ufo_recycler_entity.icon = nil
 ufo_recycler_entity.icons = icons
-ufo_recycler_entity.collision_box = {{ -0.35, -0.85 }, { 0.35, 0.85  }}
-ufo_recycler_entity.selection_box = {{ -0.45, -0.925 }, { 0.45, 0.925 }}
-ufo_recycler_entity.vector_to_place_result={ -0.25, -1.15 }
 ufo_recycler_entity.result_inventory_size = 18
 ufo_recycler_entity.crafting_speed = 2
 ufo_recycler_entity.effect_receiver = {
