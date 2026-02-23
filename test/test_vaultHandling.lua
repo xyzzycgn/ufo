@@ -137,7 +137,7 @@ function TestVaultHandling:test_handleShardBeforeVault()
         surface = surface
     }
 
-    vaultHandling.handleShardBeforeVault(shard)
+    vaultHandling.handleInhibitorBeforeVault(shard)
 
     -- Verify protected vault destruction
     lu.assertEquals(destroyCalled, 1)
@@ -186,7 +186,7 @@ function TestVaultHandling:test_handleVaultBeforeShard()
         unit_number = vaultUN
     }
     
-    vaultHandling.handleVaultBeforeShard(vaultEntity)
+    vaultHandling.handleVaultBeforeInhibitor(vaultEntity)
     
     lu.assertNil(global_data.getProtectedVaults()[shardUN])
 end

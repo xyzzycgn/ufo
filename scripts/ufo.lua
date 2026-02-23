@@ -23,11 +23,15 @@ local function initLogging()
 end
 -- ###############################################################
 
+--- @return true if mod Electric_flying_enemies is active
 local function fe_mod_active()
     return script.active_mods["Electric_flying_enemies"]
 end
 -- ###############################################################
 
+--- @param entity LuaEntity
+--- @param name string
+--- @return true if mod Electric_flying_enemies is active and entity name is equal to name
 local function fe_mod_active_entity(entity, name)
     return fe_mod_active() and entity.name == name
 end
@@ -109,6 +113,7 @@ local function onMinedEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
 
     local entity = event.entity
+    -- is it a normal (unprotected) vault?
     local is_vault = entity.name == "fulgoran-ruin-vault"
     if is_vault or fe_mod_active_entity(entity,"ufo-fulgoran-ruin-vault") then
         if event.player_index then
@@ -117,7 +122,7 @@ local function onMinedEntity(event)
             digVault4tech(player.force)
             if not is_vault then
                 -- must be an protected vault (ufo-fulgoran-ruin-vault)
-                vaultHandling.handleVaultBeforeShard(entity)
+                vaultHandling.handleVaultBeforeInhibitor(entity)
             end
         elseif event.robot then
             Log.log("mined by robot", function(m)log(m)end, Log.FINE)
@@ -125,12 +130,12 @@ local function onMinedEntity(event)
         end
     elseif fe_mod_active_entity(entity, "ufo-inhibitor") then
         if event.player_index then
-            -- player mined a shard
+            -- player mined an ufo-inhibitor
             local player = game.players[event.player_index]
             digShard4tech(player.force)
         end
-        -- mined shard before vault
-        vaultHandling.handleShardBeforeVault(entity)
+        -- mined ufo-inhibitor before vault
+        vaultHandling.handleInhibitorBeforeVault(entity)
     else
         -- player mined an adapter or an ufo-adapted-attractor
         Log.log(entity.name, function(m)log(m)end, Log.FINE)

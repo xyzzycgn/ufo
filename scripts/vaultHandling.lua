@@ -79,14 +79,14 @@ local function handleShardBeforeVault(entity)
 end
 -- ###############################################################
 
---- handles mining the (protected) vault before the shard
+--- handles mining of the (protected) vault before the inhibitor
 --- @param entity LuaEntity the (protected) vault
-local function handleVaultBeforeShard(entity)
+local function handleVaultBeforeInhibitor(entity)
     local un = entity.unit_number
 
     for ndx, pvault in pairs(global_data.getProtectedVaults()) do
         if pvault.unit_number == un then
-            -- found the protecting shard - remove its data
+            -- found the protecting inhibitor - remove its data
             global_data.getProtectedVaults()[ndx] = nil
             return
         end
@@ -96,8 +96,8 @@ end
 
 local adapterHandling = {
     handleBuild = handleBuild,
-    handleShardBeforeVault = handleShardBeforeVault,
-    handleVaultBeforeShard = handleVaultBeforeShard,
+    handleInhibitorBeforeVault = handleShardBeforeVault,
+    handleVaultBeforeInhibitor = handleVaultBeforeInhibitor,
 }
 
 return adapterHandling
