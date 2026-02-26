@@ -38,7 +38,6 @@ Log.logBlock(ufo_inhibitor_shard_recipe, function(m)log(m)end, Log.CONFIG)
 local scale_factor = 0.5
 local ufo_inhibitor_entity = data_util.copy_prototype(data.raw["beacon"]["fe_resonance_shard"], "ufo-inhibitor")
 scale.rescale_entity(ufo_inhibitor_entity, scale_factor)
--- TODO icons?
 ufo_inhibitor_entity.max_health = 100
 ufo_inhibitor_entity.energy_usage = "150kW"
 ufo_inhibitor_entity.factoriopedia_description = { "factoriopedia-description.ufo-inhibitor" }
@@ -48,15 +47,10 @@ ufo_inhibitor_entity.surface_conditions = consts.sc_only_fulgora
 
 local gs = ufo_inhibitor_entity.graphics_set
 
--- TODO HACK for POC
-gs.animation_list[2].animation = {
-    filename = "__ufo__/graphics/icons/blue-crystal.png",
-    frame_count = 1,
-    width = 256,
-    height = 256,
-    scale = 0.25,
-    blend_mode="additive"
-}
+---- change colors of animation
+gs.animation_list[1].animation.layers[3].tint = { 1, 0.3, 1, 0.9 }
+gs.animation_list[2].animation.layers[3].tint = { 1, 1, 1, 0.9 }
+gs.animation_list[2].animation.layers[4].tint = { 0.2, 0.4, 1, 0.9 }
 
 Log.logBlock(ufo_inhibitor_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
