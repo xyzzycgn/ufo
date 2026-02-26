@@ -145,7 +145,7 @@ end
 -- ###############################################################
 
 --- triggered if an adapter has been built
---- or a resonance shard if mod Electric_flying_enemies is active
+--- or an inhibitor if mod Electric_flying_enemies is active
 --- @param event EventData
 local function onBuiltEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
@@ -176,8 +176,8 @@ end
 -- ###############################################################
 
 --- checks if ufo-detector-equipment-tech has been researched
---- @param pid LuaPlayer
---- @return LuaPlayer, boolean
+--- @param p LuaPlayer
+--- @return boolean
 local function checkTech4Player(p)
    return p and p.force.technologies["ufo-detector-equipment-tech"].researched
 end
@@ -658,7 +658,7 @@ local function sortRelics(unsorted, owningVehicle)
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local function businessLogic()
+local function handleGUIUpdates()
     for _, player in pairs(game.players) do
         if checkTech4Player(player) then -- update only if tech is researched
             --- @type PlayerData
@@ -698,6 +698,52 @@ local function businessLogic()
 end
 --###############################################################
 
+local function checkMining()
+    for _, player in pairs(game.players) do
+        local ms = player.mining_state
+        if ms.mining then
+            local sel = player.selected
+            if sel.name == "ufo-fulgoran-ruin-vault" then
+                for _, pvault in pairs(global_data.getProtectedVaults()) do
+                    local entity = pvault.entity
+                    if entity.unit_number == player.selected.unit_number then
+                       -- play mines a protected vault
+                        local miningProgress = pvault.mining_progress[player.index]
+                        if not miningProgress then
+                            miningProgress = {
+                                last_mining_progress = player.character_mining_progress
+                            }
+                            pvault.mining_progress[player.index] = miningProgress
+                        end
+
+                        -- did character_mining_progress change since last time?
+                        if miningProgress.last_mining_progress ~= player.character_mining_progress then
+                            Log.logLine(player.character_mining_progress, function(m)log(m)end, Log.FINE)
+                            miningProgress.last_mining_progress = player.character_mining_progress
+                            local protector = pvault.protector
+                            if protector and protector.valid and protector.energy == 0 then
+                                Log.log("#### DISTURBED ####", function(m)log(m)end, Log.FINE)
+                                miningProgress.disturbed = true
+                            end
+                        end
+                        if miningProgress.disturbed and player.character_mining_progress > 0.98 then -- TODO wert nicht fest verdrahten
+                            Log.log("#### mined without protection #####", function(m)log(m)end, Log.FINE)
+                            -- rebuild unprotected vault to trigger guardian
+                            local vault = vaultHandling.handleInhibitorBeforeVault(pvault.protector)
+                            -- switch mining
+                            player.selected = vault
+                            -- and BOOM ;-)
+                            player.mine_entity(vault)
+                        end
+                    end
+                end
+            else
+            end
+        end
+    end
+end
+--###############################################################
+
 -- mod initialization/configuration of handlers
 local ufo = {}
 
@@ -729,9 +775,14 @@ ufo.events = {
 
 }
 
--- handling of gui updates
 ufo.on_nth_tick = {
-    [60] = businessLogic,
+    [60] = handleGUIUpdates,
 }
+
+-- activate only if mod Electric_flying_enemies is active
+if fe_mod_active() then
+    ufo.on_nth_tick[6]  = checkMining
+end
+
 
 return ufo

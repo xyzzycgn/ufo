@@ -59,7 +59,7 @@ end
 -- ###############################################################
 
 --- List of known protected vaults
---- @return table<number, ProtectedVault> indexed by unit_number of protecting shard
+--- @return table<number, ProtectedVault> indexed by unit_number of protecting inhibitor
 function global_data.getProtectedVaults()
     return storage.protectedVaults
 end

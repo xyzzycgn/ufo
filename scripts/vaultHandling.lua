@@ -4,20 +4,26 @@
 local Log = require("__log4factorio__.Log")
 local global_data = require("scripts.global_data")
 
+
+---
+--- @class MiningProgressOfPLayer
+--- @field last_mining_progress float
+--- @field disturbed boolean Flag if mining process disturbed guardian (due to low energy of inhibitor)
+
 ---
 --- @class ProtectedVault
 --- @field entity LuaEntity the protected vault (ufo-fulgoran-ruin-vault)
+--- @field protector LuaEntity inhibitor in range of vault
 --- @field pos MapPosition its location
 --- @field direction defines.direction
 --- @field force ForceID id of the owning force
+--- @field mining_progress MiningProgressOfPLayer[] indexed by player ID
 
 
---- handles the build of a resonace shard near by a fulguran vault
+--- handles the build of an inhibitor near by a fulguran vault
 --- @param entity LuaEntity
 local function handleBuild(entity)
     local pos = entity.position
-    local quality = entity.quality
-    local name = entity.name
     local un = entity.unit_number
     Log.logBlock(entity.prototype, function(m)log(m)end, Log.FINE)
 
@@ -49,32 +55,36 @@ local function handleBuild(entity)
             pos = vaultposition,
             direction = vaultdirection,
             force = vaultforce,
+            protector = entity,
+            mining_progress = {}
         }
         global_data.getProtectedVaults()[un] = pv
     end
 end
 -- ###############################################################
 
---- handles mining the shard before the vault
---- @param entity LuaEntity the shard
+--- handles mining the inhibitor before the vault
+--- @param entity LuaEntity the inhibitor
+--- @return LuaEntity the recreated (unprotected) vault
 local function handleShardBeforeVault(entity)
     local un = entity.unit_number
     local surface = entity.surface
     --- @type ProtectedVault
     local pv = global_data.getProtectedVaults()[un]
     if pv then
-        -- handle mine of shard before mining the vault
+        -- handle mine of inhibitor before mining the vault
         local pvault = pv.entity
         if pvault.valid then
             pvault.destroy()
         end
         -- recreate (unprotected) vault
-        surface.create_entity({ name = "fulgoran-ruin-vault",
+        local vault = surface.create_entity({ name = "fulgoran-ruin-vault",
                                 position = pv.pos,
                                 direction = pv.direction,
                                 force = pv.force,
         })
         global_data.getProtectedVaults()[un] = nil
+        return vault
     end
 end
 -- ###############################################################
@@ -86,6 +96,8 @@ local function handleVaultBeforeInhibitor(entity)
 
     for ndx, pvault in pairs(global_data.getProtectedVaults()) do
         if pvault.unit_number == un then
+            local protector = pvault.protector
+            Log.logBlock(protector and protector.energy, function(m)log(m)end, Log.FINE)
             -- found the protecting inhibitor - remove its data
             global_data.getProtectedVaults()[ndx] = nil
             return
