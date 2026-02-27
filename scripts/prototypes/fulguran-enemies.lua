@@ -31,6 +31,8 @@ ufo_inhibitor_shard_recipe.results = { { type = "item", name = "ufo-resonance-sh
 ufo_inhibitor_shard_recipe.surface_conditions = consts.sc_only_fulgora
 ufo_inhibitor_shard_recipe.allow_productivity = false
 ufo_inhibitor_shard_recipe.auto_recycle = false
+ufo_inhibitor_shard_recipe.enabled = false
+ufo_inhibitor_shard_recipe.energy_required = 15
 Log.logBlock(ufo_inhibitor_shard_recipe, function(m)log(m)end, Log.CONFIG)
 
 -- ###############################################################
