@@ -128,13 +128,18 @@ local function onMinedEntity(event)
             Log.log("mined by robot", function(m)log(m)end, Log.FINE)
             -- TODO???
         end
-    elseif fe_mod_active_entity(entity, "ufo-inhibitor") then
+    elseif fe_mod_active_entity(entity, "fe_resonance_shard") then
         if event.player_index then
-            -- player mined an ufo-inhibitor
+            -- player mined a shard
             local player = game.players[event.player_index]
             digShard4tech(player.force)
+        elseif event.robot then
+            -- robot mined a shard
+            Log.log("shard mined by robot", function(m)log(m)end, Log.FINE)
+            -- TODO???
         end
-        -- mined ufo-inhibitor before vault
+    elseif fe_mod_active_entity(entity, "ufo-inhibitor") then
+        -- mined ufo-inhibitor
         vaultHandling.handleInhibitorBeforeVault(entity)
     else
         -- player mined an adapter or an ufo-adapted-attractor
@@ -485,6 +490,7 @@ local function registerEvents()
         filters_building[#filters_building + 1] = inhibitor_filter
         filters_mining[#filters_mining + 1] = inhibitor_filter
         filters_mining[#filters_mining + 1] = { filter = 'name', name = "ufo-fulgoran-ruin-vault" }
+        filters_mining[#filters_mining + 1] = { filter = 'name', name = "fe_resonance_shard" }
     end
 
     Log.logLine(filters_building, function(m)log(m)end, Log.FINE)
