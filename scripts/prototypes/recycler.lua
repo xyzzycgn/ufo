@@ -4,7 +4,7 @@
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
-local scale = require("__ufo__.scripts.scale")
+local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
 local consts = require("__ufo__.scripts.consts")
 
 -- ###############################################################
@@ -22,25 +22,23 @@ local icons = {
 }
 -- ###############################################################
 
-local ufo_recycler_entity = data_util.copy_prototype(data.raw["furnace"]["recycler"], "ufo-recycler")
-Log.logBlock(ufo_recycler_entity, function(m)log(m)end, Log.FINER)
-scale.rescale_entity(ufo_recycler_entity, scale_factor)
-ufo_recycler_entity.icon = nil
-ufo_recycler_entity.icons = icons
-ufo_recycler_entity.result_inventory_size = 18
-ufo_recycler_entity.crafting_speed = 2
-ufo_recycler_entity.effect_receiver = {
-    base_effect = {
-      productivity = 1
-    }
-}
-ufo_recycler_entity.energy_usage = "160kW"
-ufo_recycler_entity.factoriopedia_description = { "factoriopedia-description.ufo-recycler" }
+local ufo_recycler_entity = prototypeHelper.copyAndReplace("furnace", "recycler", "ufo-recycler", {
+    icons = icons,
+    result_inventory_size = 18,
+    crafting_speed = 2,
+    effect_receiver = {
+        base_effect = {
+          productivity = 1
+        }
+    },
+    energy_usage = "160kW",
+    factoriopedia_description = { "factoriopedia-description.ufo-recycler" },
+}, scale_factor)
+-- to make big-beautiful-module-icons working
+ufo_recycler_entity.icons_positioning = nil
 -- scale icon of the production
 ufo_recycler_entity.icon_draw_specification.scale = scale_factor
 ufo_recycler_entity.icon_draw_specification.scale_for_many = scale_factor
--- to make big-beautiful-module-icons working
-ufo_recycler_entity.icons_positioning = nil
 
 Log.logBlock(ufo_recycler_entity, function(m)log(m)end, Log.FINER)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

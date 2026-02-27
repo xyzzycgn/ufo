@@ -79,9 +79,11 @@ local ufo_resonance_raw_shard_recipe = prototypeHelper.copyAndReplace("recipe", 
     results = { { type = "item", name = "ufo-resonance-raw-shard", amount = 1 } },
     surface_conditions = consts.sc_only_fulgora,
     enabled = false,
+    allow_speed = false,
     allow_productivity = false,
+    maximum_productivity = 0,
     auto_recycle = false,
-    energy_required = 15,
+    energy_required = 25,
 })
 
 Log.logBlock(ufo_resonance_raw_shard_recipe, function(m)log(m)end, Log.CONFIG)
