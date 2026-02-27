@@ -718,7 +718,6 @@ local function checkMining()
 
                         -- did character_mining_progress change since last time?
                         if miningProgress.last_mining_progress ~= player.character_mining_progress then
-                            Log.logLine(player.character_mining_progress, function(m)log(m)end, Log.FINE)
                             miningProgress.last_mining_progress = player.character_mining_progress
                             local protector = pvault.protector
                             if protector and protector.valid and protector.energy == 0 then
@@ -737,7 +736,6 @@ local function checkMining()
                         end
                     end
                 end
-            else
             end
         end
     end

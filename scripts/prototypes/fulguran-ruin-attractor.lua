@@ -177,6 +177,7 @@ local ufo_arch_tech = {
     icon = "__ufo__/graphics/icons/archeological-tech.png",
     icon_size = 256,
     icon_mipmaps = 4,
+    essential = true,
 
     prerequisites = { "planet-discovery-fulgora" },
     unit = {
