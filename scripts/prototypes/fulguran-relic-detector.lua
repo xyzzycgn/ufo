@@ -147,8 +147,11 @@ local pimp_my_car_recipe = {
     enabled = false,
     energy_required = 4,
     ingredients = {
-        { type = "item", name = "iron-gear-wheel", amount = 2 }, -- TODO
         { type = "item", name = "car", amount = 1 },
+        { type = "item", name = "iron-plate", amount = 10 },
+        { type = "item", name = "iron-gear-wheel", amount = 2 },
+        { type = "item", name = "plastic-bar", amount = 5 },
+        { type = "item", name = "copper-cable", amount = 5 },
     },
     results = { { type = "item", name = "ufo-pimp-my-car", amount = 1 } },
     icons = icons
