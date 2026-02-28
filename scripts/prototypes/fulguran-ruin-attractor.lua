@@ -3,6 +3,7 @@
 --- adapted fulguran ruin attractor
 ---
 local Log = require("__log4factorio__.Log")
+local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
 local data_util = require('__flib__.data-util')
 local util = require('util') -- from lualib
 local consts = require("__ufo__.scripts.consts")
@@ -12,21 +13,22 @@ Log.setSeverity(Log.CONFIG)
 local tint = { r = 0.793, g = 0.625, b = 0.668, a = 0.3 }
 
 -- adapted attractor entity
-local ufo_attractor = data_util.copy_prototype(data.raw["lightning-attractor"]["fulgoran-ruin-attractor"], "ufo-adapted-attractor")
-ufo_attractor.energy_source = {
-    buffer_capacity = "2GJ",
-    drain = "100MW",
-    output_flow_limit = "1GW",
-    type = "electric",
-    usage_priority = "primary-output"
-}
-ufo_attractor.efficiency = 0.55
-ufo_attractor.hidden_in_factoriopedia = false
-ufo_attractor.icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png"
-ufo_attractor.localised_description = { "entity-description.ufo-adapted-attractor" }
-ufo_attractor.factoriopedia_description = { "factoriopedia-description.ufo-adapted-attractor" }
--- TODO if shown in factoriopedia change group where it's shown (not environment, but production)
-ufo_attractor.render_no_network_icon = true
+local ufo_attractor = prototypeHelper.copyAndReplace("lightning-attractor", "fulgoran-ruin-attractor", "ufo-adapted-attractor", {
+    energy_source = {
+        buffer_capacity = "2GJ",
+        drain = "100MW",
+        output_flow_limit = "1GW",
+        type = "electric",
+        usage_priority = "primary-output"
+    },
+    efficiency = 0.55,
+    hidden_in_factoriopedia =    false,
+    factoriopedia_description = { "factoriopedia-description.ufo-adapted-attractor" },
+    subgroup = "environmental-protection", --  change place where it's shown (not environment, but production)
+    render_no_network_icon = true,
+    icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png",
+    localised_description = { "entity-description.ufo-adapted-attractor" },
+})
 
 -- parameters for animation
 local variation_count = 4
@@ -65,7 +67,10 @@ ufo_attractor.stateless_visualisation.animation = {
     },
     sheet = nil
 }
-Log.logBlock(ufo_attractor, function(m)log(m)end, Log.FINER)
+ufo_attractor.order = nil
+
+Log.logBlock(data.raw["lightning-attractor"], function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_attractor, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- adapter item
@@ -77,18 +82,19 @@ ufo_adapter_item.factoriopedia_description = { "factoriopedia-description.ufo-ad
 Log.logBlock(ufo_adapter_item, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_adapter_recipe = data_util.copy_prototype(data.raw["recipe"]["processing-unit"], "ufo-adapter")
-ufo_adapter_recipe.ingredients = {
-    { type = "item", name = "small-lamp", amount = 1 },
-    { type = "item", name = "electronic-circuit", amount = 5 },
-    { type = "item", name = "advanced-circuit", amount = 2 },
-    { type = "item", name = "processing-unit", amount = 1 },
-    { type = "item", name = "holmium-plate", amount = 1 },
-    { type = "item", name = "ufo-resonance-raw-shard", amount = 1 },
-}
-ufo_adapter_recipe.category="electronics"
-ufo_adapter_recipe.allow_quality=false
-ufo_adapter_recipe.energy_required=20
+local ufo_adapter_recipe = prototypeHelper.copyAndReplace("recipe", "processing-unit", "ufo-adapter", {
+    ingredients = {
+        { type = "item", name = "small-lamp", amount = 1 },
+        { type = "item", name = "electronic-circuit", amount = 5 },
+        { type = "item", name = "advanced-circuit", amount = 2 },
+        { type = "item", name = "processing-unit", amount = 1 },
+        { type = "item", name = "holmium-plate", amount = 1 },
+        { type = "item", name = "ufo-resonance-raw-shard", amount = 1 },
+    },
+    category="electronics",
+    allow_quality=false,
+    energy_required=20,
+})
 Log.logBlock(ufo_adapter_recipe, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
