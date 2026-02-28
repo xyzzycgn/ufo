@@ -781,12 +781,8 @@ ufo.events = {
 
 ufo.on_nth_tick = {
     [60] = handleGUIUpdates,
-}
-
 -- activate only if mod Electric_flying_enemies is active
-if fe_mod_active() then
-    ufo.on_nth_tick[6]  = checkMining
-end
-
+    [6]  = fe_mod_active() and checkMining
+}
 
 return ufo

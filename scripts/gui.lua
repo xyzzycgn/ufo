@@ -50,22 +50,8 @@ function Common:toggle()
     end
 end
 
+-- prepared for future use
 function Common:update()
-    -- TODO ?
-    --if self.state.visible then
-    --    local rld_data = global_data.getRld_data()
-    --    local gui_model = global_data.getGui_model()
-    --
-    --    local ndx = self.state.selected_tab_index
-    --    Log.log("update gui - player=" .. self.player.index .. ", ndx=" .. ndx, function(m)log(m)end, Log.FINER)
-    --
-    --    local func = switch[ndx]
-    --    if (func) then
-    --        func(self.refs, rld_data, gui_model, self.player.index)
-    --    else
-    --        Log.log("no func for ndx=" .. ndx, function(m)log(m)end, Log.WARN)
-    --    end
-    --end
 end
 --###########################################################################
 

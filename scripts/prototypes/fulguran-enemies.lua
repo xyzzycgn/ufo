@@ -24,7 +24,6 @@ local ufo_inhibitor_shard_item = prototypeHelper.copyAndReplace("item", "iron-pl
 local ufo_inhibitor_shard_recipe = prototypeHelper.copyAndReplace("recipe", "iron-plate", "ufo-resonance-shard", {
     category = "metallurgy",
     ingredients = {
-        -- TODO
         { type = 'item', name = 'ufo-resonance-raw-shard', amount = 1 },
         { type = 'item', name = 'holmium-ore', amount = 1 }
     },
