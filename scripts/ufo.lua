@@ -108,6 +108,7 @@ end
 -- ###############################################################
 
 --- triggered if a fulgoran-ruin-vault or an adapter has been mined
+--- additionally triggered by mining a fe_resonance_shard or an ufo-inhibitor if mod Electric_flying_enemies is active
 --- @param event EventData
 local function onMinedEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
@@ -550,9 +551,11 @@ local function updatePoles()
         adapterHandling.addAdapterPrototype(name)
     end
 
+    Log.logBlock(global_data.getAdaptees(), function(m)log(m)end, Log.FINER)
     for name, _ in pairs(removed) do
         adapterHandling.removeAdapterPrototype(name)
     end
+    Log.logBlock(global_data.getAdaptees(), function(m)log(m)end, Log.FINER)
 end
 -- ###############################################################
 

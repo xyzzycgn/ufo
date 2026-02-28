@@ -18,14 +18,6 @@ local function addAdapterPrototype(name)
 end
 -- ###############################################################
 
---- removes a prototype
---- @param name string name of the prototype to be removed
-local function removeAdapterPrototype(name)
-    -- TODO clean up existing adapters of this type
-    getAdapterPrototypes()[name] = nil
-end
--- ###############################################################
-
 --- handles the build of an adapter entity
 --- @param entity LuaEntity
 local function handleBuild(entity)
@@ -91,6 +83,7 @@ local function handleBuild(entity)
                                                     position = attposition,
                                                     direction = attdirection,
                                                     force = attforce,
+                                                    create_build_effect_smoke = false,
             })
             aa.entity = adaptee -- for later use in handleDestruction
             global_data.getAdaptees()[adaptee.unit_number] = aa
@@ -139,13 +132,11 @@ local function handleDestruction(entity)
         end
     else
         -- removal of an adapter
-
         local ufoAdapters = global_data.getAdapterData()[entity.name]
         local ufoAdapter = ufoAdapters and ufoAdapters[un]
         if ufoAdapter then
             -- found the removed adapter
             local all_adaptees = global_data.getAdaptees()
-            local surface = entity.surface
 
             for un_adaptee, _ in pairs(ufoAdapter.adaptees) do
                 local aa = all_adaptees[un_adaptee]
@@ -154,16 +145,15 @@ local function handleDestruction(entity)
                     aa.adaptedBy[un] = nil
                     if table_size(aa.adaptedBy) == 0 then
                         -- last adapter removed - replace ufo-adapted-attractor with fulgoran-ruin-attractor
+                        local surface = aa.entity.surface
                         Log.logLine(aa.entity.destroy(), function(m)log(m)end, Log.FINE)
                         ---@type LuaEntity
-                        local ruin = surface.create_entity({ name = "fulgoran-ruin-attractor",
+                        local _ = surface.create_entity({ name = "fulgoran-ruin-attractor",
                                                 position = aa.pos,
                                                 direction = aa.direction,
                                                 force = aa.force,
+                                                create_build_effect_smoke = false,
                         })
-                        --Log.logEntity(ruin, function(m)log(m)end, Log.FINE)
-                        --Log.logBlock({ ebs = ruin.electric_buffer_size, ed = ruin.electric_drain, ofl = ruin.get_electric_output_flow_limit() },
-                        --        function(m)log(m)end, Log.FINE)
                         -- remove from structures
                         all_adaptees[un_adaptee] = nil
                     end
@@ -176,6 +166,31 @@ local function handleDestruction(entity)
             Log.log("unknown adapter - ignored", function(m)log(m)end, Log.WARN)
         end
     end
+end
+-- ###############################################################
+
+--- removes a prototype
+--- clean up existing adapters of this type
+--- @param name string name of the prototype to be removed
+local function removeAdapterPrototype(name)
+    Log.logLine(name, function(m)log(m)end, Log.FINE)
+
+    local gad = global_data.getAdapterData()[name] or {}
+    Log.logBlock(gad, function(m)log(m)end, Log.FINER)
+
+    -- look for (formerly) existing adapters of this type
+    for adapter_un, _ in pairs(gad) do
+        -- adapter_un was the unit_number of the adapter (already removed by game and invalid!)
+        Log.logLine(adapter_un, function(m)log(m)end, Log.FINER)
+        -- create facsimile of the removed adapter entity
+        local entity = {
+            name = name,
+            unit_number = adapter_un,
+        }
+        handleDestruction(entity)
+    end
+
+    getAdapterPrototypes()[name] = nil
 end
 -- ###############################################################
 
