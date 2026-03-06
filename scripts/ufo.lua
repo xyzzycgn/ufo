@@ -246,39 +246,40 @@ local function guiUpdates4Player(player)
         local gui = pd and pd.guiModel and pd.guiModel.gui
         if gui and gui.valid then
             local frd = pd.frd
-            if check_energy(frd) then
-                Log.log("##### high", function(m)log(m)end, Log.FINER)
-                local high = pd.guiModel.refs["sprite-high"]
-                high.visible = true
-                pd.guiModel.refs["sprite-low"].visible = false
+            if frd and frd.valid then
+                if check_energy(frd) then
+                    Log.log("##### high", function(m)log(m)end, Log.FINER)
+                    local high = pd.guiModel.refs["sprite-high"]
+                    high.visible = true
+                    pd.guiModel.refs["sprite-low"].visible = false
 
-                -- clear all previous drawn dots
-                high.clear()
+                    -- clear all previous drawn dots
+                    high.clear()
 
-                local grid = pd.grid
-                if grid and grid.valid then
-                    local owningVehicle = grid.entity_owner
-                    Log.logLine(owningVehicle.position, function(m)log(m)end, Log.FINER)
+                    local grid = pd.grid
+                    if grid and grid.valid then
+                        local owningVehicle = grid.entity_owner
+                        Log.logLine(owningVehicle.position, function(m)log(m)end, Log.FINER)
 
-                    for type, list in pairs(pd.relics or {}) do
-                        for ndx, relic in pairs(list) do
-                            if relic.valid then
-                                local normalized = normalizePosition(relic, owningVehicle)
-                                Log.logLine({ relic = relic.position, norm = normalized }, function(m)log(m)end, Log.FINER)
-                                drawDot(high, normalized.x, normalized.y, type)
-                            else
-                                -- remove invalid (probably mined) relic
-                                list[ndx] = nil
+                        for type, list in pairs(pd.relics or {}) do
+                            for ndx, relic in pairs(list) do
+                                if relic.valid then
+                                    local normalized = normalizePosition(relic, owningVehicle)
+                                    Log.logLine({ relic = relic.position, norm = normalized }, function(m)log(m)end, Log.FINER)
+                                    drawDot(high, normalized.x, normalized.y, type)
+                                else
+                                    -- remove invalid (probably mined) relic
+                                    list[ndx] = nil
+                                end
                             end
                         end
                     end
+                else
+                    Log.log("##### low", function(m)log(m)end, Log.FINER)
+                    pd.guiModel.refs["sprite-high"].visible = false
+                    pd.guiModel.refs["sprite-low"].visible = true
                 end
-            else
-                Log.log("##### low", function(m)log(m)end, Log.FINER)
-                pd.guiModel.refs["sprite-high"].visible = false
-                pd.guiModel.refs["sprite-low"].visible = true
             end
-
         end
     end
 end
@@ -707,34 +708,39 @@ local function handleGUIUpdates()
 end
 --###############################################################
 
+--- checks mining progress for a protected vault
 local function checkMining()
     for _, player in pairs(game.players) do
         local ms = player.mining_state
         if ms.mining then
             local sel = player.selected
-            if sel.name == "ufo-fulgoran-ruin-vault" then
-                for _, pvault in pairs(global_data.getProtectedVaults()) do
+            for _, pvault in pairs(global_data.getProtectedVaults()) do
+                if sel.name == "ufo-fulgoran-ruin-vault" then
                     local entity = pvault.entity
                     if entity.unit_number == player.selected.unit_number then
-                       -- play mines a protected vault
+                        -- play mines a protected vault
                         local miningProgress = pvault.mining_progress[player.index]
+                        local cmp = player.character_mining_progress
                         if not miningProgress then
+                            -- player starts mining a protected vault
                             miningProgress = {
-                                last_mining_progress = player.character_mining_progress
+                                last_mining_progress = 0,
                             }
                             pvault.mining_progress[player.index] = miningProgress
                         end
 
                         -- did character_mining_progress change since last time?
-                        if miningProgress.last_mining_progress ~= player.character_mining_progress then
-                            miningProgress.last_mining_progress = player.character_mining_progress
+                        if miningProgress.last_mining_progress ~= cmp then
+                            miningProgress.delta = cmp - miningProgress.last_mining_progress
+                            miningProgress.last_mining_progress = cmp
                             local protector = pvault.protector
                             if protector and protector.valid and protector.energy == 0 then
                                 Log.log("#### DISTURBED ####", function(m)log(m)end, Log.FINE)
                                 miningProgress.disturbed = true
                             end
                         end
-                        if miningProgress.disturbed and player.character_mining_progress > 0.98 then -- TODO wert nicht fest verdrahten
+                        -- check if last cycle is reached and miningProgress was disturbing
+                        if miningProgress.disturbed and cmp > 1 - miningProgress.delta then
                             Log.log("#### mined without protection #####", function(m)log(m)end, Log.FINE)
                             -- rebuild unprotected vault to trigger guardian
                             local vault = vaultHandling.handleInhibitorBeforeVault(pvault.protector)
@@ -744,6 +750,9 @@ local function checkMining()
                             player.mine_entity(vault)
                         end
                     end
+                else
+                    -- mining sth else means - reset mining_progress for this player
+                    pvault.mining_progress[player.index] = nil
                 end
             end
         end
