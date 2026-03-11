@@ -80,7 +80,7 @@ function TestVaultHandling:test_handleBuild()
         surface = surface
     }
 
-    vaultHandling.handleBuild(shard)
+    vaultHandling.replaceWithProtecedVault(shard)
 
     -- Verify find_entities_filtered call
     lu.assertEquals(arg2find.name, { "fulgoran-ruin-vault" })
@@ -137,7 +137,7 @@ function TestVaultHandling:test_handleShardBeforeVault()
         surface = surface
     }
 
-    vaultHandling.handleInhibitorBeforeVault(shard)
+    vaultHandling.replaceWithNormalVault(shard)
 
     -- Verify protected vault destruction
     lu.assertEquals(destroyCalled, 1)

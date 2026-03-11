@@ -21,8 +21,8 @@ local global_data = require("scripts.global_data")
 
 
 --- handles the build of an inhibitor near by a fulguran vault
---- @param entity LuaEntity
-local function handleBuild(entity)
+--- @param entity LuaEntity inhibitor that has been build
+local function replaceWithProtecedVault(entity)
     local pos = entity.position
     local un = entity.unit_number
     Log.logBlock(entity.prototype, function(m)log(m)end, Log.FINE)
@@ -33,7 +33,8 @@ local function handleBuild(entity)
     local left_top = { x = pos.x - dist, y = pos.y - dist }
     local right_bottom = { x = pos.x + dist, y = pos.y + dist }
 
-    local vaults = surface.find_entities_filtered({ area = { left_top, right_bottom}, name = { "fulgoran-ruin-vault" } })
+    -- look for vaults in range
+    local vaults = surface.find_entities_filtered({ area = { left_top, right_bottom }, name = { "fulgoran-ruin-vault" } })
     Log.logBlock(vaults, function(m)log(m)end, Log.FINE)
 
     for _, vault in pairs(vaults) do
@@ -64,9 +65,9 @@ end
 -- ###############################################################
 
 --- handles mining the inhibitor before the vault
---- @param entity LuaEntity the inhibitor
+--- @param entity LuaEntity the inhibitor that has been removed
 --- @return LuaEntity the recreated (unprotected) vault
-local function handleShardBeforeVault(entity)
+local function replaceWithNormalVault(entity)
     local un = entity.unit_number
     local surface = entity.surface
     --- @type ProtectedVault
@@ -107,8 +108,8 @@ end
 -- ###############################################################
 
 local adapterHandling = {
-    handleBuild = handleBuild,
-    handleInhibitorBeforeVault = handleShardBeforeVault,
+    replaceWithProtecedVault = replaceWithProtecedVault,
+    replaceWithNormalVault = replaceWithNormalVault,
     handleVaultBeforeInhibitor = handleVaultBeforeInhibitor,
 }
 

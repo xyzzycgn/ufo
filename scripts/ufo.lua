@@ -108,7 +108,8 @@ end
 -- ###############################################################
 
 --- triggered if a fulgoran-ruin-vault or an adapter has been mined
---- additionally triggered by mining a fe_resonance_shard or an ufo-inhibitor if mod Electric_flying_enemies is active
+--- additionally triggered by mining a fe_resonance_shard, an ufo-fulgoran-ruin-vault or an ufo-inhibitor if
+--- mod Electric_flying_enemies is active
 --- @param event EventData
 local function onMinedEntity(event)
     Log.logEvent(event, function(m)log(m)end, Log.FINE)
@@ -117,17 +118,28 @@ local function onMinedEntity(event)
     -- is it a normal (unprotected) vault?
     local is_vault = entity.name == "fulgoran-ruin-vault"
     if is_vault or fe_mod_active_entity(entity,"ufo-fulgoran-ruin-vault") then
+        -- either fulgoran-ruin-vault or ufo-fulgoran-ruin-vault have been mined
         if event.player_index then
-            -- player mined a vault or a protected vault
             local player = game.players[event.player_index]
             digVault4tech(player.force)
             if not is_vault then
                 -- must be an protected vault (ufo-fulgoran-ruin-vault)
                 vaultHandling.handleVaultBeforeInhibitor(entity)
             end
-        elseif event.robot then
-            Log.log("mined by robot", function(m)log(m)end, Log.FINE)
-            -- TODO???
+        elseif event.robot and not is_vault then
+            -- ufo-fulgoran-ruin-vault mined by robot
+            Log.log("protected vault mined by robot", function(m)log(m)end, Log.INFO)
+
+            for _, pv in pairs(global_data.getProtectedVaults()) do
+                if pv.entity.unit_number == entity.unit_number then
+                    -- found the mined protected vault
+                    local vault = vaultHandling.replaceWithNormalVault(pv.protector)
+                    vault.die() -- produces loot from the vault
+                    -- so - don't loot twice
+                    event.buffer.clear()
+                    break
+                end
+            end
         end
     elseif fe_mod_active_entity(entity, "fe_resonance_shard") then
         if event.player_index then
@@ -136,12 +148,11 @@ local function onMinedEntity(event)
             digShard4tech(player.force)
         elseif event.robot then
             -- robot mined a shard
-            Log.log("shard mined by robot", function(m)log(m)end, Log.FINE)
-            -- TODO???
+            Log.log("shard mined by robot", function(m)log(m)end, Log.INFO)
         end
     elseif fe_mod_active_entity(entity, "ufo-inhibitor") then
         -- mined ufo-inhibitor
-        vaultHandling.handleInhibitorBeforeVault(entity)
+        vaultHandling.replaceWithNormalVault(entity)
     else
         -- player mined an adapter or an ufo-adapted-attractor
         Log.log(entity.name, function(m)log(m)end, Log.FINE)
@@ -159,7 +170,7 @@ local function onBuiltEntity(event)
     Log.logEntity(entity, function(m)log(m)end, Log.FINE)
 
     if fe_mod_active_entity(entity, "ufo-inhibitor") then
-        vaultHandling.handleBuild(entity)
+        vaultHandling.replaceWithProtecedVault(entity)
     else
         adapterHandling.handleBuild(entity)
     end
@@ -743,7 +754,7 @@ local function checkMining()
                         if miningProgress.disturbed and cmp > 1 - miningProgress.delta then
                             Log.log("#### mined without protection #####", function(m)log(m)end, Log.FINE)
                             -- rebuild unprotected vault to trigger guardian
-                            local vault = vaultHandling.handleInhibitorBeforeVault(pvault.protector)
+                            local vault = vaultHandling.replaceWithNormalVault(pvault.protector)
                             -- switch mining
                             player.selected = vault
                             -- and BOOM ;-)

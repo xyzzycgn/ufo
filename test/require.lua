@@ -8,6 +8,7 @@ local alternatives = {
     -- here exact names
     --["__flib__.gui"] = "lib.flib.gui",
     ["util"] = "lib.util",
+    ["math2d"] = "lib.math2d",
 
     -- here patterns, that start with
     starts_with = {

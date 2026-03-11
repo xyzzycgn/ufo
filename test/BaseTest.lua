@@ -19,6 +19,7 @@ end
 settings = {
     global = {
         ["ufo-logLevel"] = { value = 5 }, -- == Log.INFO
+        ["ufo-frd-scan-radius"] = { value = 500 },
     },
     startup = {
         ["ufo-mined-ruin-vaults-needed"] = { value = 2 },
@@ -51,6 +52,8 @@ defines = {
         on_force_reset = 10,
         on_lua_shortcut = 11,
         on_player_driving_changed_state = 12,
+        on_player_removed_equipment = 13,
+        on_player_placed_equipment = 14,
     },
     print_sound = {
         use_player_settings = true
