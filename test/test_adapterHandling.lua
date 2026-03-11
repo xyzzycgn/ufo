@@ -147,7 +147,13 @@ function TestAdapterHandling:test_handleBuildOneRuinAttractor()
     adapterHandling.handleBuild(adapterEntity)
 
     lu.assertEquals(destroyCalled, 1)
-    lu.assertEquals(arg2create, { direction = 2, force = 1, name = "ufo-adapted-attractor", position = { x = 2.5, y = 3.5 }})
+    lu.assertEquals(arg2create, {
+        direction = 2,
+        force = 1,
+        name = "ufo-adapted-attractor",
+        position = { x = 2.5, y = 3.5 },
+        create_build_effect_smoke = false,
+    })
     lu.assertEquals(arg2find, {
         area = { { x = -2.5, y = -1.5 }, { x = 4.5, y = 5.5 } },
         name = { "fulgoran-ruin-attractor", "ufo-adapted-attractor" }
@@ -338,6 +344,14 @@ end
 
 -- test remove an ufo adapter
 function TestAdapterHandling:test_handleDestructionAdapter()
+    -- mock the surface
+    local surface = {
+        create_entity = function(arg)
+            arg2create = arg
+            -- no return as the result is skipped in code
+        end,
+    }
+
     storage.adapterData = {
         ["test-adapter"] = {
             [4711] = {
@@ -364,7 +378,8 @@ function TestAdapterHandling:test_handleDestructionAdapter()
                 force={index=1},
                 name="ufo-adapted-attractor",
                 position={x=2.5, y=3.5},
-                unit_number=815
+                unit_number=815,
+                surface = surface
             },
         },
         [816] = {
@@ -383,18 +398,12 @@ function TestAdapterHandling:test_handleDestructionAdapter()
                     arg2destroy = arg
                     destroyCalled = destroyCalled + 1
                     return true
-                end
+                end,
+                surface = surface
             },
         }
     }
 
-    -- and the surface
-    local surface = {
-        create_entity = function(arg)
-            arg2create = arg
-            -- no return as the result is skipped in code
-        end,
-    }
 
     local adapter = {
         name = "test-adapter",
@@ -433,7 +442,8 @@ function TestAdapterHandling:test_handleDestructionAdapter()
                 force={index=1},
                 name="ufo-adapted-attractor",
                 position={x=2.5, y=3.5},
-                unit_number=815
+                unit_number=815,
+                surface = surface
             },
         },
     })
