@@ -263,7 +263,7 @@ local function dot_sprite_def(name, settingname)
         priority = "extra-high",
         width = 48,
         height = 48,
-        scale = 1 / 24,
+        scale = 1 / 16,
         tint = settings.startup[settingname].value
     }
 end
