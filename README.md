@@ -23,12 +23,31 @@ Untersuchungen starten zu können
 ## Compatibility
 
 ## Supported languages in this version:
+  - čeština (cs)
   - deutsch (de)
-
+  - ελληνικά (el)
+  - english (en)
+  - español (es-ES)
+  - suomi (fi)
+  - français (fr)
+  - italiano (it)
+  - 日本語 (ja)
+  - 한국인 (ko)
+  - magyar (hu)
+  - nederlands (nl)
+  - norsk (no)
+  - polski (pl)
+  - português (pt-BR)
+  - русский (ru)
+  - svenska (sv-SE)
+  - türkçe (tr)
+  - українська (uk-UA)
+  - 中国人 (zh-CN)
+  - 中國人 (zh-TW)
 
 Mostly translated with google or AI - may contain wrong translations or such sounding strange/funny for native speakers.
 
-Contributions adding new language localizations or corrections welcomed (please open a suitable PR)
+Contributions adding new language localizations or corrections are welcomed (please open a suitable PR)
 
 # Have fun
 
