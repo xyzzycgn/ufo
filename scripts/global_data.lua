@@ -89,7 +89,7 @@ end
 
 --- @return PlayerData[]
 function global_data.getAllPlayerData()
-    return storage.playerData
+    return storage.playerData or {}
 end
 -- ###############################################################
 
