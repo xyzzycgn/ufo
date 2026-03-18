@@ -47,28 +47,28 @@ end
 --- List of known prototypes for adapted electric poles
 --- @return table<string, true> indexed by name of prototype
 function global_data.getAdapterPrototypes()
-    return storage.adapterPrototypes
+    return storage.adapterPrototypes or {}
 end
 -- ###############################################################
 
 --- List of known adapted electric poles
 --- @return AdapterData indexed by name of prototype
 function global_data.getAdapterData()
-    return storage.adapterData
+    return storage.adapterData or {}
 end
 -- ###############################################################
 
 --- List of known protected vaults
 --- @return table<number, ProtectedVault> indexed by unit_number of protecting inhibitor
 function global_data.getProtectedVaults()
-    return storage.protectedVaults
+    return storage.protectedVaults or {}
 end
 -- ###############################################################
 
 --- List of known adapted attractors
 --- @return table<number, AdaptedAttractor> indexed by unit_number of adapted attractor entity
 function global_data.getAdaptees()
-    return storage.adaptees
+    return storage.adaptees or {}
 end
 -- ###############################################################
 
