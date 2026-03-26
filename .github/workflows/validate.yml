@@ -1,0 +1,19 @@
+name: validate Factorio Mod
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - main
+
+jobs:
+  validate-mod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate Mod
+        uses: TheBrutalX/factorio-mod-uploader-action@v2
+        with:
+          action: validate

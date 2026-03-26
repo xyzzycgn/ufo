@@ -1,0 +1,11 @@
+mod_info:
+  description_file: README.md
+  summary: Use fulgoran objects or technologies to improve your factory
+  title: U.F.O.
+  attach_source_link: true
+  license: mit
+  category: tweaks
+  tags:
+    - power
+    - manufacturing
+
