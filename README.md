@@ -63,7 +63,7 @@ for better integration.
 
 Mostly translated with google or AI - may contain wrong translations or such sounding strange/funny for native speakers.
 
-Contributions adding new language localizations or corrections are welcomed (please open a suitable PR)
+Contributions adding new language localizations or corrections are welcomed.
 
 # Have fun
 
