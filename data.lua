@@ -11,6 +11,7 @@ require("__ufo__.scripts.prototypes.electro-magnetic-plant")
 require("__ufo__.scripts.prototypes.recycler")
 require("__ufo__.scripts.prototypes.fulguran-relic-detector")
 require("__ufo__.scripts.prototypes.beacon")
+require("__ufo__.scripts.prototypes.achievements")
 
 if mods["Electric_flying_enemies"] then
     Log.log("mod Electric_flying_enemies detected", function(m)log(m)end, Log.CONFIG)
