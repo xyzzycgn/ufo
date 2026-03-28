@@ -73,7 +73,7 @@ local ufo_resonance_raw_shard_item = prototypeHelper.copyAndReplace("item", "iro
 local ufo_resonance_raw_shard_recipe = prototypeHelper.copyAndReplace("recipe", "iron-plate", "ufo-resonance-raw-shard", {
     category = "metallurgy",
     ingredients = {
-        { type = "item", name = "ufo-sand", amount = 50 },
+        { type = "item", name = "ufo-sand", amount = 25 },
         { type = "item", name = "holmium-ore", amount = 15 }
     },
     results = { { type = "item", name = "ufo-resonance-raw-shard", amount = 1 } },
@@ -83,7 +83,7 @@ local ufo_resonance_raw_shard_recipe = prototypeHelper.copyAndReplace("recipe", 
     allow_productivity = false,
     maximum_productivity = 0,
     auto_recycle = false,
-    energy_required = 25,
+    energy_required = 35,
 })
 
 Log.logBlock(ufo_resonance_raw_shard_recipe, function(m)log(m)end, Log.CONFIG)
