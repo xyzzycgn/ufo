@@ -25,7 +25,7 @@ local function make_achievement(name, icon, order, technology)
 end
 
 data:extend({
-    make_achievement("rookie-archaeologist", "bg_bronze.png", "a", "ufo-resonance-raw-shard-tech"),
-    make_achievement("senior-archaeologist", "bg_silver.png", "b", "ufo-tech"),
-    make_achievement("experienced-archaeologist", "bg_gold.png", "c", "ufo-fulgoran-know-how-tech"),
+    make_achievement("ufo-rookie-archaeologist", "bg_bronze.png", "a", "ufo-resonance-raw-shard-tech"),
+    make_achievement("ufo-senior-archaeologist", "bg_silver.png", "b", "ufo-tech"),
+    make_achievement("ufo-experienced-archaeologist", "bg_gold.png", "c", "ufo-fulgoran-know-how-tech"),
 })

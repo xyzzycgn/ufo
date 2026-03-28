@@ -31,7 +31,7 @@ Log.logBlock(ufo_crusher_recipe, function(m)log(m)end, Log.CONFIG)
 
 local sand_item = {
     type = "item",
-    name = "sand",
+    name = "ufo-sand",
     icon = "__ufo__/graphics/icons/sand-pile.png",
     icon_size = 256,
     icon_mipmaps = 4,
@@ -46,10 +46,10 @@ local sand_item = {
 
 local sand_recipe =   {
     type = "recipe",
-    name = "sand",
+    name = "ufo-sand",
     enabled = false,
     ingredients = { { type = "item", name = "stone", amount = 7 } },
-    results = { { type = "item", name = "sand", amount = 5 } },
+    results = { { type = "item", name = "ufo-sand", amount = 5 } },
     allow_productivity = true,
     auto_recycle = false,
     category = "crushing",
@@ -60,7 +60,7 @@ local sand_recipe =   {
 -- enable sand and crusher with space-platform (like normal crusher)
 local sppe = data.raw["technology"]["space-platform"].effects
 sppe[#sppe + 1] = { type = "unlock-recipe", recipe = "ufo-crusher" }
-sppe[#sppe + 1] = { type = "unlock-recipe", recipe = "sand" }
+sppe[#sppe + 1] = { type = "unlock-recipe", recipe = "ufo-sand" }
 Log.logBlock(sppe, function(m)log(m)end, Log.FINE)
 -- ###############################################################
 
@@ -73,8 +73,8 @@ local ufo_resonance_raw_shard_item = prototypeHelper.copyAndReplace("item", "iro
 local ufo_resonance_raw_shard_recipe = prototypeHelper.copyAndReplace("recipe", "iron-plate", "ufo-resonance-raw-shard", {
     category = "metallurgy",
     ingredients = {
-        { type = 'item', name = 'sand', amount = 50 },
-        { type = 'item', name = 'holmium-ore', amount = 15 }
+        { type = "item", name = "ufo-sand", amount = 50 },
+        { type = "item", name = "holmium-ore", amount = 15 }
     },
     results = { { type = "item", name = "ufo-resonance-raw-shard", amount = 1 } },
     surface_conditions = consts.sc_only_fulgora,
