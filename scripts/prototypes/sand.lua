@@ -8,6 +8,8 @@ local consts = require("__ufo__.scripts.consts")
 local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
 local scale = require("__ufo__.scripts.scale")
 
+
+
 local scale_factor = 1.5
 local ufo_crusher_entity = prototypeHelper.copyAndReplace("assembling-machine", "crusher", "ufo-crusher", {
     energy_usage = "600kW",
@@ -102,31 +104,61 @@ local recipe_category = {
   type = "recipe-category",
   name = "electrodynamic-fragmentation-category"
 }
+-- ###############################################################
 
+local function tint_icon(prototype, tint)
+    local icon = prototype.icon
+    prototype.icons = {
+        {
+            icon = icon,
+            tint = tint
+        }
+    }
+    prototype.icon = nil
+end
+-- ###############################################################
+
+local tint = { r = 0.693, g = 0.1, b = 0.1, a = 0.4 }
 local scale_factor_efd = 4/3
 local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
     energy_usage = "600kW",
     factoriopedia_description = { "factoriopedia-description.fo-electrodynamic-fragmentation-device" },
     surface_conditions = consts.sc_only_fulgora,
-    -- TODO erlaubte rezepte (hoffentlich geht das)
+    -- only very special recipes allowed ;-)
     crafting_categories = {
         "electrodynamic-fragmentation-category"
-    }
+    },
+    allowed_effects = {
+        "consumption",
+        "speed",
+        "productivity",
+        "pollution",
+    },
+    working_sound = {
+        match_progress_to_activity = true,
+        sound = {
+            audible_distance_modifier = 1.5,
+            filename = "__space-age__/sound/entity/lightning-attractor/lightning-attractor-discharge.ogg",
+            volume = 0.75,
+        }
+      }
 }, scale_factor_efd)
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 
-scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 1, { -0.5, -1.5 })
-scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 2, {  0.5,  1.5 })
-
--- TODO icon + tint
+scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 1, { -0.5, -1.49 })
+scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 2, {  0.5,  1.49 })
 ufo_efd_entity.icon_draw_specification.scale = scale_factor_efd
 ufo_efd_entity.icon_draw_specification.scale_for_many = scale_factor_efd
+
+tint_icon(ufo_efd_entity, tint)
+ufo_efd_entity.graphics_set.animation.layers[1].tint = tint
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_efd_item = data_util.copy_prototype(data.raw["item"]["assembling-machine-3"], "ufo-electrodynamic-fragmentation-device")
-local order_efd = ufo_efd_item.order or "ufo"
+tint_icon(ufo_efd_item, tint)
 ufo_efd_item.subgroup = "production-machine"
+local order_efd = ufo_efd_item.order or "ufo"
 ufo_efd_item.order = order_efd .. "-b"
 Log.logBlock(ufo_efd_item, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -180,9 +212,11 @@ local sand_from_concrete_rubble_recipe =   {
         { type = "fluid", name = "water", amount = 99 }
     },
     allow_productivity = true,
+    allow_quality = false,
     auto_recycle = false,
     category = "electrodynamic-fragmentation-category",
     hide_from_player_crafting = true,
+    energy_required = 15,
 }
 -- ###############################################################
 
@@ -191,15 +225,11 @@ local ufo_electrodynamic_fragmentation_tech = {
     type = 'technology',
     icons = {
         {
-            icon = "__base__/graphics/technology/automation-3.png", -- TODO???
+            icon = "__base__/graphics/technology/automation-3.png",
             icon_size = 256,
             icon_mipmaps = 4,
+            tint = tint,
         },
-        {
-            icon = "__ufo__/graphics/technology/tech_up.png",
-            icon_size = 256,
-            icon_mipmaps = 4,
-        }
     },
 
     prerequisites = { "ufo-resonance-raw-shard-tech" },
@@ -243,13 +273,10 @@ data:extend( {
     ufo_resonance_raw_shard_tech,
     concrete_rubble_item,
     concrete_rubble_recipe,
-
     recipe_category,
-
     ufo_electrodynamic_fragmentation_tech,
     ufo_efd_entity,
     ufo_efd_item,
     ufo_efd_recipe,
-
     sand_from_concrete_rubble_recipe,
 })
