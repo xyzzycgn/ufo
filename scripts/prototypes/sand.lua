@@ -98,11 +98,20 @@ local ufo_resonance_raw_shard_tech = {
 }
 -- ###############################################################
 
+local recipe_category = {
+  type = "recipe-category",
+  name = "electrodynamic-fragmentation-category"
+}
+
 local scale_factor_efd = 4/3
 local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
     energy_usage = "600kW",
     factoriopedia_description = { "factoriopedia-description.fo-electrodynamic-fragmentation-device" },
-    surface_conditions = consts.sc_only_fulgora
+    surface_conditions = consts.sc_only_fulgora,
+    -- TODO erlaubte rezepte (hoffentlich geht das)
+    crafting_categories = {
+        "electrodynamic-fragmentation-category"
+    }
 }, scale_factor_efd)
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 
@@ -110,7 +119,6 @@ scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 1, { -0.5, -1.5 })
 scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 2, {  0.5,  1.5 })
 
 -- TODO icon + tint
--- TODO erlaubte rezepte (hoffentlich geht das)
 ufo_efd_entity.icon_draw_specification.scale = scale_factor_efd
 ufo_efd_entity.icon_draw_specification.scale_for_many = scale_factor_efd
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
@@ -156,6 +164,28 @@ local concrete_rubble_recipe =   {
 }
 -- ###############################################################
 
+local sand_from_concrete_rubble_recipe =   {
+    type = "recipe",
+    name = "ufo-sand-from-concrete-rubble",
+    enabled = false,
+    icon = "__ufo__/graphics/icons/sand-pile.png",
+    icon_size = 256,
+    icon_mipmaps = 4,
+    ingredients = {
+        { type = "item", name = "ufo-concrete-rubble", amount = 50 },
+        { type = "fluid", name = "water", amount = 100 }
+    },
+    results = {
+        { type = "item", name = "ufo-sand", amount = 6 },
+        { type = "fluid", name = "water", amount = 99 }
+    },
+    allow_productivity = true,
+    auto_recycle = false,
+    category = "electrodynamic-fragmentation-category",
+    hide_from_player_crafting = true,
+}
+-- ###############################################################
+
 local ufo_electrodynamic_fragmentation_tech = {
     name = 'ufo-electrodynamic-fragmentation-tech',
     type = 'technology',
@@ -174,7 +204,8 @@ local ufo_electrodynamic_fragmentation_tech = {
 
     prerequisites = { "ufo-resonance-raw-shard-tech" },
     effects = {
-        { type = "unlock-recipe", recipe = "ufo-electrodynamic-fragmentation-device" }
+        { type = "unlock-recipe", recipe = "ufo-electrodynamic-fragmentation-device" },
+        { type = "unlock-recipe", recipe = "ufo-sand-from-concrete-rubble" }
     },
 
     unit = {
@@ -212,8 +243,13 @@ data:extend( {
     ufo_resonance_raw_shard_tech,
     concrete_rubble_item,
     concrete_rubble_recipe,
+
+    recipe_category,
+
     ufo_electrodynamic_fragmentation_tech,
     ufo_efd_entity,
     ufo_efd_item,
     ufo_efd_recipe,
+
+    sand_from_concrete_rubble_recipe,
 })
