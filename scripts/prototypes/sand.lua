@@ -106,10 +106,8 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
 }, scale_factor_efd)
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 
-scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 1, { -1.125, 1 })
-scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 2, { 1.125, -1 })
---scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 3, { 1, 1.125 })
---scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 4, { -1, -1.125 })
+scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 1, { -0.5, -1.5 })
+scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 2, {  0.5,  1.5 })
 
 -- TODO icon + tint
 -- TODO erlaubte rezepte (hoffentlich geht das)
