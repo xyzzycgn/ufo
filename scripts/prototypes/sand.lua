@@ -106,19 +106,7 @@ local recipe_category = {
 }
 -- ###############################################################
 
-local function tint_icon(prototype, tint)
-    local icon = prototype.icon
-    prototype.icons = {
-        {
-            icon = icon,
-            tint = tint
-        }
-    }
-    prototype.icon = nil
-end
--- ###############################################################
-
-local tint = { r = 0.693, g = 0.1, b = 0.1, a = 0.4 }
+local img = "__ufo__/graphics/entity/electrodynamic-fragmentation-device.png"
 local scale_factor_efd = 4/3
 local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
     energy_usage = "600kW",
@@ -134,6 +122,7 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
         "productivity",
         "pollution",
     },
+    icon = img,
     working_sound = {
         match_progress_to_activity = true,
         sound = {
@@ -150,13 +139,15 @@ scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 2, {  0.5,  1.49 })
 ufo_efd_entity.icon_draw_specification.scale = scale_factor_efd
 ufo_efd_entity.icon_draw_specification.scale_for_many = scale_factor_efd
 
-tint_icon(ufo_efd_entity, tint)
-ufo_efd_entity.graphics_set.animation.layers[1].tint = tint
+ufo_efd_entity.graphics_set.animation.layers[1].filename = img
+
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_efd_item = data_util.copy_prototype(data.raw["item"]["assembling-machine-3"], "ufo-electrodynamic-fragmentation-device")
-tint_icon(ufo_efd_item, tint)
+local ufo_efd_item = prototypeHelper.copyAndReplace("item", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
+    icon = "__ufo__/graphics/icons/electrodynamic-fragmentation-device.png"
+})
+--tint_icon(ufo_efd_item, tint)
 ufo_efd_item.subgroup = "production-machine"
 local order_efd = ufo_efd_item.order or "ufo"
 ufo_efd_item.order = order_efd .. "-b"
@@ -225,10 +216,9 @@ local ufo_electrodynamic_fragmentation_tech = {
     type = 'technology',
     icons = {
         {
-            icon = "__base__/graphics/technology/automation-3.png",
+            icon = "__ufo__/graphics/technology/electrodynamic-fragmentation.png",
             icon_size = 256,
             icon_mipmaps = 4,
-            tint = tint,
         },
     },
 
