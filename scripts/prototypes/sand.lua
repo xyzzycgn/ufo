@@ -56,6 +56,7 @@ local sand_recipe =   {
     allow_productivity = true,
     auto_recycle = false,
     category = "crushing",
+    subgroup = "intermediate-product",
     hide_from_player_crafting = true,
 }
 -- ###############################################################
@@ -110,7 +111,6 @@ local img = "__ufo__/graphics/entity/electrodynamic-fragmentation-device.png"
 local scale_factor_efd = 4/3
 local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
     energy_usage = "600kW",
-    factoriopedia_description = { "factoriopedia-description.fo-electrodynamic-fragmentation-device" },
     surface_conditions = consts.sc_only_fulgora,
     -- only very special recipes allowed ;-)
     crafting_categories = {
@@ -130,7 +130,9 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
             filename = "__space-age__/sound/entity/lightning-attractor/lightning-attractor-discharge.ogg",
             volume = 0.75,
         }
-      }
+    },
+    factoriopedia_description = { "factoriopedia-description.ufo-electrodynamic-fragmentation-device" },
+    localised_description = { "entity-description.ufo-electrodynamic-fragmentation-device" }
 }, scale_factor_efd)
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 
@@ -184,6 +186,7 @@ local concrete_rubble_recipe =   {
     auto_recycle = false,
     category = "crushing",
     hide_from_player_crafting = true,
+    energy_required = 12,
 }
 -- ###############################################################
 
@@ -202,12 +205,15 @@ local sand_from_concrete_rubble_recipe =   {
         { type = "item", name = "ufo-sand", amount = 6 },
         { type = "fluid", name = "water", amount = 99 }
     },
+    main_product = "ufo-sand",
     allow_productivity = true,
     allow_quality = false,
     auto_recycle = false,
     category = "electrodynamic-fragmentation-category",
+    subgroup = "intermediate-product",
     hide_from_player_crafting = true,
     energy_required = 15,
+    factoriopedia_description = { "factoriopedia-description.ufo-sand-from-concrete-rubble" },
 }
 -- ###############################################################
 

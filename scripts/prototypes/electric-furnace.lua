@@ -4,6 +4,7 @@
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
+local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
 local scale = require("__ufo__.scripts.scale")
 local consts = require("__ufo__.scripts.consts")
 
@@ -22,19 +23,22 @@ local icons = {
 }
 -- ###############################################################
 
-local ufo_furnace_entity = data_util.copy_prototype(data.raw["furnace"]["electric-furnace"], "ufo-electric-furnace")
+local ufo_furnace_entity = prototypeHelper.copyAndReplace("furnace", "electric-furnace", "ufo-electric-furnace", {
+    crafting_speed = 8,
+    module_slots = 4,
+    energy_usage = "560kW",
+    icons = icons,
+    effect_receiver = {
+        base_effect = {
+          productivity = 1
+        }
+    },
+    factoriopedia_description = { "factoriopedia-description.ufo-electric-furnace" },
+    localised_description = { "entity-description.ufo-electric-furnace" }
+})
 Log.logBlock(ufo_furnace_entity, function(m)log(m)end, Log.FINE)
 scale.rescale_entity(ufo_furnace_entity, scale_factor)
 ufo_furnace_entity.icon = nil
-ufo_furnace_entity.icons = icons
-ufo_furnace_entity.effect_receiver = {
-    base_effect = {
-      productivity = 1
-    }
-}
-ufo_furnace_entity.crafting_speed = 8
-ufo_furnace_entity.module_slots = 4
-ufo_furnace_entity.energy_usage = "560kW"
 ufo_furnace_entity.energy_source.emissions_per_minute = { pollution = 0.5 }
 ufo_furnace_entity.energy_source.drain = "300W"
 -- scale icon of the production
@@ -51,13 +55,14 @@ ufo_furnace_item.icons = icons
 ufo_furnace_item.order = order .. "-a"
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_furnace_recipe = data_util.copy_prototype(data.raw["recipe"]["electric-furnace"], "ufo-electric-furnace")
+local ufo_furnace_recipe = prototypeHelper.copyAndReplace("recipe", "electric-furnace", "ufo-electric-furnace", {
+    enabled = false,
+    category = "crafting-with-fluid",
+    surface_conditions = consts.sc_only_fulgora,
+})
 local ingredients = ufo_furnace_recipe.ingredients
 ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-adapter', amount = 5 }
 ingredients[#ingredients + 1] = { type = 'fluid', name = 'holmium-solution', amount = 10 }
-ufo_furnace_recipe.enabled = false
-ufo_furnace_recipe.category="crafting-with-fluid"
-ufo_furnace_recipe.surface_conditions = consts.sc_only_fulgora
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technology

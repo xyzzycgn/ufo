@@ -44,11 +44,15 @@ local scale_factor = 0.5
 local ufo_inhibitor_entity = prototypeHelper.copyAndReplace("beacon", "fe_resonance_shard", "ufo-inhibitor", {
     max_health = 100,
     energy_usage = "150kW",
+    localised_description = { "entity-description.ufo-inhibitor" },
     factoriopedia_description = { "factoriopedia-description.ufo-inhibitor" },
     surface_conditions = consts.sc_only_fulgora,
     module_slots = 0,
+    subgroup = "defensive-structure",
 }, scale_factor)
 ufo_inhibitor_entity.radius_visualisation_picture = nil
+ufo_inhibitor_entity.profile = nil
+ufo_inhibitor_entity.allowed_effects = nil
 
 ---- change colors of animation
 local gs = ufo_inhibitor_entity.graphics_set
@@ -62,6 +66,7 @@ Log.logBlock(ufo_inhibitor_entity, function(m)log(m)end, Log.CONFIG)
 local ufo_inhibitor_item = prototypeHelper.copyAndReplace("item", "fe_resonance_shard", "ufo-inhibitor", {
     weight = 25 * kg,
     stack_size = 40,
+    subgroup = "defensive-structure",
 })
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
