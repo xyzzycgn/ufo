@@ -8,8 +8,6 @@ local consts = require("__ufo__.scripts.consts")
 local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
 local scale = require("__ufo__.scripts.scale")
 
-
-
 local scale_factor = 1.5
 local ufo_crusher_entity = prototypeHelper.copyAndReplace("assembling-machine", "crusher", "ufo-crusher", {
     energy_usage = "600kW",
@@ -58,6 +56,7 @@ local sand_recipe =   {
     category = "crushing",
     subgroup = "intermediate-product",
     hide_from_player_crafting = true,
+    factoriopedia_alternative = "ufo-sand-from-concrete-rubble",
 }
 -- ###############################################################
 
@@ -214,6 +213,7 @@ local sand_from_concrete_rubble_recipe =   {
     hide_from_player_crafting = true,
     energy_required = 15,
     factoriopedia_description = { "factoriopedia-description.ufo-sand-from-concrete-rubble" },
+    factoriopedia_alternative = "ufo-sand",
 }
 -- ###############################################################
 
