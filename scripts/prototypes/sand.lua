@@ -106,6 +106,9 @@ local recipe_category = {
 }
 -- ###############################################################
 
+
+local edr_animation = require("__ufo__.scripts.prototypes.edr_animation")
+
 local img = "__ufo__/graphics/entity/electrodynamic-fragmentation-device.png"
 local scale_factor_efd = 4/3
 local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
@@ -134,6 +137,8 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
     localised_description = { "entity-description.ufo-electrodynamic-fragmentation-device" }
 }, scale_factor_efd)
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
+
+ufo_efd_entity.graphics_set = edr_animation.graphics_set
 
 scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 1, { -0.5, -1.49 })
 scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 2, {  0.5,  1.49 })
