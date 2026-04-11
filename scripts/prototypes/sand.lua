@@ -6,7 +6,7 @@ local data_util = require("__flib__.data-util")
 local item_sounds = require("__base__.prototypes.item_sounds")
 local consts = require("__ufo__.scripts.consts")
 local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
-local scale = require("__ufo__.scripts.scale")
+local edr_animation = require("__ufo__.scripts.prototypes.edr_animation")
 
 local scale_factor = 1.5
 local ufo_crusher_entity = prototypeHelper.copyAndReplace("assembling-machine", "crusher", "ufo-crusher", {
@@ -108,9 +108,8 @@ local recipe_category = {
 
 Log.logBlock(data.raw["assembling-machine"]["assembling-machine-3"], function(m)log(m)end, Log.CONFIG)
 
-local edr_animation = require("__ufo__.scripts.prototypes.edr_animation")
+local edf_icon = "__ufo__/graphics/research-center/base/research-center-icon.png"
 
-local img = "__ufo__/graphics/entity/electrodynamic-fragmentation-device.png"
 local scale_factor_efd = 4/3
 local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
     energy_usage = "600kW",
@@ -125,7 +124,7 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
         "productivity",
         "pollution",
     },
-    icon = img,
+    icon = edf_icon,
     working_sound = {
         match_progress_to_activity = true,
         sound = {
@@ -151,9 +150,8 @@ Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_efd_item = prototypeHelper.copyAndReplace("item", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
-    icon = "__ufo__/graphics/icons/electrodynamic-fragmentation-device.png"
+    icon = edf_icon
 })
---tint_icon(ufo_efd_item, tint)
 ufo_efd_item.subgroup = "production-machine"
 local order_efd = ufo_efd_item.order or "ufo"
 ufo_efd_item.order = order_efd .. "-b"
@@ -225,13 +223,7 @@ local sand_from_concrete_rubble_recipe =   {
 local ufo_electrodynamic_fragmentation_tech = {
     name = 'ufo-electrodynamic-fragmentation-tech',
     type = 'technology',
-    icons = {
-        {
-            icon = "__ufo__/graphics/technology/electrodynamic-fragmentation.png",
-            icon_size = 256,
-            icon_mipmaps = 4,
-        },
-    },
+    icon = edf_icon,
 
     prerequisites = { "ufo-resonance-raw-shard-tech" },
     effects = {
