@@ -1,10 +1,12 @@
-local base = "__ufo__/graphics/research-center/base/"
-
 local function file(filename)
-    return base .. filename
+    return "__ufo__/graphics/research-center/base/" .. filename
 end
 
-edr_animation = {
+local function file2(filename)
+    return "__base__/graphics/entity/assembling-machine-3/" .. filename
+end
+
+return {
     graphics_set = {
         animation = {
             layers = {
@@ -50,36 +52,46 @@ edr_animation = {
                     shift = util.by_pixel_hr(0, 0),
                     tint = { r = 0, g = 0.403921568627451, b = 0.9137254901960784, a = 1 },
                 },
-                {
-                    scale = 0.25,
-                    filenames = {
-                        file("research-center-color3.png"),
-                    },
-                    blend_mode = "normal",
-                    width = 590,
-                    height = 640,
-                    line_length = 10,
-                    lines_per_file = 8,
-                    frame_count = 80,
-                    shift = util.by_pixel_hr(0, 0),
-                    tint = { r = 0.3137254901960784, g = 0.6078431372549019, b = 0.796078431372549, a = 1 },
-                },
-                {
-                    scale = 0.25,
-                    filenames = {
-                        file("research-center-emission2.png"),
-                    },
-                    blend_mode = "additive",
-                    width = 590,
-                    height = 640,
-                    line_length = 10,
-                    lines_per_file = 8,
-                    frame_count = 80,
-                    shift = util.by_pixel_hr(0, 0),
-                    tint = { r = 1, g = 1, b = 1, a = 1 },
-                },
             },
         },
+        working_visualisations = {
+            {
+                animation = {
+                    layers = {
+                        {
+                            scale = 0.25,
+                            filenames = {
+                                file("research-center-color3.png"),
+                            },
+                            blend_mode = "normal",
+                            draw_as_glow = true,
+                            width = 590,
+                            height = 640,
+                            line_length = 10,
+                            lines_per_file = 8,
+                            frame_count = 80,
+                            shift = util.by_pixel_hr(0, 0),
+                            tint = { r = 0.3137254901960784, g = 0.6078431372549019, b = 0.796078431372549, a = 1 },
+                        },
+                        {
+                            scale = 0.25,
+                            filenames = {
+                                file("research-center-emission2.png"),
+                            },
+                            blend_mode = "additive",
+                            draw_as_glow = true,
+                            width = 590,
+                            height = 640,
+                            line_length = 10,
+                            lines_per_file = 8,
+                            frame_count = 80,
+                            shift = util.by_pixel_hr(0, 0),
+                            tint = { r = 1, g = 1, b = 1, a = 1 },
+                        },
+                    }
+                }
+            }
+        }
     },
     circuit_connector = circuit_connector_definitions.create_vector(
             universal_connector_template,
@@ -114,58 +126,50 @@ edr_animation = {
         {
             pipe_covers = pipecoverspictures(),
             pipe_picture = {
-                north = {
-                    layers = {
-                    },
-                },
-                east = {
-                    layers = {
-                        {
-                            scale = 0.5,
-                            filename = "__base__/graphics/entity/pipe-covers/pipe-cover-east.png",
-                            blend_mode = "normal",
-                            width = 128,
-                            height = 128,
-                            shift = util.by_pixel_hr(0, 0),
-                            tint = { r = 1, g = 1, b = 1, a = 1 },
-                            position = { 0, 0 },
-                        },
-                    },
-                },
-                south = {
-                    layers = {
-                    },
-                },
-                west = {
-                    layers = {
-                        {
-                            scale = 0.5,
-                            filename = "__base__/graphics/entity/pipe-covers/pipe-cover-west.png",
-                            blend_mode = "normal",
-                            width = 128,
-                            height = 128,
-                            shift = util.by_pixel_hr(0, 0),
-                            tint = { r = 1, g = 1, b = 1, a = 1 },
-                            position = { 0, 0 },
-                        },
-                    },
-                },
+                scale = 0.5,
+                filename = file2("assembling-machine-3-pipe-W.png"),
+                blend_mode = "normal",
+                width = 39,
+                height = 73,
+                shift = util.by_pixel_hr(50, 0),
+                position = { 0, 0 },
             },
             pipe_connections = {
                 {
-                    direction = defines.direction.east,
-                    position = { 1.5, -0.5 },
-                },
-                {
                     direction = defines.direction.west,
-                    position = { -1.5, -0.5 },
+                    position = { -4/3, -0.5 },
+                    flow_direction = "input",
                 },
             },
             secondary_draw_orders = {
                 north = -1,
             },
+            production_type = "input",
+            volume = 1000
+       },
+        {
+            pipe_covers = pipecoverspictures(),
+            pipe_picture = {
+                scale = 0.5,
+                filename = file2("assembling-machine-3-pipe-E.png"),
+                blend_mode = "normal",
+                width = 42,
+                height = 76,
+                shift = util.by_pixel_hr(-50, 0),
+                position = { 0, 0 },
+            },
+            pipe_connections = {
+                {
+                    direction = defines.direction.east,
+                    position = { 4/3, -0.5 },
+                    flow_direction = "output",
+                },
+            },
+            secondary_draw_orders = {
+                north = -1,
+            },
+            production_type = "output",
+            volume = 1000
         },
     },
 }
-
-return edr_animation

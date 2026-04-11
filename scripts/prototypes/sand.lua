@@ -106,6 +106,7 @@ local recipe_category = {
 }
 -- ###############################################################
 
+Log.logBlock(data.raw["assembling-machine"]["assembling-machine-3"], function(m)log(m)end, Log.CONFIG)
 
 local edr_animation = require("__ufo__.scripts.prototypes.edr_animation")
 
@@ -133,19 +134,18 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
             volume = 0.75,
         }
     },
+    graphics_set = edr_animation.graphics_set,
+    circuit_connector = edr_animation.circuit_connector,
+    fluid_boxes = edr_animation.fluid_boxes,
+
     factoriopedia_description = { "factoriopedia-description.ufo-electrodynamic-fragmentation-device" },
     localised_description = { "entity-description.ufo-electrodynamic-fragmentation-device" }
 }, scale_factor_efd)
-Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 
-ufo_efd_entity.graphics_set = edr_animation.graphics_set
-
-scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 1, { -0.5, -1.49 })
-scale.move_pipe_connection(ufo_efd_entity.fluid_boxes, 2, {  0.5,  1.49 })
 ufo_efd_entity.icon_draw_specification.scale = scale_factor_efd
 ufo_efd_entity.icon_draw_specification.scale_for_many = scale_factor_efd
-
-ufo_efd_entity.graphics_set.animation.layers[1].filename = img
+local flags = ufo_efd_entity.flags
+flags[#flags + 1] = "not-rotatable"
 
 Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
