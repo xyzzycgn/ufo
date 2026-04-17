@@ -60,9 +60,10 @@ local ufo_furnace_recipe = prototypeHelper.copyAndReplace("recipe", "electric-fu
     category = "crafting-with-fluid",
     surface_conditions = consts.sc_only_fulgora,
 })
-local ingredients = ufo_furnace_recipe.ingredients
-ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-adapter', amount = 5 }
-ingredients[#ingredients + 1] = { type = 'fluid', name = 'holmium-solution', amount = 10 }
+prototypeHelper.additionalIngredients(ufo_furnace_recipe, {
+    { type = 'item', name = 'ufo-adapter', amount = 5 },
+    { type = 'fluid', name = 'holmium-solution', amount = 10 },
+})
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technology

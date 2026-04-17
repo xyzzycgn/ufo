@@ -6,7 +6,7 @@ local data_util = require("__flib__.data-util")
 local item_sounds = require("__base__.prototypes.item_sounds")
 local consts = require("__ufo__.scripts.consts")
 local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
-local edr_animation = require("__ufo__.scripts.prototypes.edr_animation")
+local edf_animation = require("__ufo__.scripts.prototypes.edf_animation")
 
 local scale_factor = 1.5
 local ufo_crusher_entity = prototypeHelper.copyAndReplace("assembling-machine", "crusher", "ufo-crusher", {
@@ -108,8 +108,8 @@ local recipe_category = {
 
 Log.logBlock(data.raw["assembling-machine"]["assembling-machine-3"], function(m)log(m)end, Log.CONFIG)
 
-local scale_factor_efd = 4/3
-local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
+local scale_factor_edf = 4/3
+local ufo_edf_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
     energy_usage = "600kW",
     surface_conditions = consts.sc_only_fulgora,
     -- only very special recipes allowed ;-)
@@ -122,7 +122,7 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
         "productivity",
         "pollution",
     },
-    icon = edr_animation.icon,
+    icon = edf_animation.icon,
     icon_size = 256,
     icon_mipmaps = 4,
     working_sound = {
@@ -133,35 +133,43 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
             volume = 0.75,
         }
     },
-    graphics_set = edr_animation.graphics_set,
-    circuit_connector = edr_animation.circuit_connector,
-    fluid_boxes = edr_animation.fluid_boxes,
+    graphics_set = edf_animation.graphics_set,
+    circuit_connector = edf_animation.circuit_connector,
+    fluid_boxes = edf_animation.fluid_boxes,
 
     factoriopedia_description = { "factoriopedia-description.ufo-electrodynamic-fragmentation-device" },
     localised_description = { "entity-description.ufo-electrodynamic-fragmentation-device" }
-}, scale_factor_efd)
+}, scale_factor_edf)
 
-ufo_efd_entity.icon_draw_specification.scale = scale_factor_efd
-ufo_efd_entity.icon_draw_specification.scale_for_many = scale_factor_efd
-local flags = ufo_efd_entity.flags
+ufo_edf_entity.icon_draw_specification.scale = scale_factor_edf
+ufo_edf_entity.icon_draw_specification.scale_for_many = scale_factor_edf
+local flags = ufo_edf_entity.flags
 flags[#flags + 1] = "not-rotatable"
 
-Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_edf_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_efd_item = prototypeHelper.copyAndReplace("item", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
-    icon = edr_animation.icon,
+local ufo_edf_item = prototypeHelper.copyAndReplace("item", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
+    icon = edf_animation.icon,
     icon_size = 256,
     icon_mipmaps = 4,
+    subgroup = "production-machine"
 })
-ufo_efd_item.subgroup = "production-machine"
-local order_efd = ufo_efd_item.order or "ufo"
-ufo_efd_item.order = order_efd .. "-b"
-Log.logBlock(ufo_efd_item, function(m)log(m)end, Log.CONFIG)
+local order_edf = ufo_edf_item.order or "ufo"
+ufo_edf_item.order = order_edf .. "-b"
+Log.logBlock(ufo_edf_item, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_efd_recipe = prototypeHelper.copyAndReplace("recipe", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
-    enabled = false
+local ufo_edf_recipe = prototypeHelper.copyAndReplace("recipe", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
+    enabled = false,
+})
+prototypeHelper.additionalIngredients(ufo_edf_recipe, {
+    { type = "item", name = "ufo-resonance-raw-shard", amount = 3 },
+    { type = 'item', name = 'holmium-plate', amount = 10 },
+    { type = "item", name = "electronic-circuit", amount = 15 },
+    { type = "item", name = "advanced-circuit", amount = 12 },
+    { type = "item", name = "copper-cable", amount = 30 },
+    { type = "item", name = "iron-plate", amount = 10 },
 })
 -- ###############################################################
 
@@ -225,7 +233,7 @@ local sand_from_concrete_rubble_recipe =   {
 local ufo_electrodynamic_fragmentation_tech = {
     name = 'ufo-electrodynamic-fragmentation-tech',
     type = 'technology',
-    icon = edr_animation.icon,
+    icon = edf_animation.icon,
     icon_size = 256,
     icon_mipmaps = 4,
     prerequisites = { "ufo-resonance-raw-shard-tech" },
@@ -271,8 +279,8 @@ data:extend( {
     concrete_rubble_recipe,
     recipe_category,
     ufo_electrodynamic_fragmentation_tech,
-    ufo_efd_entity,
-    ufo_efd_item,
-    ufo_efd_recipe,
+    ufo_edf_entity,
+    ufo_edf_item,
+    ufo_edf_recipe,
     sand_from_concrete_rubble_recipe,
 })

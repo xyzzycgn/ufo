@@ -23,6 +23,15 @@ local function copyAndReplace(ndx1, ndx2, newName, replacement, scale_factor)
     return prototype
 end
 
+
+local function additionalIngredients(prototype, ai)
+    local ingredients = prototype.ingredients
+    for _, ingredient in pairs(ai) do
+        ingredients[#ingredients + 1] = ingredient
+    end
+end
+
 return {
-    copyAndReplace = copyAndReplace
+    copyAndReplace = copyAndReplace,
+    additionalIngredients = additionalIngredients
 }

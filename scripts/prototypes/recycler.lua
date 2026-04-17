@@ -50,12 +50,13 @@ ufo_recycler_item.icons = icons
 ufo_recycler_item.order = order .. "-a"
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_recycler_recipe = data_util.copy_prototype(data.raw["recipe"]["recycler"], "ufo-recycler")
-local ingredients = ufo_recycler_recipe.ingredients
-ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-adapter', amount = 2 }
-ingredients[#ingredients + 1] = { type = 'item', name = 'holmium-plate', amount = 3 }
-ufo_recycler_recipe.enabled = false
-ufo_recycler_recipe.surface_conditions = consts.sc_only_fulgora
+local ufo_recycler_recipe = prototypeHelper.copyAndReplace("recipe", "recycler", "ufo-recycler", {
+    enabled = false,
+})
+prototypeHelper.additionalIngredients(ufo_recycler_recipe, {
+    { type = 'item', name = 'ufo-adapter', amount = 2 },
+    { type = 'item', name = 'holmium-plate', amount = 3 },
+})
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technology

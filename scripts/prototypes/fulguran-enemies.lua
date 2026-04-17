@@ -75,10 +75,10 @@ local ufo_inhibitor_recipe = prototypeHelper.copyAndReplace("recipe", "beacon", 
     surface_conditions = consts.sc_only_fulgora,
     module_slots = 0,  -- no slots
 })
--- additional ingredients
-local ingredients = ufo_inhibitor_recipe.ingredients
-ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-resonance-shard', amount = 1 }
-ingredients[#ingredients + 1] = { type = 'item', name = 'holmium-plate', amount = 3 }
+prototypeHelper.additionalIngredients(ufo_inhibitor_recipe, {
+    { type = 'item', name = 'ufo-resonance-shard', amount = 1 },
+    { type = 'item', name = 'holmium-plate', amount = 3 },
+})
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

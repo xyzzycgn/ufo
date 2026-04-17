@@ -6,6 +6,7 @@ local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
 local scale = require("__ufo__.scripts.scale")
 local consts = require("__ufo__.scripts.consts")
+local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
 
 -- ###############################################################
 
@@ -45,12 +46,14 @@ ufo_beacon_item.icons = icons
 ufo_beacon_item.order = order .. "-a"
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_beacon_recipe = data_util.copy_prototype(data.raw["recipe"]["beacon"], "ufo-beacon")
-local ingredients = ufo_beacon_recipe.ingredients
-ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-adapter', amount = 2 }
-ingredients[#ingredients + 1] = { type = 'item', name = 'holmium-plate', amount = 3 }
-ufo_beacon_recipe.enabled = false
-ufo_beacon_recipe.surface_conditions = consts.sc_only_fulgora
+local ufo_beacon_recipe = prototypeHelper.copyAndReplace("recipe", "beacon", "ufo-beacon", {
+    enabled = false,
+    surface_conditions = consts.sc_only_fulgora
+})
+prototypeHelper.additionalIngredients(ufo_beacon_recipe, {
+    { type = 'item', name = 'ufo-adapter', amount = 2 },
+    { type = 'item', name = 'holmium-plate', amount = 3 },
+})
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technology

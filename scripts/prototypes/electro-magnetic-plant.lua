@@ -6,6 +6,7 @@ local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
 local scale = require("__ufo__.scripts.scale")
 local consts = require("__ufo__.scripts.consts")
+local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
 
 -- ###############################################################
 
@@ -52,12 +53,14 @@ ufo_emp_item.icons = icons
 ufo_emp_item.order = order .. "-a"
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local ufo_emp_recipe = data_util.copy_prototype(data.raw["recipe"]["electromagnetic-plant"], "ufo-electromagnetic-plant")
-local ingredients = ufo_emp_recipe.ingredients
-ingredients[#ingredients + 1] = { type = 'item', name = 'ufo-adapter', amount = 10 }
-ingredients[#ingredients + 1] = { type = 'fluid', name = 'holmium-solution', amount = 20 }
-ufo_emp_recipe.enabled = false
-ufo_emp_recipe.surface_conditions = consts.sc_only_fulgora
+local ufo_emp_recipe = prototypeHelper.copyAndReplace("recipe", "electromagnetic-plant", "ufo-electromagnetic-plant", {
+    enabled = false,
+    surface_conditions = consts.sc_only_fulgora,
+})
+prototypeHelper.additionalIngredients(ufo_emp_recipe, {
+    { type = 'item', name = 'ufo-adapter', amount = 10 },
+    { type = 'fluid', name = 'holmium-solution', amount = 20 },
+})
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- technology
