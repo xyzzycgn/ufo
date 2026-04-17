@@ -1,5 +1,6 @@
-local function file(filename)
-    return "__ufo__/graphics/research-center/base/" .. filename
+local function file(filename, base)
+    base = base or "base"
+    return "__ufo__/graphics/research-center/" .. base .."/" .. filename
 end
 
 local function file2(filename)
@@ -172,4 +173,7 @@ return {
             volume = 1000
         },
     },
+    icon = function()
+        return file("icon.png", "icon"), 256, 4
+    end
 }

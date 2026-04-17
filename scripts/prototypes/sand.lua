@@ -108,8 +108,6 @@ local recipe_category = {
 
 Log.logBlock(data.raw["assembling-machine"]["assembling-machine-3"], function(m)log(m)end, Log.CONFIG)
 
-local edf_icon = "__ufo__/graphics/research-center/base/research-center-icon.png"
-
 local scale_factor_efd = 4/3
 local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
     energy_usage = "600kW",
@@ -124,7 +122,9 @@ local ufo_efd_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
         "productivity",
         "pollution",
     },
-    icon = edf_icon,
+    icon = edr_animation.icon,
+    icon_size = 256,
+    icon_mipmaps = 4,
     working_sound = {
         match_progress_to_activity = true,
         sound = {
@@ -150,7 +150,9 @@ Log.logBlock(ufo_efd_entity, function(m)log(m)end, Log.CONFIG)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_efd_item = prototypeHelper.copyAndReplace("item", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
-    icon = edf_icon
+    icon = edr_animation.icon,
+    icon_size = 256,
+    icon_mipmaps = 4,
 })
 ufo_efd_item.subgroup = "production-machine"
 local order_efd = ufo_efd_item.order or "ufo"
@@ -223,8 +225,9 @@ local sand_from_concrete_rubble_recipe =   {
 local ufo_electrodynamic_fragmentation_tech = {
     name = 'ufo-electrodynamic-fragmentation-tech',
     type = 'technology',
-    icon = edf_icon,
-
+    icon = edr_animation.icon,
+    icon_size = 256,
+    icon_mipmaps = 4,
     prerequisites = { "ufo-resonance-raw-shard-tech" },
     effects = {
         { type = "unlock-recipe", recipe = "ufo-electrodynamic-fragmentation-device" },
