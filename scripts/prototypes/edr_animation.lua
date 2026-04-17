@@ -1,6 +1,6 @@
 local function file(filename, base)
     base = base or "base"
-    return "__ufo__/graphics/research-center/" .. base .."/" .. filename
+    return "__ufo-assets__/graphics/electrodynamic-fragmentation-device/" .. base .."/" .. filename
 end
 
 local function file2(filename)
@@ -13,9 +13,7 @@ return {
             layers = {
                 {
                     scale = 0.25,
-                    filenames = {
-                        file("research-center-animation.png"),
-                    },
+                    filename = file("electrodynamic-fragmentation-device-animation.png"),
                     blend_mode = "normal",
                     width = 590,
                     height = 640,
@@ -27,9 +25,7 @@ return {
                 },
                 {
                     scale = 0.25,
-                    filenames = {
-                        file("research-center-color1.png"),
-                    },
+                    filename = file("electrodynamic-fragmentation-device-color1.png"),
                     blend_mode = "normal",
                     width = 590,
                     height = 640,
@@ -41,9 +37,7 @@ return {
                 },
                 {
                     scale = 0.25,
-                    filenames = {
-                        file("research-center-color2.png"),
-                    },
+                    filename = file("electrodynamic-fragmentation-device-color2.png"),
                     blend_mode = "additive-soft",
                     width = 590,
                     height = 640,
@@ -61,9 +55,7 @@ return {
                     layers = {
                         {
                             scale = 0.25,
-                            filenames = {
-                                file("research-center-color3.png"),
-                            },
+                            filename = file("electrodynamic-fragmentation-device-color3.png"),
                             blend_mode = "normal",
                             draw_as_glow = true,
                             width = 590,
@@ -76,9 +68,7 @@ return {
                         },
                         {
                             scale = 0.25,
-                            filenames = {
-                                file("research-center-emission2.png"),
-                            },
+                            filename = file("electrodynamic-fragmentation-device-emission2.png"),
                             blend_mode = "additive",
                             draw_as_glow = true,
                             width = 590,
@@ -173,7 +163,5 @@ return {
             volume = 1000
         },
     },
-    icon = function()
-        return file("icon.png", "icon"), 256, 4
-    end
+    icon = file("electrodynamic-fragmentation-device.png", "icon"),
 }

@@ -7,6 +7,7 @@
   "factorio_version": "2.0",
   "dependencies": [
     "space-age >= 2.0.72"
+    , "ufo-assets >= 1.0.0"
     , "flib >= 0.16.2"
     , "log4factorio >= 0.2.2"
     , "big-beautiful-module-icons >= 1.0.3"
