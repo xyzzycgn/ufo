@@ -84,7 +84,7 @@ local ufo_beacon_tech = {
         },
         time = 20,
     },
-    order = "c-e-b3",
+    order = "ufo-b-c4-d3-e3",
     factoriopedia_description = { "factoriopedia-description.ufo-beacon" }
 }
 -- ###############################################################

@@ -69,8 +69,8 @@ ufo_attractor.stateless_visualisation.animation = {
 }
 ufo_attractor.order = nil
 
-Log.logBlock(data.raw["lightning-attractor"], function(m)log(m)end, Log.CONFIG)
-Log.logBlock(ufo_attractor, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(data.raw["lightning-attractor"], function(m)log(m)end, Log.FINE)
+Log.logBlock(ufo_attractor, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- adapter item
@@ -198,7 +198,7 @@ local ufo_arch_tech = {
         },
         time = 35,
     },
-    order = "c-e-b3",
+    order = "ufo-a",
 }
 
 local ufo_tech = {
@@ -210,7 +210,7 @@ local ufo_tech = {
     effects = effects,
 
     research_trigger = { type = "scripted", trigger_description = {"description.ufo-tech", tostring(num_vaults)}},
-    order = "c-e-b4",
+    order = "ufo-b-c4",
     factoriopedia_description = { "factoriopedia-description.ufo-tech" }
 }
 -- ###############################################################

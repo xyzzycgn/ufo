@@ -21,8 +21,8 @@ local ufo_fulgoran_know_how_tech = {
 
     prerequisites = { "ufo-tech" },
     research_trigger = { type = "scripted", trigger_description = {"description.ufo-fulgoran-know-how-tech", tostring(num_vaults)}},
-    order = "c-e-b3",
-    factoriopedia_description = { "factoriopedia-description.ufo-tech" }
+    order = "ufo-b-c4-d3",
+    factoriopedia_description = { "factoriopedia-description.ufo-tech" } -- TODO ufo-fulgoran-know-how-tech + locales!
 }
 -- ###############################################################
 

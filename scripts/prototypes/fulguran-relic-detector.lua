@@ -54,7 +54,7 @@ local detector_equipment_tech = {
         },
         time = 25,
     },
-    order = "c-e-b2",
+    order = "ufo-b-c2",
     factoriopedia_description = { "factoriopedia-description.ufo-detector-equipment" }
 }
 
@@ -138,7 +138,7 @@ pimp_my_car_tech.unit = {
     },
     time = 25,
 }
-pimp_my_car_tech.order = "c-e-b4"
+pimp_my_car_tech.order = "ufo-b-c2-d1"
 
 -- recipe for pimped car
 local pimp_my_car_recipe = {
