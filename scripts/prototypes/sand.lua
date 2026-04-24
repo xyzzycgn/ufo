@@ -100,7 +100,7 @@ local ufo_resonance_raw_shard_tech = {
 }
 -- ###############################################################
 
-local recipe_category = {
+local edf_recipe_category = {
   type = "recipe-category",
   name = "electrodynamic-fragmentation-category"
 }
@@ -277,7 +277,7 @@ data:extend( {
     ufo_resonance_raw_shard_tech,
     concrete_rubble_item,
     concrete_rubble_recipe,
-    recipe_category,
+    edf_recipe_category,
     ufo_electrodynamic_fragmentation_tech,
     ufo_edf_entity,
     ufo_edf_item,

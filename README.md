@@ -20,7 +20,8 @@ investigations:
 ![U.F.O. technology](https://github.com/xyzzycgn/ufo/blob/main/doc/ufo-technology-fe.png?raw=true)
 
 These consist of a basic branch, with two technologies that facilitate the search for the required relics, and a 
-branch with advanced technologies that utilize Fulguran know-how to improve your factory.
+branch with advanced technologies that utilize Fulguran know-how to improve your factory. The third branch contains 
+a technology that helps to gain certain resources more efficiently.
 
 When the optional mod [Fulgoran enemies](https://mods.factorio.com/mod/Electric_flying_enemies) is loaded, two additional 
 technologies are available:

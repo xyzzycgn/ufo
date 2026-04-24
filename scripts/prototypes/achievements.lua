@@ -19,7 +19,7 @@ local function make_achievement(name, icon, order, technology)
                 scale = 0.27,
             },
         },
-        order = "ufo-a-" .. order,
+        order = "ufo-achievement-" .. order,
         technology = technology,
     }
 end
