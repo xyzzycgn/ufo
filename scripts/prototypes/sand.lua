@@ -16,18 +16,18 @@ local ufo_crusher_entity = prototypeHelper.copyAndReplace("assembling-machine", 
 }, scale_factor)
 ufo_crusher_entity.icon_draw_specification.scale = scale_factor
 ufo_crusher_entity.icon_draw_specification.scale_for_many = scale_factor
-Log.logBlock(ufo_crusher_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_crusher_entity, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_crusher_item = data_util.copy_prototype(data.raw["item"]["crusher"], "ufo-crusher")
 local order = ufo_crusher_item.order or "ufo"
 ufo_crusher_item.subgroup = "production-machine"
 ufo_crusher_item.order = order .. "-a"
-Log.logBlock(ufo_crusher_item, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_crusher_item, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_crusher_recipe = prototypeHelper.copyAndReplace("recipe", "crusher", "ufo-crusher", { enabled = false })
-Log.logBlock(ufo_crusher_recipe, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_crusher_recipe, function(m)log(m)end, Log.FINE)
 -- ###############################################################
 
 local sand_item = {
@@ -82,7 +82,7 @@ local ufo_resonance_raw_shard_recipe = prototypeHelper.copyAndReplace("recipe", 
     energy_required = 35,
 })
 
-Log.logBlock(ufo_resonance_raw_shard_recipe, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_resonance_raw_shard_recipe, function(m)log(m)end, Log.FINE)
 
 local ufo_resonance_raw_shard_tech = {
     name = 'ufo-resonance-raw-shard-tech',
@@ -95,18 +95,18 @@ local ufo_resonance_raw_shard_tech = {
     effects = {{ type = 'unlock-recipe', recipe = 'ufo-resonance-raw-shard' }},
 
     research_trigger = { type = "mine-entity", entity = "fulgoran-ruin-colossal"},
-    order = "c-e-a",
+    order = "ufo-b",
     factoriopedia_description = { "factoriopedia-description.ufo-resonance-raw-shard-tech" }
 }
 -- ###############################################################
 
-local recipe_category = {
+local edf_recipe_category = {
   type = "recipe-category",
   name = "electrodynamic-fragmentation-category"
 }
 -- ###############################################################
 
-Log.logBlock(data.raw["assembling-machine"]["assembling-machine-3"], function(m)log(m)end, Log.CONFIG)
+Log.logBlock(data.raw["assembling-machine"]["assembling-machine-3"], function(m)log(m)end, Log.FINE)
 
 local scale_factor_edf = 4/3
 local ufo_edf_entity = prototypeHelper.copyAndReplace("assembling-machine", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
@@ -146,7 +146,7 @@ ufo_edf_entity.icon_draw_specification.scale_for_many = scale_factor_edf
 local flags = ufo_edf_entity.flags
 flags[#flags + 1] = "not-rotatable"
 
-Log.logBlock(ufo_edf_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_edf_entity, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_edf_item = prototypeHelper.copyAndReplace("item", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
@@ -157,7 +157,7 @@ local ufo_edf_item = prototypeHelper.copyAndReplace("item", "assembling-machine-
 })
 local order_edf = ufo_edf_item.order or "ufo"
 ufo_edf_item.order = order_edf .. "-b"
-Log.logBlock(ufo_edf_item, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_edf_item, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_edf_recipe = prototypeHelper.copyAndReplace("recipe", "assembling-machine-3", "ufo-electrodynamic-fragmentation-device", {
@@ -253,7 +253,7 @@ local ufo_electrodynamic_fragmentation_tech = {
         },
         time = 25,
     },
-    order = "c-e-b",
+    order = "ufo-b-c1",
     factoriopedia_description = { "factoriopedia-description.electrodynamic-fragmentation" }
 }
 -- ###############################################################
@@ -277,7 +277,7 @@ data:extend( {
     ufo_resonance_raw_shard_tech,
     concrete_rubble_item,
     concrete_rubble_recipe,
-    recipe_category,
+    edf_recipe_category,
     ufo_electrodynamic_fragmentation_tech,
     ufo_edf_entity,
     ufo_edf_item,

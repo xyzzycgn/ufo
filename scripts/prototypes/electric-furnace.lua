@@ -95,7 +95,7 @@ local ufo_furnace_tech = {
         },
         time = 45,
     },
-    order = "c-e-b1",
+    order = "ufo-b-c4-d3-e1",
     factoriopedia_description = { "factoriopedia-description.ufo-electric-furnace" }
 }
 -- ###############################################################

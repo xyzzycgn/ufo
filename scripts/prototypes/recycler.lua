@@ -87,7 +87,7 @@ local ufo_recycler_tech = {
         },
         time = 20,
     },
-    order = "c-e-b4",
+    order = "ufo-b-c4-d3-e4",
     factoriopedia_description = { "factoriopedia-description.ufo-recycler" }
 }
 -- ###############################################################
