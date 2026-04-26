@@ -12,6 +12,7 @@ require("__ufo__.scripts.prototypes.electro-magnetic-plant")
 require("__ufo__.scripts.prototypes.recycler")
 require("__ufo__.scripts.prototypes.fulguran-relic-detector")
 require("__ufo__.scripts.prototypes.beacon")
+require("__ufo__.scripts.prototypes.electrodynamic_fragmentation")
 require("__ufo__.scripts.prototypes.achievements")
 
 if mods["Electric_flying_enemies"] then
