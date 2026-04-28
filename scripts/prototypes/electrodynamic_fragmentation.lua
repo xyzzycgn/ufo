@@ -25,6 +25,8 @@ local ufo_edf_entity = prototypeHelper.copyAndReplace("assembling-machine", "ass
     crafting_categories = {
         "electrodynamic-fragmentation-category"
     },
+    collision_box = { { -2, -2  }, { 2, 2 } },
+    selection_box = { { -2, -2 }, { 2, 2 } },
     allowed_effects = {
         "consumption",
         "speed",
