@@ -7,12 +7,24 @@ local function file2(filename)
     return "__base__/graphics/entity/assembling-machine-3/" .. filename
 end
 
+
+local function pipe_covers_pictures(layer, shift)
+    local pcp = pipecoverspictures()
+    if layer and shift then
+        local layers = pcp[layer].layers
+        layers[1].shift = shift
+        layers[2].shift = shift
+    end
+    return pcp
+end
+
+
 return {
     graphics_set = {
         animation = {
             layers = {
                 {
-                    scale = 0.25,
+                    scale = 0.2,
                     filename = file("electrodynamic-fragmentation-device-animation.png"),
                     blend_mode = "normal",
                     width = 590,
@@ -24,7 +36,7 @@ return {
                     tint = { r = 1, g = 1, b = 1, a = 1 },
                 },
                 {
-                    scale = 0.25,
+                    scale = 0.2,
                     filename = file("electrodynamic-fragmentation-device-color1.png"),
                     blend_mode = "normal",
                     width = 590,
@@ -36,7 +48,7 @@ return {
                     tint = { r = 0.44313725490196076, g = 0.9215686274509803, b = 0.6627450980392157, a = 1 },
                 },
                 {
-                    scale = 0.25,
+                    scale = 0.2,
                     filename = file("electrodynamic-fragmentation-device-color2.png"),
                     blend_mode = "additive-soft",
                     width = 590,
@@ -54,7 +66,7 @@ return {
                 animation = {
                     layers = {
                         {
-                            scale = 0.25,
+                            scale = 0.2,
                             filename = file("electrodynamic-fragmentation-device-color3.png"),
                             blend_mode = "normal",
                             draw_as_glow = true,
@@ -67,7 +79,7 @@ return {
                             tint = { r = 0.3137254901960784, g = 0.6078431372549019, b = 0.796078431372549, a = 1 },
                         },
                         {
-                            scale = 0.25,
+                            scale = 0.2,
                             filename = file("electrodynamic-fragmentation-device-emission2.png"),
                             blend_mode = "additive",
                             draw_as_glow = true,
@@ -85,79 +97,73 @@ return {
         }
     },
     circuit_connector = circuit_connector_definitions.create_vector(
-            universal_connector_template,
+        universal_connector_template,
+        {
             {
-                {
-                    variation = 33,
-                    main_offset = util.by_pixel_hr(-100, 15),
-                    shadow_offset = util.by_pixel_hr(-100, 15),
-                    show_shadow = false,
-                },
-                {
-                    variation = 33,
-                    main_offset = util.by_pixel_hr(-100, 15),
-                    shadow_offset = util.by_pixel_hr(-100, 15),
-                    show_shadow = false,
-                },
-                {
-                    variation = 33,
-                    main_offset = util.by_pixel_hr(-100, 15),
-                    shadow_offset = util.by_pixel_hr(-100, 15),
-                    show_shadow = false,
-                },
-                {
-                    variation = 33,
-                    main_offset = util.by_pixel_hr(-100, 15),
-                    shadow_offset = util.by_pixel_hr(-100, 15),
-                    show_shadow = false,
-                },
-            }
+                variation = 33,
+                main_offset = util.by_pixel_hr(-85, 15),
+                shadow_offset = util.by_pixel_hr(-85, 15),
+                show_shadow = false,
+            },
+            {
+                variation = 33,
+                main_offset = util.by_pixel_hr(-85, 15),
+                shadow_offset = util.by_pixel_hr(-85, 15),
+                show_shadow = false,
+            },
+            {
+                variation = 33,
+                main_offset = util.by_pixel_hr(-85, 15),
+                shadow_offset = util.by_pixel_hr(-85, 15),
+                show_shadow = false,
+            },
+            {
+                variation = 33,
+                main_offset = util.by_pixel_hr(-85, 15),
+                shadow_offset = util.by_pixel_hr(-85, 15),
+                show_shadow = false,
+            },
+        }
     ),
     fluid_boxes = {
         {
-            pipe_covers = pipecoverspictures(),
+            pipe_covers = pipe_covers_pictures("west", util.by_pixel_hr(4, 0)),
             pipe_picture = {
                 scale = 0.5,
                 filename = file2("assembling-machine-3-pipe-W.png"),
                 blend_mode = "normal",
                 width = 39,
                 height = 73,
-                shift = util.by_pixel_hr(50, 0),
+                shift = util.by_pixel_hr(54, 2),
                 position = { 0, 0 },
             },
             pipe_connections = {
                 {
                     direction = defines.direction.west,
-                    position = { -4/3, -0.5 },
+                    position = { -1.55, -0.5 },
                     flow_direction = "input",
                 },
             },
-            secondary_draw_orders = {
-                north = -1,
-            },
             production_type = "input",
             volume = 1000
-       },
+        },
         {
-            pipe_covers = pipecoverspictures(),
+            pipe_covers = pipe_covers_pictures("east", util.by_pixel_hr(-3, 0)),
             pipe_picture = {
                 scale = 0.5,
                 filename = file2("assembling-machine-3-pipe-E.png"),
                 blend_mode = "normal",
                 width = 42,
                 height = 76,
-                shift = util.by_pixel_hr(-50, 0),
+                shift = util.by_pixel_hr(-52, 2),
                 position = { 0, 0 },
             },
             pipe_connections = {
                 {
                     direction = defines.direction.east,
-                    position = { 4/3, -0.5 },
+                    position = { 1.55, -0.5 },
                     flow_direction = "output",
                 },
-            },
-            secondary_draw_orders = {
-                north = -1,
             },
             production_type = "output",
             volume = 1000
