@@ -8,10 +8,10 @@ local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
 
 local edf_recipes = {}
 local edf_sources = {
-    ["electronic-circuit-recycling"]    = { energy = 15, input = 100, output = 99 },
-    ["advanced-circuit-recycling"]      = { energy = 17, input = 110, output = 109 },
-    ["processing-unit-recycling"]       = { energy = 20, input = 120, output = 118 },
-    ["low-density-structure-recycling"] = { energy = 25, input = 180, output = 177 },
+    ["electronic-circuit-recycling"]    = { energy = 15, in_amount = 6,  res = { amount = 8,  extra = 7,  delta = 0.5 }, input = 100, output = 99 },
+    ["advanced-circuit-recycling"]      = { energy = 17, in_amount = 6,  res = { amount = 8,  extra = 7,  delta = 0.5 }, input = 110, output = 109 },
+    ["processing-unit-recycling"]       = { energy = 20, in_amount = 6,  res = { amount = 8,  extra = 7,  delta = 0.4 }, input = 120, output = 118 },
+    ["low-density-structure-recycling"] = { energy = 25, in_amount = 10, res = { amount = 12, extra = 11, delta = 0.7 }, input = 200, output = 196 },
 }
 local effects = data.raw["technology"]["ufo-electrodynamic-fragmentation-tech"].effects
 
@@ -22,6 +22,7 @@ for recipe, recipe_parameters in pairs(edf_sources) do
     local ufo_edf_recipe = prototypeHelper.copyAndReplace("recipe", recipe , name, {
         enabled = false,
         category = "electrodynamic-fragmentation-category",
+        subgroup = "intermediate-product",
         hide_from_player_crafting = true,
         hidden = false,
         factoriopedia_alternative = recipe,
@@ -35,12 +36,13 @@ for recipe, recipe_parameters in pairs(edf_sources) do
     local results = ufo_edf_recipe.results
 
     for _, ingredient in pairs(ingredients) do
-        ingredient.amount = ingredient.amount * 6
+        ingredient.amount = ingredient.amount * recipe_parameters.in_amount
     end
 
     for _, result in pairs(results) do
-        result.amount = result.amount * 8
-        result.extra_count_fraction = result.extra_count_fraction * 7 + 0.5
+        local res = recipe_parameters.res
+        result.amount = result.amount * res.amount
+        result.extra_count_fraction = result.extra_count_fraction * res.extra + res.delta
     end
 
     ingredients[#ingredients + 1] = { type = "fluid", name = "water", amount = recipe_parameters.input }
