@@ -16,7 +16,6 @@ local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 local frd_radius = settings.global["ufo-frd-scan-radius"].value
 
 local const_energy = util.parse_energy(consts.frd_energy) * 60 -- frd_energy is returned per tick, but needed per second
-Log.logLine(const_energy, function(m)log(m)end, Log.CONFIG)
 
 local function initLogging()
     Log.setSeverityFromSettings("ufo-logLevel")
@@ -538,7 +537,7 @@ local function checkPoles()
             if known[name] then
                 remaining[name] = true
             else
-                Log.logMsg(function(m)log(m)end, Log.CONFIG, "new type of pole detected: %s", name)
+                Log.logMsg(function(m)log(m)end, Log.INFO, "new type of pole detected: %s", name)
                 new[name] = true
             end
         end
@@ -548,7 +547,7 @@ local function checkPoles()
     -- known - new - remaining = removed types
     for name, _ in pairs(known) do
         if not (remaining[name] or new[name]) then
-            Log.logMsg(function(m)log(m)end, Log.CONFIG, "type of pole has been removed: %s", name)
+            Log.logMsg(function(m)log(m)end, Log.INFO, "type of pole has been removed: %s", name)
             removed[name] = true
         end
     end
