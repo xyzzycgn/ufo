@@ -3,9 +3,9 @@
 ---
 
 local Log = require("__log4factorio__.Log")
-local consts = require("__ufo__.scripts.consts")
-local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
-local edf_animation = require("__ufo__.scripts.prototypes.edf_animation")
+local consts = require("__use-fulguran-objects__.scripts.consts")
+local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
+local edf_animation = require("__use-fulguran-objects__.scripts.prototypes.edf_animation")
 
 -- ###############################################################
 
@@ -116,7 +116,7 @@ local sand_from_concrete_rubble_recipe =   {
     type = "recipe",
     name = "ufo-sand-from-concrete-rubble",
     enabled = false,
-    icon = "__ufo__/graphics/icons/sand-pile.png",
+    icon = "__use-fulguran-objects__/graphics/icons/sand-pile.png",
     icon_size = 256,
     icon_mipmaps = 4,
     ingredients = {

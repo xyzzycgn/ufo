@@ -14,7 +14,8 @@ local alternatives = {
     starts_with = {
         ["__flib__"] = "lib.flib",
         ["__log4factorio__"] = "lib",
-        ["__ufo__"] = ".",
+        -- - needs to be escaped, see https://stackoverflow.com/questions/29072601/lua-string-gsub-with-a-hyphen
+        ["__use%-fulguran%-objects__."] = ".",
     }
 }
 

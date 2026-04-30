@@ -47,7 +47,7 @@ local original_require = require
 require = function(name)
     if name == "__flib__.data-util" then
         return mock_data_util
-    elseif name == "__ufo__.scripts.scale" then
+    elseif name == "__use-fulguran-objects__.scripts.scale" then
         return mock_scale
     end
     return original_require(name)

@@ -9,12 +9,12 @@ local function make_achievement(name, icon, order, technology)
         name = name,
         icons = {
             {
-                icon = "__ufo__/graphics/achievements/" .. icon,
+                icon = "__use-fulguran-objects__/graphics/achievements/" .. icon,
                 icon_size = 128,
 
             },
             {
-                icon = "__ufo__/graphics/achievements/experienced_archaeologist.png",
+                icon = "__use-fulguran-objects__/graphics/achievements/experienced_archaeologist.png",
                 icon_size = 256,
                 scale = 0.27,
             },

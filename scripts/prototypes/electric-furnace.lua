@@ -4,9 +4,9 @@
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
-local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
-local scale = require("__ufo__.scripts.scale")
-local consts = require("__ufo__.scripts.consts")
+local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
+local scale = require("__use-fulguran-objects__.scripts.scale")
+local consts = require("__use-fulguran-objects__.scripts.consts")
 
 -- ###############################################################
 

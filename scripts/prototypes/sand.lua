@@ -4,8 +4,8 @@
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
 local item_sounds = require("__base__.prototypes.item_sounds")
-local consts = require("__ufo__.scripts.consts")
-local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
+local consts = require("__use-fulguran-objects__.scripts.consts")
+local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
 
 local scale_factor = 1.5
 local ufo_crusher_entity = prototypeHelper.copyAndReplace("assembling-machine", "crusher", "ufo-crusher", {
@@ -32,7 +32,7 @@ Log.logBlock(ufo_crusher_recipe, function(m)log(m)end, Log.FINE)
 local sand_item = {
     type = "item",
     name = "ufo-sand",
-    icon = "__ufo__/graphics/icons/sand-pile.png",
+    icon = "__use-fulguran-objects__/graphics/icons/sand-pile.png",
     icon_size = 256,
     icon_mipmaps = 4,
     subgroup = "intermediate-product",
@@ -60,7 +60,7 @@ local sand_recipe =   {
 -- ###############################################################
 
 local ufo_resonance_raw_shard_item = prototypeHelper.copyAndReplace("item", "iron-plate", "ufo-resonance-raw-shard", {
-    icon = "__ufo__/graphics/icons/raw-pink-crystal.png",
+    icon = "__use-fulguran-objects__/graphics/icons/raw-pink-crystal.png",
     icon_size = 256,
     icon_mipmaps = 4,
 })
@@ -86,7 +86,7 @@ Log.logBlock(ufo_resonance_raw_shard_recipe, function(m)log(m)end, Log.FINE)
 local ufo_resonance_raw_shard_tech = {
     name = 'ufo-resonance-raw-shard-tech',
     type = 'technology',
-    icon = "__ufo__/graphics/icons/raw-pink-crystal.png",
+    icon = "__use-fulguran-objects__/graphics/icons/raw-pink-crystal.png",
     icon_size = 256,
     icon_mipmaps = 4,
 
@@ -102,7 +102,7 @@ local ufo_resonance_raw_shard_tech = {
 local concrete_rubble_item = {
     type = "item",
     name = "ufo-concrete-rubble",
-    icon = "__ufo__/graphics/icons/concrete-rubble.png",
+    icon = "__use-fulguran-objects__/graphics/icons/concrete-rubble.png",
     icon_size = 256,
     icon_mipmaps = 4,
     subgroup = "intermediate-product",

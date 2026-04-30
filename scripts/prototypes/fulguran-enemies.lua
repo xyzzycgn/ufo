@@ -2,9 +2,9 @@
 --- Created by xyzzycgn.
 --- adapter to mod Electric_flying_enemies
 ---
-local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
+local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
 local Log = require("__log4factorio__.Log")
-local consts = require("__ufo__.scripts.consts")
+local consts = require("__use-fulguran-objects__.scripts.consts")
 
 -- ###############################################################
 
@@ -16,7 +16,7 @@ local ufo_vault = prototypeHelper.copyAndReplace("simple-entity", "fulgoran-ruin
 
 -- part of the ufo-inhibitor
 local ufo_inhibitor_shard_item = prototypeHelper.copyAndReplace("item", "iron-plate", "ufo-resonance-shard", {
-    icon = "__ufo__/graphics/icons/pink-crystal.png",
+    icon = "__use-fulguran-objects__/graphics/icons/pink-crystal.png",
     icon_size = 256,
     icon_mipmaps = 4,
 })
@@ -89,7 +89,7 @@ local ufo_inhibitor_shard_tech = {
     type = "technology",
     icons = {
         {
-            icon = "__ufo__/graphics/icons/pink-crystal.png",
+            icon = "__use-fulguran-objects__/graphics/icons/pink-crystal.png",
             icon_size = 256,
             icon_mipmaps = 4,
             scale = scale_factor,

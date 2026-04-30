@@ -4,7 +4,7 @@
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
-local consts = require('__ufo__.scripts.consts')
+local consts = require('__use-fulguran-objects__.scripts.consts')
 
 -- new equipment-category
 local equipment_category = {
@@ -37,7 +37,7 @@ end
 local detector_equipment_tech = {
     name = "ufo-detector-equipment-tech",
     type = "technology",
-    icon = "__ufo__/graphics/icons/sensor.png",
+    icon = "__use-fulguran-objects__/graphics/icons/sensor.png",
     icon_size = 128,
     icon_mipmaps = 4,
 
@@ -61,7 +61,7 @@ local detector_equipment_tech = {
 local detector_equipment_item = {
     type = "item",
     name = "ufo-detector-equipment",
-    icon = "__ufo__/graphics/icons/sensor.png",
+    icon = "__use-fulguran-objects__/graphics/icons/sensor.png",
     icon_size = 128,
     icon_mipmaps = 4,
     subgroup = "equipment",
@@ -90,7 +90,7 @@ local detector_equipment = {
     type = "night-vision-equipment",
     name = "ufo-detector-equipment",
     sprite = {
-        filename = "__ufo__/graphics/icons/sensor.png",
+        filename = "__use-fulguran-objects__/graphics/icons/sensor.png",
         size = 128,
     },
     shape = { width = 1, height = 1, type = "full", },
@@ -118,7 +118,7 @@ local icons = {
         icon_size = icon_size
     },
     {
-        icon = "__ufo__/graphics/technology/tech_up.png",
+        icon = "__use-fulguran-objects__/graphics/technology/tech_up.png",
         icon_size = 256,
         icon_mipmaps = 4,
     }
@@ -201,9 +201,9 @@ local shortcut =  {
     name = 'ufo-toggle-gui',
     associated_control_input = "ufo-toggle-gui-key",
     action = "lua",
-    icon = '__ufo__/graphics/icons/sensor.png',
+    icon = '__use-fulguran-objects__/graphics/icons/sensor.png',
     icon_size = 128,
-    small_icon = '__ufo__/graphics/icons/sensor.png',
+    small_icon = '__use-fulguran-objects__/graphics/icons/sensor.png',
     small_icon_size = 64,
     toggleable = true,
     technology_to_unlock = "ufo-detector-equipment-tech",
@@ -240,7 +240,7 @@ local function gui_sprite_def(name, tint)
     return {
         type = "sprite",
         name = name,
-        filename = "__ufo__/graphics/crosshairs.png",
+        filename = "__use-fulguran-objects__/graphics/crosshairs.png",
         priority = "extra-high",
         width = 170,
         height = 148,
