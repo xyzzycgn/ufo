@@ -2,7 +2,7 @@
 --- Created by xyzzycgn.
 --- fulgoran know how technology
 ---
-local consts = require("__ufo__.scripts.consts")
+local consts = require("__use-fulguran-objects__.scripts.consts")
 
 local num_vaults = math.ceil(settings.startup["ufo-mined-ruin-vaults-needed"].value * consts.fulgoran_know_how_factor)
 

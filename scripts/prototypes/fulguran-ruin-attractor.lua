@@ -3,10 +3,10 @@
 --- adapted fulguran ruin attractor
 ---
 local Log = require("__log4factorio__.Log")
-local prototypeHelper = require("__ufo__.scripts.prototypeHelper")
+local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
 local data_util = require('__flib__.data-util')
 local util = require('util') -- from lualib
-local consts = require("__ufo__.scripts.consts")
+local consts = require("__use-fulguran-objects__.scripts.consts")
 
 Log.setSeverity(Log.CONFIG)
 -- tint for entities and items
@@ -26,7 +26,7 @@ local ufo_attractor = prototypeHelper.copyAndReplace("lightning-attractor", "ful
     factoriopedia_description = { "factoriopedia-description.ufo-adapted-attractor" },
     subgroup = "environmental-protection", --  change place where it's shown (not environment, but production)
     render_no_network_icon = true,
-    icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png",
+    icon = "__use-fulguran-objects__/graphics/icons/fulgoran-ruin-attractor.png",
     localised_description = { "entity-description.ufo-adapted-attractor" },
 })
 
@@ -37,7 +37,7 @@ local repeat_count = 2 * frame_count - 2
 local animation_speed = 1/25
 
 local oldsheet = ufo_attractor.stateless_visualisation.animation.sheet
-oldsheet.filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor.png"
+oldsheet.filename = "__use-fulguran-objects__/graphics/entity/fulgoran-ruin-attractor.png"
 oldsheet.line_length = 1
 oldsheet.frame_count = 1
 oldsheet.variation_count = variation_count
@@ -53,7 +53,7 @@ ufo_attractor.stateless_visualisation.animation = {
         oldsheet,
         -- blue light on top
         {
-            filename = "__ufo__/graphics/entity/fulgoran-ruin-attractor-glow.png",
+            filename = "__use-fulguran-objects__/graphics/entity/fulgoran-ruin-attractor-glow.png",
             width = 120,
             height = 96,
             frame_count = frame_count,
@@ -76,7 +76,7 @@ Log.logBlock(ufo_attractor, function(m)log(m)end, Log.FINE)
 -- adapter item
 local ufo_adapter_item = data_util.copy_prototype(data.raw["item"]["processing-unit"], "ufo-adapter")
 local order = ufo_adapter_item.order or "ufo"
-ufo_adapter_item.icon = "__ufo__/graphics/icons/ufo-adapter.png"
+ufo_adapter_item.icon = "__use-fulguran-objects__/graphics/icons/ufo-adapter.png"
 ufo_adapter_item.order = order .. "-a"
 ufo_adapter_item.factoriopedia_description = { "factoriopedia-description.ufo-adapter" }
 Log.logBlock(ufo_adapter_item, function(m)log(m)end, Log.FINE)
@@ -180,7 +180,7 @@ local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
 local ufo_arch_tech = {
     name = 'ufo-archeological-tech',
     type = 'technology',
-    icon = "__ufo__/graphics/icons/archeological-tech.png",
+    icon = "__use-fulguran-objects__/graphics/icons/archeological-tech.png",
     icon_size = 256,
     icon_mipmaps = 4,
     essential = true,
@@ -204,7 +204,7 @@ local ufo_arch_tech = {
 local ufo_tech = {
     name = 'ufo-tech',
     type = 'technology',
-    icon = "__ufo__/graphics/icons/fulgoran-ruin-attractor.png",
+    icon = "__use-fulguran-objects__/graphics/icons/fulgoran-ruin-attractor.png",
 
     prerequisites = { "ufo-resonance-raw-shard-tech" },
     effects = effects,

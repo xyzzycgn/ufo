@@ -2,7 +2,7 @@
 --- Created by xyzzycgn.
 ---
 local data_util = require("__flib__.data-util")
-local scale = require("__ufo__.scripts.scale")
+local scale = require("__use-fulguran-objects__.scripts.scale")
 
 --- @param ndx1 string 1st index into data.raw
 --- @param ndx2 string 2nd index into data.raw
