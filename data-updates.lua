@@ -46,7 +46,7 @@ for recipe, recipe_parameters in pairs(edf_sources) do
     end
 
     ingredients[#ingredients + 1] = { type = "fluid", name = "water", amount = recipe_parameters.input }
-    results[#results + 1] = { type = "fluid", name = "water", amount = recipe_parameters.output }
+    results[#results + 1] = { type = "fluid", name = "water", amount = recipe_parameters.output, ignored_by_productivity = recipe_parameters.output }
 
     edf_recipes[#edf_recipes + 1] = ufo_edf_recipe
     effects[#effects + 1] = { type = "unlock-recipe", recipe = name }

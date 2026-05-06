@@ -125,7 +125,7 @@ local sand_from_concrete_rubble_recipe =   {
     },
     results = {
         { type = "item", name = "ufo-sand", amount = 7 },
-        { type = "fluid", name = "water", amount = 99 }
+        { type = "fluid", name = "water", amount = 99, ignored_by_productivity = 99 }
     },
     main_product = "ufo-sand",
     allow_productivity = true,

@@ -4,7 +4,7 @@
   "description": "Use fulgoran objects or technologies to improve your factory",
   "author": "xyzzycgn",
   "homepage": "https://github.com/xyzzycgn/ufo.git",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "factorio_version": "2.0",
   "dependencies": [
     "space-age >= 2.0.72"
