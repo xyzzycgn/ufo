@@ -2,9 +2,9 @@
 --- Created by xyzzycgn.
 --- adapter to mod Electric_flying_enemies
 ---
-local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
+local prototypeHelper = require("scripts.prototypeHelper")
 local Log = require("__log4factorio__.Log")
-local consts = require("__use-fulguran-objects__.scripts.consts")
+local consts = require("scripts.consts")
 
 -- ###############################################################
 
