@@ -9,11 +9,6 @@ local adapterHandling
 local global_data
 
 describe("adapterHandling", function()
-    local arg2find
-    local arg2create
-    local arg2destroy
-    local destroyCalled
-
     local function init_factorio_globals()
         _G.storage = {
             forces = {},
@@ -91,14 +86,7 @@ describe("adapterHandling", function()
         global_data = require("scripts.global_data")
     end)
 
-    before_each(function()
-        init_factorio_globals()
-
-        arg2find = nil
-        arg2create = nil
-        arg2destroy = nil
-        destroyCalled = 0
-    end)
+    before_each(init_factorio_globals)
 
     it("adds an adapter prototype to an empty list", function()
         storage.adapterPrototypes = {}
@@ -136,11 +124,12 @@ describe("adapterHandling", function()
         }
 
         local surface = {
-            find_entities_filtered = function(arg)
-                arg2find = arg
+            find_entities_filtered = function(_)
                 return {}
             end,
         }
+
+        local spied_surface = spy.on(surface, "find_entities_filtered")
 
         local adapterEntity = {
             position = { x = 1, y = 2 },
@@ -152,12 +141,10 @@ describe("adapterHandling", function()
         }
 
         adapterHandling.handleBuild(adapterEntity)
-
-        assert.is_nil(arg2create)
-        assert.are.same({
+        assert.spy(spied_surface).was_called_with({
             area = { { x = -2.5, y = -1.5 }, { x = 4.5, y = 5.5 } },
             name = { "fulgoran-ruin-attractor", "ufo-adapted-attractor" }
-        }, arg2find)
+        })
     end)
 
     it("handles building an adapter near a ruin attractor", function()
@@ -170,12 +157,12 @@ describe("adapterHandling", function()
             force = {
                 index = 1,
             },
-            destroy = function(arg)
-                arg2destroy = arg
-                destroyCalled = destroyCalled + 1
+            destroy = function()
                 return true
             end
         }
+
+        local spied_attractor = spy.on(attractor, "destroy")
 
         local adapter = {
             name = "ufo-adapted-attractor",
@@ -194,16 +181,16 @@ describe("adapterHandling", function()
         }
 
         local surface = {
-            find_entities_filtered = function(arg)
-                arg2find = arg
+            find_entities_filtered = function(_)
                 return { attractor }
             end,
 
-            create_entity = function(arg)
-                arg2create = arg
+            create_entity = function(_)
                 return adapter
             end,
         }
+
+        local mocked_surface = mock(surface)
 
         attractor.surface = surface
 
@@ -218,18 +205,20 @@ describe("adapterHandling", function()
 
         adapterHandling.handleBuild(adapterEntity)
 
-        assert.are.equal(1, destroyCalled)
-        assert.are.same({
+
+        assert.spy(mocked_surface.find_entities_filtered).was_called_with({
+            area = { { x = -2.5, y = -1.5 }, { x = 4.5, y = 5.5 } },
+            name = { "fulgoran-ruin-attractor", "ufo-adapted-attractor" }
+        })
+        assert.spy(mocked_surface.create_entity).was_called_with({
             direction = 2,
             force = 1,
             name = "ufo-adapted-attractor",
             position = { x = 2.5, y = 3.5 },
             create_build_effect_smoke = false,
-        }, arg2create)
-        assert.are.same({
-            area = { { x = -2.5, y = -1.5 }, { x = 4.5, y = 5.5 } },
-            name = { "fulgoran-ruin-attractor", "ufo-adapted-attractor" }
-        }, arg2find)
+        })
+
+        assert.spy(spied_attractor).was_called(1)
 
         assert.are.same({
             ["test-adapter"] = {
@@ -295,11 +284,11 @@ describe("adapterHandling", function()
         }
 
         local surface = {
-            find_entities_filtered = function(arg)
-                arg2find = arg
+            find_entities_filtered = function(_)
                 return { attractor }
             end,
         }
+        local spied_surface = spy.on(surface, "find_entities_filtered")
 
         attractor.surface = surface
 
@@ -314,11 +303,10 @@ describe("adapterHandling", function()
 
         adapterHandling.handleBuild(adapterEntity)
 
-        assert.is_nil(arg2create)
-        assert.are.same({
+        assert.spy(spied_surface).was_called_with({
             area = { { x = -1.5, y = -0.5 }, { x = 5.5, y = 6.5 } },
             name = { "fulgoran-ruin-attractor", "ufo-adapted-attractor" }
-        }, arg2find)
+        })
 
         assert.are.same({
             ["test-adapter"] = {
@@ -410,8 +398,7 @@ describe("adapterHandling", function()
 
     it("handles destruction of an adapter", function()
         local surface = {
-            create_entity = function(arg)
-                arg2create = arg
+            create_entity = function(_)
             end,
         }
 
@@ -456,9 +443,7 @@ describe("adapterHandling", function()
                     name = "ufo-adapted-attractor",
                     position = { x = 12.5, y = 13.5 },
                     unit_number = 816,
-                    destroy = function(arg)
-                        arg2destroy = arg
-                        destroyCalled = destroyCalled + 1
+                    destroy = function()
                         return true
                     end,
                     surface = surface
@@ -474,14 +459,18 @@ describe("adapterHandling", function()
             },
             unit_number = 4712,
             surface = surface,
-            destroy = function(arg)
-                arg2destroy = arg
-                destroyCalled = destroyCalled + 1
+            destroy = function()
                 return true
             end
         }
 
+        local spied_adapter = spy.on(adapter, "destroy")
+        local spied_816 = spy.on(storage.adaptees[816].entity, "destroy")
+
         adapterHandling.handleDestruction(adapter)
+
+        assert.spy(spied_816).was_called(1)
+        assert.spy(spied_adapter).was_not_called()
 
         assert.are.same({
             ["test-adapter"] = {
