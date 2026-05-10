@@ -1,18 +1,17 @@
 ---
---- Created by Junie (AI).
+--- Created by xyzzycgn
 --- Tests for ufo.lua
 ---
 local Require = require("test.require")
 _G.require = Require.replace(require)
 
 local assert = require("luassert")
-serpent = require("serpent")
+_G.serpent = require("serpent")
 
 local ufo
 local global_data
 local adapterHandling
 local Log
-
 
 _G.log = function()
 end
@@ -32,11 +31,10 @@ end
 
 describe("ufo", function()
     local events
-    local adapterDestructionCalled
-    local adapterBuildCalled
+    local spied_handleDestruction
+    local spied_handleBuild
+
     local researchTriggered
-    local origHandleDestruction
-    local origHandleBuild
 
     local function init_factorio_globals()
         _G.storage = {
@@ -108,6 +106,7 @@ describe("ufo", function()
 
         events = {}
     end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     setup(function()
         init_factorio_globals()
@@ -118,37 +117,32 @@ describe("ufo", function()
         Log = require("__log4factorio__.Log")
         ufo = require("scripts.ufo")
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     before_each(function()
         init_factorio_globals()
 
-        adapterDestructionCalled = 0
-        adapterBuildCalled = 0
+        spied_handleDestruction = stub(adapterHandling, "handleDestruction")
+        spied_handleBuild = stub(adapterHandling, "handleBuild")
+
         researchTriggered = {}
-
-        origHandleDestruction = adapterHandling.handleDestruction
-        adapterHandling.handleDestruction = function()
-            adapterDestructionCalled = adapterDestructionCalled + 1
-        end
-
-        origHandleBuild = adapterHandling.handleBuild
-        adapterHandling.handleBuild = function()
-            adapterBuildCalled = adapterBuildCalled + 1
-        end
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     after_each(function()
-        adapterHandling.handleDestruction = origHandleDestruction
-        adapterHandling.handleBuild = origHandleBuild
+        -- restore the original functions
+        spied_handleDestruction:revert()
+        spied_handleBuild:revert()
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("initialisiert Force-Daten in on_init", function()
+    it("initializes force_data in on_init", function()
         local force1 = {
             index = 1,
             name = "player"
         }
 
-        game.players = {
+        _G.game.players = {
             { force = force1 }
         }
 
@@ -159,8 +153,10 @@ describe("ufo", function()
         assert.is_not_nil(fd)
         assert.are.equal(0, fd.num_vaults)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("zählt geminte Vaults und triggert ufo-tech nach Erreichen des Schwellwerts", function()
+    it("tests on_player_mined_entity for vault", function()
+        -- Set up force and its technology
         local force = {
             index = 1,
             technologies = {
@@ -177,8 +173,10 @@ describe("ufo", function()
             force = force
         }
 
+        -- Initialize force data
         ufo.on_init()
 
+        -- mocked event
         local event = {
             player_index = 1,
             entity = {
@@ -186,12 +184,15 @@ describe("ufo", function()
             }
         }
 
+        -- Trigger handler (manually from the ufo.lua logic)
+        -- Since onMinedEntity is local in ufo.lua, we need to get it from script.on_event
         ufo.on_configuration_changed()
 
         local handler = events[defines.events.on_player_mined_entity].handler
 
         assert.is_not_nil(handler)
 
+        -- Mine first vault
         handler(event)
 
         local fd = global_data.getForce_data(1)
@@ -199,13 +200,15 @@ describe("ufo", function()
         assert.are.equal(1, fd.num_vaults)
         assert.are.equal(0, #researchTriggered)
 
+        -- Mine second vault (needed is set to 2)
         handler(event)
 
         assert.are.equal(2, fd.num_vaults)
         assert.are.equal("ufo-tech", researchTriggered[1])
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("delegiert beim Minen eines Adapters an adapterHandling.handleDestruction", function()
+    it("tests on_player_mined_entity for adapter", function()
         local event = {
             entity = {
                 name = "ufo-adapter-test"
@@ -218,10 +221,11 @@ describe("ufo", function()
 
         handler(event)
 
-        assert.are.equal(1, adapterDestructionCalled)
+        assert.spy(spied_handleDestruction).was_called()
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("delegiert beim Bauen eines Adapters an adapterHandling.handleBuild", function()
+    it("tests on_built_entity", function()
         local event = {
             entity = {
                 name = "ufo-adapter-test"
@@ -234,10 +238,11 @@ describe("ufo", function()
 
         handler(event)
 
-        assert.are.equal(1, adapterBuildCalled)
+        assert.spy(spied_handleBuild).was_called()
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("delegiert bei Entity-Tod an adapterHandling.handleDestruction", function()
+    it("tests entity_died", function()
         local event = {
             entity = {
                 name = "ufo-adapter-test"
@@ -250,10 +255,11 @@ describe("ufo", function()
 
         handler(event)
 
-        assert.are.equal(1, adapterDestructionCalled)
+        assert.spy(spied_handleDestruction).was_called()
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("ändert das Log-Level bei Runtime-Setting-Änderung", function()
+    it("tests setting change", function()
         local event = {
             setting = "ufo-logLevel"
         }
@@ -270,8 +276,9 @@ describe("ufo", function()
 
         assert.are.equal(Log.FINE, Log.getSeverity())
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("triggert fulgoran-know-how-tech nach genügend weiteren Vaults", function()
+    it("Test dig4tech for second stage research", function()
         local force = {
             index = 1,
             technologies = {
@@ -291,13 +298,12 @@ describe("ufo", function()
         ufo.on_init()
 
         local fd = global_data.getForce_data(1)
+        -- Need 2 * 1.5 = 3 vaults
         fd.num_vaults = 2
 
         local event = {
             player_index = 1,
-            entity = {
-                name = "fulgoran-ruin-vault"
-            }
+            entity = { name = "fulgoran-ruin-vault" }
         }
 
         ufo.on_configuration_changed()
@@ -309,4 +315,5 @@ describe("ufo", function()
         assert.are.equal(3, fd.num_vaults)
         assert.are.equal("ufo-fulgoran-know-how-tech", researchTriggered[1])
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 end)
