@@ -9,9 +9,6 @@ local vaultHandling
 local global_data
 
 describe("vaultHandling", function()
-    local arg2find
-    local arg2create
-    local destroyCalled
     local destroyedEntities
 
     local function init_factorio_globals()
@@ -92,7 +89,6 @@ describe("vaultHandling", function()
         }
 
         entity.destroy = function()
-            destroyCalled = destroyCalled + 1
             table.insert(destroyedEntities, entity)
             entity.valid = false
             return true
@@ -113,9 +109,6 @@ describe("vaultHandling", function()
         init_factorio_globals()
         global_data.init()
 
-        arg2find = nil
-        arg2create = nil
-        destroyCalled = 0
         destroyedEntities = {}
     end)
 
@@ -131,6 +124,8 @@ describe("vaultHandling", function()
             unit_number = 999
         })
 
+        local spied_vault = spy.on(vault, "destroy")
+
         local protectedVault = createMockEntity({
             name = "ufo-fulgoran-ruin-vault",
             position = { x = 11, y = 11 },
@@ -138,15 +133,15 @@ describe("vaultHandling", function()
         })
 
         local surface = {
-            find_entities_filtered = function(arg)
-                arg2find = arg
+            find_entities_filtered = function(_)
                 return { vault }
             end,
-            create_entity = function(arg)
-                arg2create = arg
+            create_entity = function(_)
                 return protectedVault
             end
         }
+
+        local mocked_surface = mock(surface)
 
         local shard = {
             position = shardPos,
@@ -161,16 +156,21 @@ describe("vaultHandling", function()
 
         vaultHandling.replaceWithProtecedVault(shard)
 
-        assert.are.same({ "fulgoran-ruin-vault" }, arg2find.name)
-        assert.are.same({ { x = 5, y = 6 }, { x = 15, y = 16 } }, arg2find.area)
+        assert.spy(mocked_surface.find_entities_filtered).was_called_with({
+            name = { "fulgoran-ruin-vault" },
+            area = { { x = 5, y = 6 }, { x = 15, y = 16 } }
+        })
 
-        assert.are.equal(1, destroyCalled)
+        assert.spy(spied_vault).was_called(1)
+
         assert.are.equal(vault, destroyedEntities[1])
 
-        assert.are.equal("ufo-fulgoran-ruin-vault", arg2create.name)
-        assert.are.same(vault.position, arg2create.position)
-        assert.are.equal(vault.direction, arg2create.direction)
-        assert.are.equal(vault.force.index, arg2create.force)
+        assert.spy(mocked_surface.create_entity).was_called_with({
+            name = "ufo-fulgoran-ruin-vault",
+            position = vault.position,
+            direction = vault.direction,
+            force = vault.force.index,
+        })
 
         local protectedVaultData = global_data.getProtectedVaults()[123]
 
@@ -192,6 +192,7 @@ describe("vaultHandling", function()
             position = vaultPosition,
             unit_number = 1000
         })
+        local spied_pvault = spy.on(protectedVault, "destroy")
 
         global_data.getProtectedVaults()[shardUnitNumber] = {
             entity = protectedVault,
@@ -201,11 +202,11 @@ describe("vaultHandling", function()
         }
 
         local surface = {
-            create_entity = function(arg)
-                arg2create = arg
+            create_entity = function(_)
                 return {}
             end
         }
+        local mocked_surface = mock(surface)
 
         local shard = {
             unit_number = shardUnitNumber,
@@ -214,13 +215,15 @@ describe("vaultHandling", function()
 
         vaultHandling.replaceWithNormalVault(shard)
 
-        assert.are.equal(1, destroyCalled)
+        assert.spy(spied_pvault).was_called(1)
         assert.are.equal(protectedVault, destroyedEntities[1])
 
-        assert.are.equal("fulgoran-ruin-vault", arg2create.name)
-        assert.are.same(vaultPosition, arg2create.position)
-        assert.are.equal(vaultDirection, arg2create.direction)
-        assert.are.equal(vaultForce, arg2create.force)
+        assert.spy(mocked_surface.create_entity).was_called_with({
+            name = "fulgoran-ruin-vault",
+            position = vaultPosition,
+            direction = vaultDirection,
+            force = vaultForce,
+        })
 
         assert.is_nil(global_data.getProtectedVaults()[shardUnitNumber])
     end)
