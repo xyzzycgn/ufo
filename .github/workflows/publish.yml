@@ -3,7 +3,7 @@ name: Publish Factorio Mod
 on:
   push:
     tags:
-      - '*'
+      - '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$'
 jobs:
   publish-mod:
     runs-on: ubuntu-latest
