@@ -1,17 +1,19 @@
 return {
   _all = {
-    coverage = false
+    coverage = true
   },
   default = {
     verbose = true,
-    --output = "TAP",
     --["suppress-pending"] = true
     lpath = "./?;./?.lua",
     ["exclude-pattern"] = "test",
   },
-  apiUnit = {
---    tags = "api",
-    ROOT = {"spec"},
-    verbose = true
+  CI = {
+    output = "TAP",
   }
+  --  apiUnit = {
+  --  tags = "api",
+  --  ROOT = {"spec"},
+  --  verbose = true
+  --}
 }

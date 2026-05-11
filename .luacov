@@ -1,6 +1,6 @@
 reporter = "html"
 reportfile = "ufo-luacov.report.html"
-exclude = { "lib", "test" }
+exclude = { "lib", "test", ".luarocks" }
 include = { "./", "scripts/" }
 runreport = true
 includeuntestedfiles = true
