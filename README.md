@@ -1,3 +1,7 @@
+[![](https://img.shields.io/factorio-mod-portal/factorio-version/use-fulguran-objects?label=factorio%20version&style=for-the-badge)](https://mods.factorio.com/mod/use-fulguran-objects)  [![](https://img.shields.io/factorio-mod-portal/v/use-fulguran-objects?style=for-the-badge&color=aqua)](https://mods.factorio.com/mod/use-fulguran-objects/changelog)
+
+[![](https://img.shields.io/github/issues/xyzzycgn/ufo?label=Bug%20Reports&style=for-the-badge)](https://github.com/xyzzycgn/ufo/issues) [![](https://img.shields.io/github/issues-pr/xyzzycgn/ufo?label=Pull%20Requests&style=for-the-badge)](https://github.com/xyzzycgn/ufo/pulls) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/xyzzycgn/ufo/busted.yml?style=for-the-badge&label=tests)]()
+
 # Use Fulgoran Objects (U.F.O.):
 ## Introduction
 
