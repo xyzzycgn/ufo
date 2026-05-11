@@ -4,7 +4,7 @@
 --- these recycling recipes need to be defined here, as the originating recipes do not exist yet when data.lua is read
 ---
 local Log = require("__log4factorio__.Log")
-local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
+local prototypeHelper = require("scripts.prototypeHelper")
 
 local edf_recipes = {}
 local edf_sources = {

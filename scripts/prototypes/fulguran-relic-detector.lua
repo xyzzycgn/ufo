@@ -4,7 +4,7 @@
 ---
 local Log = require("__log4factorio__.Log")
 local data_util = require('__flib__.data-util')
-local consts = require('__use-fulguran-objects__.scripts.consts')
+local consts = require('scripts.consts')
 
 -- new equipment-category
 local equipment_category = {

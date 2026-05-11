@@ -3,10 +3,10 @@
 --- adapted fulguran ruin attractor
 ---
 local Log = require("__log4factorio__.Log")
-local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
+local prototypeHelper = require("scripts.prototypeHelper")
 local data_util = require('__flib__.data-util')
 local util = require('util') -- from lualib
-local consts = require("__use-fulguran-objects__.scripts.consts")
+local consts = require("scripts.consts")
 
 Log.setSeverity(Log.CONFIG)
 -- tint for entities and items

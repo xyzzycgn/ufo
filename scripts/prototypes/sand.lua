@@ -4,8 +4,8 @@
 local Log = require("__log4factorio__.Log")
 local data_util = require("__flib__.data-util")
 local item_sounds = require("__base__.prototypes.item_sounds")
-local consts = require("__use-fulguran-objects__.scripts.consts")
-local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
+local consts = require("scripts.consts")
+local prototypeHelper = require("scripts.prototypeHelper")
 
 local scale_factor = 1.5
 local ufo_crusher_entity = prototypeHelper.copyAndReplace("assembling-machine", "crusher", "ufo-crusher", {

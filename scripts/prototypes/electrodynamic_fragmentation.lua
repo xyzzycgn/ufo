@@ -3,9 +3,9 @@
 ---
 
 local Log = require("__log4factorio__.Log")
-local consts = require("__use-fulguran-objects__.scripts.consts")
-local prototypeHelper = require("__use-fulguran-objects__.scripts.prototypeHelper")
-local edf_animation = require("__use-fulguran-objects__.scripts.prototypes.edf_animation")
+local consts = require("scripts.consts")
+local prototypeHelper = require("scripts.prototypeHelper")
+local edf_animation = require("scripts.prototypes.edf_animation")
 
 -- ###############################################################
 
