@@ -16,7 +16,7 @@ local edf_sources = {
 local effects = data.raw["technology"]["ufo-electrodynamic-fragmentation-tech"].effects
 
 for recipe, recipe_parameters in pairs(edf_sources) do
-    Log.logLine(recipe, function(m)log(m)end, Log.CONFIG)
+    Log.logLine(recipe, function(m)log(m)end, Log.FINE)
     local name = "ufo-edf-" .. recipe
 
     local ufo_edf_recipe = prototypeHelper.copyAndReplace("recipe", recipe , name, {
@@ -53,7 +53,7 @@ for recipe, recipe_parameters in pairs(edf_sources) do
 end
 -- ###############################################################
 
-Log.logBlock(edf_recipes, function(m)log(m)end, Log.CONFIG)
-Log.logBlock(data.raw["technology"]["ufo-electrodynamic-fragmentation-tech"], function(m)log(m)end, Log.CONFIG)
+Log.logBlock(edf_recipes, function(m)log(m)end, Log.FINE)
+Log.logBlock(data.raw["technology"]["ufo-electrodynamic-fragmentation-tech"], function(m)log(m)end, Log.FINE)
 
 data:extend(edf_recipes)
