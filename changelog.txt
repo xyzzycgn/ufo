@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 2026-06-16
+  Bugfixes:
+    - Fixed two compatibility issues in interaction with mod "Subsurface"
+  Changes:
+    - reduced noise produced by debugging log-statements
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 2026-05-06
   Balancing:
