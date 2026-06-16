@@ -96,6 +96,41 @@ local ufo_adapter_recipe = prototypeHelper.copyAndReplace("recipe", "processing-
     energy_required=20,
 })
 Log.logBlock(ufo_adapter_recipe, function(m)log(m)end, Log.FINE)
+-- ###############################################################
+
+-- effects for tech
+local effects = {
+    { type = 'unlock-recipe', recipe = 'ufo-adapter' }
+}
+
+-- all recipes unlocked by tech
+local recipes = { [1] = ufo_adapter_recipe }
+
+-- all items unlocked by tech
+local items = { [1] = ufo_adapter_item }
+
+-- all entities unlocked by tech
+local entities = {}
+
+-- fix for #13
+-- list of prototypes which must be blacklisted (e.g. due to no recipe)
+local blacklist = {}
+
+--- @type table<string, string[]> list of prototypes to be blacklisted per mod
+local modsWithBlacklistedPrototypes = {
+    Subsurface = { "tunnel-entrance-cable", "tunnel-exit-cable" }
+}
+
+-- fill blacklist
+for mod, list in pairs(modsWithBlacklistedPrototypes) do
+    if mods[mod] then
+        Log.logMsg(function(m)log(m)end, Log.CONFIG, "detected mod %s with prototypes to be blacklisted", mod)
+        for _, p in pairs(list) do
+            blacklist[p] = true
+            Log.logMsg(function(m)log(m)end, Log.CONFIG, "blacklisted prototype %s", p)
+        end
+    end
+end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local function add_tint(prototype)
@@ -113,28 +148,39 @@ local function add_tint(prototype)
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
--- effects for tech
-local effects = {
-    { type = 'unlock-recipe', recipe = 'ufo-adapter' }
-}
+local function getExistingPrototype(group, prototypeName)
+    return data.raw[group][prototypeName]
+end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
--- all recipes unlocked by tech
-local recipes = { [1] = ufo_adapter_recipe }
+--- @param poleName string
+--- @param orig_pole ElectricPolePrototype
+local function makeAdaptedPoles(poleName, orig_pole)
+    -- fix for #13 ignore blacklisted prototypes
+    if blacklist[poleName] then
+        Log.logMsg(function(m)log(m)end, Log.CONFIG, "ignore blacklisted prototype %s", poleName)
+        return
+    end
 
--- all items unlocked by tech
-local items = { [1] = ufo_adapter_item }
+    -- fix for #13 check prototypes not in blacklist without recipe
+    local baserecipe = getExistingPrototype("recipe", poleName)
+    if not baserecipe then
+        Log.logMsg(function(m)log(m)end, Log.WARN, "ignore prototype not in blacklist without recipe - %s", poleName)
+        return
+    end
+    -- fix for #13 check prototypes not in blacklist without item
+    local baseitem = getExistingPrototype("item", poleName)
+    if not baseitem then
+        Log.logMsg(function(m)log(m)end, Log.WARN, "ignore prototype not in blacklist without item - %s", poleName)
+        return
+    end
 
--- all entities unlocked by tech
-local entities = {}
-
--- create recipes and so on for each adapted electric-pole
-for k, _ in pairs(data.raw["electric-pole"]) do
-    local adapted_name = 'ufo-adapted-' .. k
+    local adapted_name = 'ufo-adapted-' .. poleName
     -- effect for tech
     effects[#effects + 1] = { type = 'unlock-recipe', recipe = adapted_name }
 
     -- make recipe
-    local recipe = data_util.copy_prototype(data.raw["recipe"][k], adapted_name)
+    local recipe = data_util.copy_prototype(baserecipe, adapted_name)
     recipe.enabled = false
     -- add an adapter and 2 holmium plates
     recipe.ingredients[#recipe.ingredients + 1] = {type = 'item', name = 'ufo-adapter', amount = 1}
@@ -144,7 +190,7 @@ for k, _ in pairs(data.raw["electric-pole"]) do
     Log.logBlock(recipe, function(m)log(m)end, Log.FINE)
 
     -- and item
-    local ufo_adapted_item = data_util.copy_prototype(data.raw["item"][k], adapted_name)
+    local ufo_adapted_item = data_util.copy_prototype(baseitem, adapted_name)
     Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
     -- set tint for ufo_adapted_item
     add_tint(ufo_adapted_item)
@@ -153,7 +199,6 @@ for k, _ in pairs(data.raw["electric-pole"]) do
     items[#items + 1] = ufo_adapted_item
 
     -- and entity
-    local orig_pole = data.raw["electric-pole"][k]
     local ufo_adapted_entity = data_util.copy_prototype(orig_pole, adapted_name)
     local flags = orig_pole.flags
     -- orig_pole must not already have a next_upgrade or flag "not-upgradable" set
@@ -164,8 +209,8 @@ for k, _ in pairs(data.raw["electric-pole"]) do
 
     Log.logBlock(ufo_adapted_entity, function(m)log(m)end, Log.FINE)
     -- localised_name and localised_description are used for item and recipe too
-    ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. k }}
-    ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. k }}
+    ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. poleName }}
+    ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.surface_conditions = consts.sc_only_fulgora
     ufo_adapted_entity.pictures.layers[1].tint = tint
     -- set tint for ufo_adapted_entity
@@ -174,6 +219,13 @@ for k, _ in pairs(data.raw["electric-pole"]) do
 
     entities[#entities + 1] = ufo_adapted_entity
 end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+-- create recipes and so on for each adapted electric-pole
+for k, v in pairs(data.raw["electric-pole"]) do
+    makeAdaptedPoles(k, v)
+end
+-- ###############################################################
 
 --- ufo base technologies
 local num_vaults = settings.startup["ufo-mined-ruin-vaults-needed"].value
@@ -200,6 +252,7 @@ local ufo_arch_tech = {
     },
     order = "ufo-a",
 }
+-- ###############################################################
 
 local ufo_tech = {
     name = 'ufo-tech',
