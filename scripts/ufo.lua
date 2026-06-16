@@ -430,6 +430,11 @@ local function driving_changed_state(e)
         -- planet-hopper raises this event, but without a vehicle as entity - so restrict to real vehicles
         -- car includes tank and hovercrafts
         if entity and entity.valid and (entity.type == "car" or entity.type == "spider-vehicle") then
+            -- fix for #16 – mod Subsurface uses 2 "car"s (tunnel-entrance resp. tunnel-exit) that aren't really vehicles
+            if (entity.type == "car") and ((entity.name == "tunnel-entrance") or (entity.name == "tunnel-exit")) then
+                return -- ignore them
+            end
+
             --- @type PlayerData
             local pd = global_data.getPlayerData(e.player_index)
 
