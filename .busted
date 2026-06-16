@@ -5,7 +5,7 @@ return {
   default = {
     verbose = true,
     --["suppress-pending"] = true
-    lpath = "./?;./?.lua",
+    --lpath = "./?;./?.lua;./events/?.lua",
     ["exclude-pattern"] = "test",
   },
   CI = {
