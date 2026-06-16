@@ -43,6 +43,10 @@ This mod is compatible to vanilla game (= space age) and offers some changes to 
 
 for better integration.
 
+## Miscellaneous
+
+Up to three achievements are awarded when certain stages of technologies are reached.
+
 ## Supported languages in this version:
   - čeština (cs)
   - deutsch (de)

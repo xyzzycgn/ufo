@@ -36,7 +36,7 @@ local ufo_inhibitor_shard_recipe = prototypeHelper.copyAndReplace("recipe", "iro
     enabled = false,
     energy_required = 50,
 })
-Log.logBlock(ufo_inhibitor_shard_recipe, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_inhibitor_shard_recipe, function(m)log(m)end, Log.FINE)
 
 -- ###############################################################
 
@@ -60,7 +60,7 @@ gs.animation_list[1].animation.layers[3].tint = { 1, 0.3, 1, 0.9 }
 gs.animation_list[2].animation.layers[3].tint = { 1, 1, 1, 0.9 }
 gs.animation_list[2].animation.layers[4].tint = { 0.2, 0.4, 1, 0.9 }
 
-Log.logBlock(ufo_inhibitor_entity, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_inhibitor_entity, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 local ufo_inhibitor_item = prototypeHelper.copyAndReplace("item", "fe_resonance_shard", "ufo-inhibitor", {
@@ -103,7 +103,7 @@ local ufo_inhibitor_shard_tech = {
     order = "ufo-b-c3",
     factoriopedia_description = { "factoriopedia-description.ufo-resonance-shard" }
 }
-Log.logBlock(ufo_inhibitor_shard_tech, function(m)log(m)end, Log.CONFIG)
+Log.logBlock(ufo_inhibitor_shard_tech, function(m)log(m)end, Log.FINE)
 
 local ufo_inhibitor_tech = {
     name = 'ufo-inhibitor-tech',
