@@ -157,12 +157,16 @@ end
 --- @param picture RotatedSprite
 local function layer(picture)
     return {
+        direction_count = picture.direction_count,
         filename = picture.filename,
         size = picture.size,
         x = picture.x,
         y = picture.y,
         height = picture.height,
         width = picture.width,
+        priority = picture.priority,
+        shift = picture.shift,
+        line_length = picture.line_length,
         tint = tint,
     }
 end
@@ -171,18 +175,28 @@ end
 --- fix for #19
 --- @param prototype ElectricPolePrototype
 local function tintPicture(prototype)
-    local pictures = prototype.pictures
+    local old_pictures = prototype.pictures
 
-    if pictures.layers then
+    if old_pictures.layers then
         -- simple way, when prototype is using layers
-        pictures.layers[1].tint = tint
-    elseif pictures.filename then
+        old_pictures.layers[1].tint = tint
+    elseif old_pictures.filename then
         -- bit more complicated without layers, but single filename
         local layers = {
-            [1] = pictures
+            [1] = layer(old_pictures)
         }
-        pictures.layers = layers
-        -- TODO remove no longer used members?
+        old_pictures.layers = layers
+        -- remove no longer used members
+        old_pictures.direction_count = nil
+        old_pictures.filename = nil
+        old_pictures.size = nil
+        old_pictures.x = nil
+        old_pictures.y = nil
+        old_pictures.height = nil
+        old_pictures.width = nil
+        old_pictures.priority = nil
+        old_pictures.shift = nil
+        old_pictures.line_length = nil
     else
         -- worst case – prototype uses filenames
     end
