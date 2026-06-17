@@ -153,6 +153,42 @@ local function getExistingPrototype(group, prototypeName)
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+--- fix for #19
+--- @param picture RotatedSprite
+local function layer(picture)
+    return {
+        filename = picture.filename,
+        size = picture.size,
+        x = picture.x,
+        y = picture.y,
+        height = picture.height,
+        width = picture.width,
+        tint = tint,
+    }
+end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+--- fix for #19
+--- @param prototype ElectricPolePrototype
+local function tintPicture(prototype)
+    local pictures = prototype.pictures
+
+    if pictures.layers then
+        -- simple way, when prototype is using layers
+        pictures.layers[1].tint = tint
+    elseif pictures.filename then
+        -- bit more complicated without layers, but single filename
+        local layers = {
+            [1] = pictures
+        }
+        pictures.layers = layers
+        -- TODO remove no longer used members?
+    else
+        -- worst case – prototype uses filenames
+    end
+end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 --- @param poleName string
 --- @param orig_pole ElectricPolePrototype
 local function makeAdaptedPoles(poleName, orig_pole)
@@ -212,8 +248,8 @@ local function makeAdaptedPoles(poleName, orig_pole)
     ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.surface_conditions = consts.sc_only_fulgora
-    ufo_adapted_entity.pictures.layers[1].tint = tint
-    -- set tint for ufo_adapted_entity
+    tintPicture(ufo_adapted_entity)
+    -- set tint for the icon of ufo_adapted_entity
     add_tint(ufo_adapted_entity)
     Log.logBlock(ufo_adapted_entity, function(m)log(m)end, Log.FINE)
 
