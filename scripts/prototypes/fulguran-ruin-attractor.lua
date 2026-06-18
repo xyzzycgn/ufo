@@ -133,14 +133,40 @@ for mod, list in pairs(modsWithBlacklistedPrototypes) do
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local function add_tint(prototype)
+-- list of prototypes that need some different tint
+local specialTints = {}
+--- @type table<string, string[]> list of prototypes to be tinted specially per mod
+local modsWithSpecialtintedPrototypes = {
+     AdvancedSubstationSpaceAgeUpdate = {
+         ["substation-2"] = { r = 0.693, g = 0.525, b = 0.768, a = 0.8 },
+         ["substation-3"] = { r = 0.693, g = 0.725, b = 0.568, a = 0.8 }
+     }
+}
+-- fill specialTints
+for mod, list in pairs(modsWithSpecialtintedPrototypes) do
+    if mods[mod] then
+        Log.logMsg(function(m)log(m)end, Log.CONFIG, "detected mod %s with special tinted prototypes", mod)
+        for p, specialtint in pairs(list) do
+            specialTints[p] = specialtint
+            Log.logMsg(function(m)log(m)end, Log.CONFIG, "special tint for prototype %s", p)
+        end
+    end
+end
+
+Log.logBlock(specialTints, function(m)log(m)end, Log.FINE)
+
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+--- @param prototype any prototype whose icon should be tinted
+--- @param poleName string name of the original pole prototype, used to distinguish tint
+local function add_tint(prototype, polename)
     local icon = prototype.icon
     local icon_size = prototype.icon_size
     prototype.icons =  {
         {
             icon = icon,
             icon_size = icon_size,
-            tint = tint,
+            tint = specialTints[polename] or tint,
         }
     }
     prototype.icon = nil
@@ -155,7 +181,8 @@ end
 
 --- fix for #19
 --- @param picture RotatedSprite
-local function layer(picture)
+--- @param usetint Color tint for the sprite
+local function layer(picture, usetint)
     return {
         direction_count = picture.direction_count,
         filename = picture.filename,
@@ -167,23 +194,25 @@ local function layer(picture)
         priority = picture.priority,
         shift = picture.shift,
         line_length = picture.line_length,
-        tint = tint,
+        tint = usetint,
     }
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 --- fix for #19
 --- @param prototype ElectricPolePrototype
-local function tintPicture(prototype)
+--- @param poleName string name of the original pole prototype, used to distinguish tint
+local function tintPicture(prototype, poleName)
     local old_pictures = prototype.pictures
+    local usetint = specialTints[poleName] or tint
 
     if old_pictures.layers then
         -- simple way, when prototype is using layers
-        old_pictures.layers[1].tint = tint
+        old_pictures.layers[1].tint = usetint
     elseif old_pictures.filename then
         -- bit more complicated without layers, but single filename
         local layers = {
-            [1] = layer(old_pictures)
+            [1] = layer(old_pictures, usetint)
         }
         old_pictures.layers = layers
         -- remove no longer used members
@@ -243,7 +272,7 @@ local function makeAdaptedPoles(poleName, orig_pole)
     local ufo_adapted_item = data_util.copy_prototype(baseitem, adapted_name)
     Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
     -- set tint for ufo_adapted_item
-    add_tint(ufo_adapted_item)
+    add_tint(ufo_adapted_item, poleName)
     Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
 
     items[#items + 1] = ufo_adapted_item
@@ -262,9 +291,9 @@ local function makeAdaptedPoles(poleName, orig_pole)
     ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.surface_conditions = consts.sc_only_fulgora
-    tintPicture(ufo_adapted_entity)
+    tintPicture(ufo_adapted_entity, poleName)
     -- set tint for the icon of ufo_adapted_entity
-    add_tint(ufo_adapted_entity)
+    add_tint(ufo_adapted_entity, poleName)
     Log.logBlock(ufo_adapted_entity, function(m)log(m)end, Log.FINE)
 
     entities[#entities + 1] = ufo_adapted_entity
