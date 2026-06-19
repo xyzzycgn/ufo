@@ -114,156 +114,50 @@ local entities = {}
 
 -- fix for #13
 -- list of prototypes which must be blacklisted (e.g. due to no recipe)
-local blacklist = {}
+local blacklisted = {}
 
---- @type table<string, string[]> list of prototypes to be blacklisted per mod
+--- @type table<string, string[]> array of prototypes to be blacklisted per mod
 local modsWithBlacklistedPrototypes = {
     Subsurface = { "tunnel-entrance-cable", "tunnel-exit-cable" }
 }
 
--- fill blacklist
-for mod, list in pairs(modsWithBlacklistedPrototypes) do
-    if mods[mod] then
-        Log.logMsg(function(m)log(m)end, Log.CONFIG, "detected mod %s with prototypes to be blacklisted", mod)
-        for _, p in pairs(list) do
-            blacklist[p] = true
-            Log.logMsg(function(m)log(m)end, Log.CONFIG, "blacklisted prototype %s", p)
-        end
-    end
-end
+prototypeHelper.fillBlacklist(blacklisted, modsWithBlacklistedPrototypes)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
--- list of prototypes that need some different tint
+--- @type table<string, Color> list of prototypes that need some different tint
 local specialTints = {}
---- @type table<string, string[]> list of prototypes to be tinted specially per mod
+
+--- @type table<string, table<string, Color>> list of prototypes to be tinted specially per mod
 local modsWithSpecialtintedPrototypes = {
      AdvancedSubstationSpaceAgeUpdate = {
          ["substation-2"] = { r = 0.693, g = 0.525, b = 0.768, a = 0.8 },
          ["substation-3"] = { r = 0.693, g = 0.725, b = 0.568, a = 0.8 }
      }
 }
--- fill specialTints
-for mod, list in pairs(modsWithSpecialtintedPrototypes) do
-    if mods[mod] then
-        Log.logMsg(function(m)log(m)end, Log.CONFIG, "detected mod %s with special tinted prototypes", mod)
-        for p, specialtint in pairs(list) do
-            specialTints[p] = specialtint
-            Log.logMsg(function(m)log(m)end, Log.CONFIG, "special tint for prototype %s", p)
-        end
-    end
-end
+
+prototypeHelper.fillSpecialTints(specialTints, modsWithSpecialtintedPrototypes)
 
 Log.logBlock(specialTints, function(m)log(m)end, Log.FINE)
 
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
---- @param prototype any prototype whose icon should be tinted
---- @param poleName string name of the original pole prototype, used to distinguish tint
-local function add_tint(prototype, polename)
-    local icon = prototype.icon
-    local icon_size = prototype.icon_size
-    prototype.icons =  {
-        {
-            icon = icon,
-            icon_size = icon_size,
-            tint = specialTints[polename] or tint,
-        }
-    }
-    prototype.icon = nil
-    prototype.icon_size = nil
-end
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-local function getExistingPrototype(group, prototypeName)
-    return data.raw[group][prototypeName]
-end
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
---- fix for #19
---- @param picture RotatedSprite
---- @param usetint Color tint for the sprite
---- @param filename string? if not nil use instead of picture.filename
-local function layer(picture, usetint, filename)
-    return {
-        filename = filename or picture.filename,
-        size = picture.size,
-        x = picture.x,
-        y = picture.y,
-        height = picture.height,
-        width = picture.width,
-        priority = picture.priority,
-        shift = picture.shift,
-        line_length = picture.line_length,
-        tint = usetint,
-    }
-end
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
---- @param sprite RotatedSprite
---- @param layers RotatedSprite[]
-local function setLayersAndResetUnused(sprite, layers)
-    sprite.layers = layers
-    -- remove no longer used members
-    sprite.direction_count = nil
-    sprite.filename = nil
-    sprite.size = nil
-    sprite.x = nil
-    sprite.y = nil
-    sprite.height = nil
-    sprite.width = nil
-    sprite.priority = nil
-    sprite.shift = nil
-    sprite.line_length = nil
-end
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
---- fix for #19
---- @param prototype ElectricPolePrototype
---- @param poleName string name of the original pole prototype, used to distinguish tint
-local function tintPicture(prototype, poleName)
-    --- @type RotatedSprite
-    local old_pictures = prototype.pictures
-    local usetint = specialTints[poleName] or tint
-
-    if old_pictures.layers then
-        -- simple way, when prototype is using layers
-        for _, layer in pairs(old_pictures.layers) do
-            layer.tint = usetint -- set tint for all layers
-        end
-    elseif old_pictures.filename then
-        -- bit more complicated without layers, but single filename
-        local layers = {
-            [1] = layer(old_pictures, usetint)
-        }
-        setLayersAndResetUnused(old_pictures, layers)
-    else
-        -- prototype uses filenames
-        local layers = {}
-        for n, filename in pairs(old_pictures.filenames) do
-            layers[n] = layer(old_pictures, usetint, filename)
-        end
-        setLayersAndResetUnused(old_pictures, layers)
-    end
-end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 --- @param poleName string
 --- @param orig_pole ElectricPolePrototype
 local function makeAdaptedPoles(poleName, orig_pole)
     -- fix for #13 ignore blacklisted prototypes
-    if blacklist[poleName] then
+    if blacklisted[poleName] then
         Log.logMsg(function(m)log(m)end, Log.CONFIG, "ignore blacklisted prototype %s", poleName)
         return
     end
 
     -- fix for #13 check prototypes not in blacklist without recipe
-    local baserecipe = getExistingPrototype("recipe", poleName)
+    local baserecipe = prototypeHelper.getExistingPrototype("recipe", poleName)
     if not baserecipe then
         Log.logMsg(function(m)log(m)end, Log.WARN, "ignore prototype not in blacklist without recipe - %s", poleName)
         return
     end
     -- fix for #13 check prototypes not in blacklist without item
-    local baseitem = getExistingPrototype("item", poleName)
+    local baseitem = prototypeHelper.getExistingPrototype("item", poleName)
     if not baseitem then
         Log.logMsg(function(m)log(m)end, Log.WARN, "ignore prototype not in blacklist without item - %s", poleName)
         return
@@ -287,7 +181,7 @@ local function makeAdaptedPoles(poleName, orig_pole)
     local ufo_adapted_item = data_util.copy_prototype(baseitem, adapted_name)
     Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
     -- set tint for ufo_adapted_item
-    add_tint(ufo_adapted_item, poleName)
+    prototypeHelper.add_tint(specialTints, ufo_adapted_item, poleName, tint)
     Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
 
     items[#items + 1] = ufo_adapted_item
@@ -306,9 +200,9 @@ local function makeAdaptedPoles(poleName, orig_pole)
     ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.surface_conditions = consts.sc_only_fulgora
-    tintPicture(ufo_adapted_entity, poleName)
+    prototypeHelper.tintPicture(specialTints, ufo_adapted_entity, poleName, tint)
     -- set tint for the icon of ufo_adapted_entity
-    add_tint(ufo_adapted_entity, poleName)
+    prototypeHelper.add_tint(specialTints, ufo_adapted_entity, poleName, tint)
     Log.logBlock(ufo_adapted_entity, function(m)log(m)end, Log.FINE)
 
     entities[#entities + 1] = ufo_adapted_entity
