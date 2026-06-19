@@ -232,7 +232,6 @@ describe("prototypeHelper", function()
     it("layer creates a tinted layer from a rotated sprite", function()
         local sprite = {
             filename = "base.png",
-            direction_count = 17,
             size = 128,
             x = 1,
             y = 2,
@@ -249,7 +248,7 @@ describe("prototypeHelper", function()
 
         assert.is.same({
             filename = "base.png",
-            direction_count = 17,
+            direction_count = 4,
             size = 128,
             x = 1,
             y = 2,
@@ -358,6 +357,7 @@ describe("prototypeHelper", function()
         assert.is.same({
             {
                 filename = "single.png",
+                direction_count = 4,
                 size = 128,
                 x = 1,
                 y = 2,
@@ -407,6 +407,7 @@ describe("prototypeHelper", function()
         assert.is.same({
             {
                 filename = "first.png",
+                direction_count = 4,
                 size = 128,
                 x = 1,
                 y = 2,
@@ -419,6 +420,7 @@ describe("prototypeHelper", function()
             },
             {
                 filename = "second.png",
+                direction_count = 4,
                 size = 128,
                 x = 1,
                 y = 2,
