@@ -119,7 +119,8 @@ local blacklisted = {}
 --- @type table<string, string[]> array of prototypes to be blacklisted per mod
 local modsWithBlacklistedPrototypes = {
     Subsurface = { "tunnel-entrance-cable", "tunnel-exit-cable" },
-    ["cargo-ships"] = { "floating-electric-pole" }
+    ["cargo-ships"] = { "floating-electric-pole" },
+    ["James-Train-Mod"] = { "james-rail-pole", "james-track-pole" },
 }
 
 prototypeHelper.fillBlacklist(blacklisted, modsWithBlacklistedPrototypes)
@@ -213,6 +214,10 @@ end
 -- create recipes and so on for each adapted electric-pole
 for k, v in pairs(data.raw["electric-pole"]) do
     makeAdaptedPoles(k, v)
+    -- fix for #26: if James-Train-Mod is present unset next-upgrade for small-electric-pole
+    if mods["James-Train-Mod"] and k == "small-electric-pole" then
+        v.next_upgrade = nil
+    end
 end
 -- ###############################################################
 
