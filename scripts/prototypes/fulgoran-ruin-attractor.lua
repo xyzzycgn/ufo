@@ -118,7 +118,8 @@ local blacklisted = {}
 
 --- @type table<string, string[]> array of prototypes to be blacklisted per mod
 local modsWithBlacklistedPrototypes = {
-    Subsurface = { "tunnel-entrance-cable", "tunnel-exit-cable" }
+    Subsurface = { "tunnel-entrance-cable", "tunnel-exit-cable" },
+    ["cargo-ships"] = { "floating-electric-pole" }
 }
 
 prototypeHelper.fillBlacklist(blacklisted, modsWithBlacklistedPrototypes)
