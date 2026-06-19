@@ -114,62 +114,50 @@ local entities = {}
 
 -- fix for #13
 -- list of prototypes which must be blacklisted (e.g. due to no recipe)
-local blacklist = {}
+local blacklisted = {}
 
---- @type table<string, string[]> list of prototypes to be blacklisted per mod
+--- @type table<string, string[]> array of prototypes to be blacklisted per mod
 local modsWithBlacklistedPrototypes = {
     Subsurface = { "tunnel-entrance-cable", "tunnel-exit-cable" }
 }
 
--- fill blacklist
-for mod, list in pairs(modsWithBlacklistedPrototypes) do
-    if mods[mod] then
-        Log.logMsg(function(m)log(m)end, Log.CONFIG, "detected mod %s with prototypes to be blacklisted", mod)
-        for _, p in pairs(list) do
-            blacklist[p] = true
-            Log.logMsg(function(m)log(m)end, Log.CONFIG, "blacklisted prototype %s", p)
-        end
-    end
-end
+prototypeHelper.fillBlacklist(blacklisted, modsWithBlacklistedPrototypes)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local function add_tint(prototype)
-    local icon = prototype.icon
-    local icon_size = prototype.icon_size
-    prototype.icons =  {
-        {
-            icon = icon,
-            icon_size = icon_size,
-            tint = tint,
-        }
-    }
-    prototype.icon = nil
-    prototype.icon_size = nil
-end
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--- @type table<string, Color> list of prototypes that need some different tint
+local specialTints = {}
 
-local function getExistingPrototype(group, prototypeName)
-    return data.raw[group][prototypeName]
-end
+--- @type table<string, table<string, Color>> list of prototypes to be tinted specially per mod
+local modsWithSpecialtintedPrototypes = {
+     AdvancedSubstationSpaceAgeUpdate = {
+         ["substation-2"] = { r = 0.693, g = 0.525, b = 0.768, a = 0.8 },
+         ["substation-3"] = { r = 0.693, g = 0.725, b = 0.568, a = 0.8 }
+     }
+}
+
+prototypeHelper.fillSpecialTints(specialTints, modsWithSpecialtintedPrototypes)
+
+Log.logBlock(specialTints, function(m)log(m)end, Log.FINE)
+
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 --- @param poleName string
 --- @param orig_pole ElectricPolePrototype
 local function makeAdaptedPoles(poleName, orig_pole)
     -- fix for #13 ignore blacklisted prototypes
-    if blacklist[poleName] then
+    if blacklisted[poleName] then
         Log.logMsg(function(m)log(m)end, Log.CONFIG, "ignore blacklisted prototype %s", poleName)
         return
     end
 
     -- fix for #13 check prototypes not in blacklist without recipe
-    local baserecipe = getExistingPrototype("recipe", poleName)
+    local baserecipe = prototypeHelper.getExistingPrototype("recipe", poleName)
     if not baserecipe then
         Log.logMsg(function(m)log(m)end, Log.WARN, "ignore prototype not in blacklist without recipe - %s", poleName)
         return
     end
     -- fix for #13 check prototypes not in blacklist without item
-    local baseitem = getExistingPrototype("item", poleName)
+    local baseitem = prototypeHelper.getExistingPrototype("item", poleName)
     if not baseitem then
         Log.logMsg(function(m)log(m)end, Log.WARN, "ignore prototype not in blacklist without item - %s", poleName)
         return
@@ -193,7 +181,7 @@ local function makeAdaptedPoles(poleName, orig_pole)
     local ufo_adapted_item = data_util.copy_prototype(baseitem, adapted_name)
     Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
     -- set tint for ufo_adapted_item
-    add_tint(ufo_adapted_item)
+    prototypeHelper.add_tint(specialTints, ufo_adapted_item, poleName, tint)
     Log.logBlock(ufo_adapted_item, function(m)log(m)end, Log.FINE)
 
     items[#items + 1] = ufo_adapted_item
@@ -212,9 +200,9 @@ local function makeAdaptedPoles(poleName, orig_pole)
     ufo_adapted_entity.localised_name = { "entity-name.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.localised_description = { "entity-description.ufo-adaptees" , { "entity-name." .. poleName }}
     ufo_adapted_entity.surface_conditions = consts.sc_only_fulgora
-    ufo_adapted_entity.pictures.layers[1].tint = tint
-    -- set tint for ufo_adapted_entity
-    add_tint(ufo_adapted_entity)
+    prototypeHelper.tintPicture(specialTints, ufo_adapted_entity, poleName, tint)
+    -- set tint for the icon of ufo_adapted_entity
+    prototypeHelper.add_tint(specialTints, ufo_adapted_entity, poleName, tint)
     Log.logBlock(ufo_adapted_entity, function(m)log(m)end, Log.FINE)
 
     entities[#entities + 1] = ufo_adapted_entity
