@@ -182,10 +182,10 @@ end
 --- fix for #19
 --- @param picture RotatedSprite
 --- @param usetint Color tint for the sprite
-local function layer(picture, usetint)
+--- @param filename string? if not nil use instead of picture.filename
+local function layer(picture, usetint, filename)
     return {
-        direction_count = picture.direction_count,
-        filename = picture.filename,
+        filename = filename or picture.filename,
         size = picture.size,
         x = picture.x,
         y = picture.y,
@@ -199,35 +199,50 @@ local function layer(picture, usetint)
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+--- @param sprite RotatedSprite
+--- @param layers RotatedSprite[]
+local function setLayersAndResetUnused(sprite, layers)
+    sprite.layers = layers
+    -- remove no longer used members
+    sprite.direction_count = nil
+    sprite.filename = nil
+    sprite.size = nil
+    sprite.x = nil
+    sprite.y = nil
+    sprite.height = nil
+    sprite.width = nil
+    sprite.priority = nil
+    sprite.shift = nil
+    sprite.line_length = nil
+end
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 --- fix for #19
 --- @param prototype ElectricPolePrototype
 --- @param poleName string name of the original pole prototype, used to distinguish tint
 local function tintPicture(prototype, poleName)
+    --- @type RotatedSprite
     local old_pictures = prototype.pictures
     local usetint = specialTints[poleName] or tint
 
     if old_pictures.layers then
         -- simple way, when prototype is using layers
-        old_pictures.layers[1].tint = usetint
+        for _, layer in pairs(old_pictures.layers) do
+            layer.tint = usetint -- set tint for all layers
+        end
     elseif old_pictures.filename then
         -- bit more complicated without layers, but single filename
         local layers = {
             [1] = layer(old_pictures, usetint)
         }
-        old_pictures.layers = layers
-        -- remove no longer used members
-        old_pictures.direction_count = nil
-        old_pictures.filename = nil
-        old_pictures.size = nil
-        old_pictures.x = nil
-        old_pictures.y = nil
-        old_pictures.height = nil
-        old_pictures.width = nil
-        old_pictures.priority = nil
-        old_pictures.shift = nil
-        old_pictures.line_length = nil
+        setLayersAndResetUnused(old_pictures, layers)
     else
-        -- worst case – prototype uses filenames
+        -- prototype uses filenames
+        local layers = {}
+        for n, filename in pairs(old_pictures.filenames) do
+            layers[n] = layer(old_pictures, usetint, filename)
+        end
+        setLayersAndResetUnused(old_pictures, layers)
     end
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
