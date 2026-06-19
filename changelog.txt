@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+Date: 2026-06-20
+  Bugfixes:
+    - Fixed a compatibility issue in interaction with mod "AdvancedSubstationSpaceAgeUpdate"
+  Changes:
+    - added custom tints for the adapted versions of the substation-prototypes from "AdvancedSubstationSpaceAgeUpdate"
+    - blacklisted floating-electric-pole from mod "cargo-ships"
+---------------------------------------------------------------------------------------------------
 Version: 1.0.3
 Date: 2026-06-16
   Bugfixes:
