@@ -155,6 +155,23 @@ describe("prototypeHelper", function()
         assert.is_nil(blacklist["not-blocked"])
     end)
 
+    it("fillWhitelist adds prototypes only for active mods", function()
+        _G.mods = {
+            ActiveMod = true
+        }
+        local whitelist = {}
+        local prototypesToBeWhitelisted = {
+            ActiveMod = { "blocked-a", "blocked-b" },
+            InactiveMod = { "not-blocked" }
+        }
+
+        prototypeHelper.fillWhitelist(whitelist, prototypesToBeWhitelisted)
+
+        assert.is_true(whitelist["blocked-a"])
+        assert.is_true(whitelist["blocked-b"])
+        assert.is_nil(whitelist["not-blocked"])
+    end)
+
     it("fillSpecialTints adds special tints only for active mods", function()
         _G.mods = {
             ActiveTintMod = true
