@@ -1,11 +1,18 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.0.5
+Version: 1.0.6
 Date: 2026-06-20
+  Changes:
+    - Introduced a whitelist for electric-poles for that an adapter-type will be generated. Mod no longer tries to do so
+      for all electric-poles found in the game. Currently whitelisted are all poles from vanilla game and the poles
+      from the mods "AdvancedSubstationSpaceAgeUpdate" and "Large-PowerPoles".
+---------------------------------------------------------------------------------------------------
+Version: 1.0.5
+Date: 2026-06-19
   Bugfixes:
     - Fixed a compatibility issue in interaction with mod "James-Train-Mod"
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.4
-Date: 2026-06-20
+Date: 2026-06-19
   Bugfixes:
     - Fixed a compatibility issue in interaction with mod "AdvancedSubstationSpaceAgeUpdate"
   Changes:
