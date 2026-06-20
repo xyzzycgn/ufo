@@ -36,16 +36,27 @@ end
 --- fill blacklist
 --- @param blacklist any
 --- @param prototypesToBeBlacklisted table<string, string[]> indexed by mod name
-local function fillBlacklist(blacklist, prototypesToBeBlacklisted)
+--- @param msg string
+local function fillBlackOrWhitelist(blacklist, prototypesToBeBlacklisted, msg)
     for mod, list in pairs(prototypesToBeBlacklisted) do
         if mods[mod] then
-            Log.logMsg(function(m)log(m)end, Log.CONFIG, "detected mod %s with prototypes to be blacklisted", mod)
+            Log.logMsg(function(m)log(m)end, Log.CONFIG, "detected mod %s with prototypes to be %s", mod, msg)
             for _, p in pairs(list) do
                 blacklist[p] = true
-                Log.logMsg(function(m)log(m)end, Log.CONFIG, "blacklisted prototype %s", p)
+                Log.logMsg(function(m)log(m)end, Log.CONFIG, "%s prototype %s", msg, p)
             end
         end
     end
+end
+-- ###############################################################
+
+local function fillBlacklist(blacklist, prototypesToBeBlacklisted)
+    fillBlackOrWhitelist(blacklist, prototypesToBeBlacklisted, "blacklisted")
+end
+-- ###############################################################
+
+local function fillWhitelist(whitelist, prototypesToBeWhitelisted)
+    fillBlackOrWhitelist(whitelist, prototypesToBeWhitelisted, "whitelisted")
 end
 -- ###############################################################
 
@@ -166,6 +177,7 @@ end
 return {
     copyAndReplace = copyAndReplace,
     additionalIngredients = additionalIngredients,
+    fillWhitelist = fillWhitelist,
     fillBlacklist = fillBlacklist,
     fillSpecialTints = fillSpecialTints,
     add_tint = add_tint,

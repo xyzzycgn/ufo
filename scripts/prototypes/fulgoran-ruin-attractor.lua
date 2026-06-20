@@ -117,11 +117,7 @@ local entities = {}
 local blacklisted = {}
 
 --- @type table<string, string[]> array of prototypes to be blacklisted per mod
-local modsWithBlacklistedPrototypes = {
-    Subsurface = { "tunnel-entrance-cable", "tunnel-exit-cable" },
-    ["cargo-ships"] = { "floating-electric-pole" },
-    ["James-Train-Mod"] = { "james-rail-pole", "james-track-pole" },
-}
+local modsWithBlacklistedPrototypes = {}
 
 prototypeHelper.fillBlacklist(blacklisted, modsWithBlacklistedPrototypes)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -211,12 +207,32 @@ local function makeAdaptedPoles(poleName, orig_pole)
 end
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
--- create recipes and so on for each adapted electric-pole
-for k, v in pairs(data.raw["electric-pole"]) do
-    makeAdaptedPoles(k, v)
+-- list of prototypes which are whitelisted (e.g. will be adapted)
+-- all vanilla poles are whitelisted
+local whitelisted = {
+    ["small-electric-pole"] = true,
+    ["medium-electric-pole"] = true,
+    ["big-electric-pole"] = true,
+    ["substation"] = true,
+}
+
+--- @type table<string, string[]> array of prototypes to be whitelisted per mod
+local modsWithWHitelistedPrototypes = {
+    ["Large-PowerPoles"] = { "Large-PowerPoles-big-electric-pole-grid-64" },
+    AdvancedSubstationSpaceAgeUpdate = { "substation-2", "substation-3"},
+}
+
+prototypeHelper.fillWhitelist(whitelisted, modsWithWHitelistedPrototypes)
+Log.logBlock(whitelisted, function(m)log(m)end)
+
+-- create recipes and so on for only for electric-poles from vanilla game or whitelisted mods
+for k, _ in pairs(whitelisted) do
+    local pole = data.raw["electric-pole"][k]
+    makeAdaptedPoles(k, pole)
     -- fix for #26: if James-Train-Mod is present unset next-upgrade for small-electric-pole
     if mods["James-Train-Mod"] and k == "small-electric-pole" then
-        v.next_upgrade = nil
+        Log.log("unset next_upgrade for small-electric-pole - James-Train-Mod is present", function(m)log(m)end)
+        pole.next_upgrade = nil
     end
 end
 -- ###############################################################
