@@ -68,20 +68,24 @@ describe("prototypeHelper", function()
 
         prototypeHelper = require("scripts.prototypeHelper")
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     teardown(function()
         _G.require = original_require
         _G.mods = original_mods
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     before_each(function()
         reset_data_raw()
         _G.mods = {}
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     after_each(function()
         mock_scale:clear() -- clear the call history
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("copyAndReplace copies a prototype and applies replacements without scaling", function()
         local replacement = { stack_size = 50, icon = "new-icon" }
@@ -97,6 +101,7 @@ describe("prototypeHelper", function()
         })
         assert.spy(mock_scale).was_not_called()
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("copyAndReplace copies a prototype, scales it, and applies replacements", function()
         local replacement = { stack_size = 20 }
@@ -117,6 +122,7 @@ describe("prototypeHelper", function()
             ingredients = { { "iron-plate", 1 } }
         }, scale_factor)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("additionalIngredients appends extra ingredients", function()
         local prototype = {
@@ -137,6 +143,7 @@ describe("prototypeHelper", function()
             }
         })
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("fillBlacklist adds prototypes only for active mods", function()
         _G.mods = {
@@ -154,6 +161,7 @@ describe("prototypeHelper", function()
         assert.is_true(blacklist["blocked-b"])
         assert.is_nil(blacklist["not-blocked"])
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("fillWhitelist adds prototypes only for active mods", function()
         _G.mods = {
@@ -171,6 +179,7 @@ describe("prototypeHelper", function()
         assert.is_true(whitelist["blocked-b"])
         assert.is_nil(whitelist["not-blocked"])
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("fillSpecialTints adds special tints only for active mods", function()
         _G.mods = {
@@ -195,6 +204,7 @@ describe("prototypeHelper", function()
         assert.is.same(tintB, specialTints["special-b"])
         assert.is_nil(specialTints["ignored"])
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("add_tint converts icon and icon_size into tinted icons using a special tint", function()
         local specialTint = { r = 0.2, g = 0.3, b = 0.4, a = 0.5 }
@@ -219,6 +229,7 @@ describe("prototypeHelper", function()
         assert.is_nil(prototype.icon)
         assert.is_nil(prototype.icon_size)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("add_tint falls back to the passed default tint when no special tint exists", function()
         local defaultTint = { r = 0.9, g = 0.8, b = 0.7, a = 0.6 }
@@ -239,12 +250,14 @@ describe("prototypeHelper", function()
         assert.is_nil(prototype.icon)
         assert.is_nil(prototype.icon_size)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("getExistingPrototype returns an existing prototype from data.raw", function()
         local result = prototypeHelper.getExistingPrototype("recipe", "test-recipe")
 
         assert.is.same(_G.data.raw["recipe"]["test-recipe"], result)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("layer creates a tinted layer from a rotated sprite", function()
         local sprite = {
@@ -277,6 +290,7 @@ describe("prototypeHelper", function()
             tint = layerTint
         }, result)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("layer uses the provided filename override", function()
         local sprite = {
@@ -298,6 +312,7 @@ describe("prototypeHelper", function()
         assert.are.equal("override.png", result.filename)
         assert.is.same(layerTint, result.tint)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("setLayersAndResetUnused sets layers and removes sprite fields that are no longer used", function()
         local sprite = {
@@ -333,6 +348,7 @@ describe("prototypeHelper", function()
         assert.is_nil(sprite.shift)
         assert.is_nil(sprite.line_length)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("tintPicture tints all existing picture layers using a special tint", function()
         local specialTint = { r = 0.2, g = 0.3, b = 0.4, a = 0.5 }
@@ -351,6 +367,7 @@ describe("prototypeHelper", function()
         assert.is.same(specialTint, prototype.pictures.layers[1].tint)
         assert.is.same(specialTint, prototype.pictures.layers[2].tint)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("tintPicture converts a single filename picture into tinted layers using the passed default tint", function()
         local defaultTint = { r = 0.9, g = 0.8, b = 0.7, a = 0.6 }
@@ -397,6 +414,7 @@ describe("prototypeHelper", function()
         assert.is_nil(prototype.pictures.shift)
         assert.is_nil(prototype.pictures.line_length)
     end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     it("tintPicture converts multiple filenames into tinted layers using a special tint", function()
         local specialTint = { r = 0.2, g = 0.3, b = 0.4, a = 0.5 }
@@ -459,5 +477,34 @@ describe("prototypeHelper", function()
         assert.is_nil(prototype.pictures.priority)
         assert.is_nil(prototype.pictures.shift)
         assert.is_nil(prototype.pictures.line_length)
+    end)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    describe("next_upgrade only filled", function()
+        it("if orig_pole not already has a next_upgrade", function()
+            local pole = { next_upgrade = "already set" }
+            prototypeHelper.next_upgrade(pole, "upgrade")
+
+            assert.is.same({ next_upgrade = "already set" }, pole)
+        end)
+
+        it("if flag 'not-upgradable' isn't set ", function()
+            local pole = { flags = { ["not-upgradable"] = true } }
+            prototypeHelper.next_upgrade(pole, "upgrade")
+
+            assert.is.same({ flags = { ["not-upgradable"] = true } }, pole)
+        end)
+
+        it("if both aren't set", function()
+            local pole = {}
+            prototypeHelper.next_upgrade(pole, "upgrade")
+
+            assert.is.same({ next_upgrade = "upgrade" }, pole)
+
+            pole = { flags = {}}
+            prototypeHelper.next_upgrade(pole, "upgrade")
+
+            assert.is.same({ flags = {}, next_upgrade = "upgrade" }, pole)
+        end)
     end)
 end)
