@@ -174,6 +174,18 @@ local function tintPicture(specialTints, prototype, poleName, default_tint)
 end
 -- ###############################################################
 
+--- @param orig_pole ElectricPolePrototype
+--- @param poleName string
+local function next_upgrade(orig_pole, adapted_name)
+    local flags = orig_pole.flags
+    -- orig_pole must not already have a next_upgrade or flag "not-upgradable" set
+    if not (orig_pole.next_upgrade or (flags and flags["not-upgradable"])) then
+        -- set adapted pole as possible upgrade
+        orig_pole.next_upgrade = adapted_name
+    end
+end
+-- ###############################################################
+
 return {
     copyAndReplace = copyAndReplace,
     additionalIngredients = additionalIngredients,
@@ -185,4 +197,5 @@ return {
     layer = layer,
     setLayersAndResetUnused = setLayersAndResetUnused,
     tintPicture = tintPicture,
+    next_upgrade = next_upgrade,
 }
