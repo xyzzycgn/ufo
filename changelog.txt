@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.7
+Date: 2026-06-24
+  Bugfixes:
+    - Fixed a compatibility issue in interaction with mods modifying recipes for some basic entities (e.g.
+      assembling-machine-3), causing load errors due to recipes with duplicate entries.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.6
 Date: 2026-06-20
   Changes:
