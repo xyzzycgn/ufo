@@ -44,6 +44,8 @@ ufo_furnace_entity.energy_source.drain = "300W"
 -- scale icon of the production
 ufo_furnace_entity.icon_draw_specification.scale = scale_factor
 ufo_furnace_entity.icon_draw_specification.scale_for_many = scale_factor
+-- fix for #33 - deals with other mods setting next_upgrade in the vanilla furnace and prevent load errors
+ufo_furnace_entity.next_upgrade = nil
 
 Log.logBlock(ufo_furnace_entity, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

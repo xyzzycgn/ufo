@@ -35,6 +35,8 @@ ufo_beacon_entity.supply_area_distance = ufo_beacon_entity.supply_area_distance 
 ufo_beacon_entity.factoriopedia_description = { "factoriopedia-description.ufo-beacon" }
 -- to make big-beautiful-module-icons working
 ufo_beacon_entity.icons_positioning = nil
+-- fix for #33 - deals with other mods setting next_upgrade in the vanilla beacon and prevent load errors
+ufo_beacon_entity.next_upgrade = nil
 
 Log.logBlock(ufo_beacon_entity, function(m)log(m)end, Log.FINE)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
