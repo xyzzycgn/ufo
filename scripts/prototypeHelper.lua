@@ -27,8 +27,23 @@ end
 
 local function additionalIngredients(prototype, ai)
     local ingredients = prototype.ingredients
+
+    local already_contained = {}
+
+    -- create a list of all already contained item-names
+    for ndx, ingredient in pairs(ingredients) do
+        already_contained[ingredient.name] = ndx
+    end
+
     for _, ingredient in pairs(ai) do
-        ingredients[#ingredients + 1] = ingredient
+        local ndx = already_contained[ingredient.name]
+        if ndx then
+            -- already known component for the recipe – sum the amounts
+            ingredients[ndx].amount = ingredients[ndx].amount + ingredient.amount
+        else
+            -- new component for the recipe – add it to the list
+            ingredients[#ingredients + 1] = ingredient
+        end
     end
 end
 -- ###############################################################

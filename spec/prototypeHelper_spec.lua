@@ -87,61 +87,89 @@ describe("prototypeHelper", function()
     end)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("copyAndReplace copies a prototype and applies replacements without scaling", function()
-        local replacement = { stack_size = 50, icon = "new-icon" }
+    describe("copyAndReplace", function()
+        it("copies a prototype and applies replacements without scaling", function()
+            local replacement = { stack_size = 50, icon = "new-icon" }
 
-        local result = prototypeHelper.copyAndReplace("item", "test-item", "new-test-item", replacement)
+            local result = prototypeHelper.copyAndReplace("item", "test-item", "new-test-item", replacement)
 
-        assert.is.same(result, {
-            name = "new-test-item",
-            type = "item",
-            stack_size = 50,
-            icon = "new-icon",
-            ingredients = { { "iron-plate", 1 } }
-        })
-        assert.spy(mock_scale).was_not_called()
+            assert.is.same(result, {
+                name = "new-test-item",
+                type = "item",
+                stack_size = 50,
+                icon = "new-icon",
+                ingredients = { { "iron-plate", 1 } }
+            })
+            assert.spy(mock_scale).was_not_called()
+        end)
+    -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        it("copies a prototype, scales it, and applies replacements", function()
+            local replacement = { stack_size = 20 }
+            local scale_factor = 2.5
+
+            local result = prototypeHelper.copyAndReplace("item", "test-item", "scaled-item", replacement, scale_factor)
+
+            assert.is.same(result, {
+                name = "scaled-item",
+                type = "item",
+                stack_size = 20,
+                ingredients = { { "iron-plate", 1 } }
+            })
+            assert.spy(mock_scale).was_called_with({
+                name = "scaled-item",
+                type = "item",
+                stack_size = 10,
+                ingredients = { { "iron-plate", 1 } }
+            }, scale_factor)
+        end)
+    -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     end)
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    it("copyAndReplace copies a prototype, scales it, and applies replacements", function()
-        local replacement = { stack_size = 20 }
-        local scale_factor = 2.5
-
-        local result = prototypeHelper.copyAndReplace("item", "test-item", "scaled-item", replacement, scale_factor)
-
-        assert.is.same(result, {
-            name = "scaled-item",
-            type = "item",
-            stack_size = 20,
-            ingredients = { { "iron-plate", 1 } }
-        })
-        assert.spy(mock_scale).was_called_with({
-            name = "scaled-item",
-            type = "item",
-            stack_size = 10,
-            ingredients = { { "iron-plate", 1 } }
-        }, scale_factor)
-    end)
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    it("additionalIngredients appends extra ingredients", function()
-        local prototype = {
-            ingredients = { { "iron-plate", 1 } }
-        }
-        local extra = {
-            { "copper-plate", 5 },
-            { "electronic-circuit", 2 }
-        }
-
-        prototypeHelper.additionalIngredients(prototype, extra)
-
-        assert.is.same(prototype, {
-            ingredients = {
-                { "iron-plate", 1 },
-                { "copper-plate", 5 },
-                { "electronic-circuit", 2 }
+    describe("additionalIngredients", function()
+        it("appends extra ingredients", function()
+            local prototype = {
+                ingredients = { { type = "item", name = "iron-plate", amount = 1 } }
             }
-        })
+            local extra = {
+                { type = "item", name = "copper-plate", amount = 5 },
+                { type = "item", name = "electronic-circuit", amount = 2 }
+            }
+
+            prototypeHelper.additionalIngredients(prototype, extra)
+
+            assert.is.same(prototype, {
+                ingredients = {
+                    { type = "item", name = "iron-plate", amount = 1 },
+                    { type = "item", name = "copper-plate", amount = 5 },
+                    { type = "item", name = "electronic-circuit",amount =  2 }
+                }
+            })
+        end)
+
+        it("adds amounts for existing ingredients", function()
+            local prototype = {
+                ingredients = {
+                    { type = "item", name = "iron-plate", amount = 1 },
+                    { type = "item", name = "copper-plate", amount = 3 },
+                }
+            }
+            local extra = {
+                { type = "item", name = "copper-plate", amount = 5 },
+                { type = "item", name = "electronic-circuit", amount = 2 }
+            }
+
+            prototypeHelper.additionalIngredients(prototype, extra)
+
+            assert.is.same(prototype, {
+                ingredients = {
+                    { type = "item", name = "iron-plate", amount = 1 },
+                    { type = "item", name = "copper-plate", amount = 8 },
+                    { type = "item", name = "electronic-circuit", amount = 2 }
+                }
+            })
+        end)
+
     end)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
