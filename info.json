@@ -4,7 +4,7 @@
   "description": "Use fulgoran objects or technologies to improve your factory",
   "author": "xyzzycgn",
   "homepage": "https://github.com/xyzzycgn/ufo.git",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "factorio_version": "2.0",
   "dependencies": [
     "space-age >= 2.0.72"
@@ -13,7 +13,7 @@
     , "log4factorio >= 0.2.2"
     , "big-beautiful-module-icons >= 1.0.3"
     , "? Electric_flying_enemies >= 0.1.9"
-    , "? Hovercrafts-reloaded >= 2.0.5"
+    , "? Hovercrafts >= 2.0.4"
   ],
   "space_travel_required": true
 }
