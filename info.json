@@ -13,7 +13,7 @@
     , "log4factorio >= 0.2.2"
     , "big-beautiful-module-icons >= 1.0.3"
     , "? Electric_flying_enemies >= 0.1.9"
-    , "? Hovercrafts >= 2.0.4"
+    , "? Hovercrafts-reloaded >= 2.0.5"
   ],
   "space_travel_required": true
 }

@@ -4,6 +4,8 @@ Date: 2026-06-25
   Bugfixes:
     - Fixed a compatibility issue in interaction with mods modifying certain basic entities (like beacon) which are
       used as templates for the advanced ufo-entities, causing load errors due to different bounding-boxes.
+  Changes:
+    - Switched dependency to Hovercrafts-reloaded.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.7
 Date: 2026-06-24
