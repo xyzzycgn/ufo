@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.9
+Date: 2026-06-25
+  Bugfixes:
+    - Roll back dependency to Hovercrafts - the new mod Hovercrafts-reloaded will be retired as soon as the changes made
+      to it are integrated into Hovercrafts. Sorry for the inconvenience.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.8
 Date: 2026-06-25
   Bugfixes:
