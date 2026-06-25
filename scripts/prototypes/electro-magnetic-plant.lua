@@ -42,6 +42,8 @@ ufo_emp_entity.energy_usage = "1600kW"
 -- scale icon of the production
 ufo_emp_entity.icon_draw_specification.scale = scale_factor
 ufo_emp_entity.icon_draw_specification.scale_for_many = scale_factor
+-- fix for #33 - deals with other mods setting next_upgrade in the vanilla electromagnetic-plant and prevent load errors
+ufo_emp_entity.next_upgrade = nil
 
 Log.logBlock(ufo_emp_entity, function(m)log(m)end, Log.FINER)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
