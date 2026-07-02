@@ -2,7 +2,7 @@
 Version: 1.0.11
 Date: 2026-07-02
   Bugfixes:
-    - Fixed a compatibility issue in interaction with mod "dea-dea-system"
+    - Fixed a compatibility issue in interaction with mod "dea-dia-system"
   Changes:
     - introduced a more generic solution for handling compatibility issues with mods dealing with electric-poles
       having different bounding-boxes.
