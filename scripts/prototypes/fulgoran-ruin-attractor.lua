@@ -219,17 +219,12 @@ local modsWithWHitelistedPrototypes = {
 }
 
 prototypeHelper.fillWhitelist(whitelisted, modsWithWHitelistedPrototypes)
-Log.logBlock(whitelisted, function(m)log(m)end)
+Log.logBlock(whitelisted, function(m)log(m)end, Log.FINE)
 
 -- create recipes and so on for only for electric-poles from vanilla game or whitelisted mods
 for k, _ in pairs(whitelisted) do
     local pole = data.raw["electric-pole"][k]
     makeAdaptedPoles(k, pole)
-    -- fix for #26: if James-Train-Mod is present unset next-upgrade for small-electric-pole
-    if mods["James-Train-Mod"] and k == "small-electric-pole" then
-        Log.log("unset next_upgrade for small-electric-pole - James-Train-Mod is present", function(m)log(m)end)
-        pole.next_upgrade = nil
-    end
 end
 -- ###############################################################
 

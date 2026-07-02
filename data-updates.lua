@@ -57,3 +57,22 @@ Log.logBlock(edf_recipes, function(m)log(m)end, Log.FINE)
 Log.logBlock(data.raw["technology"]["ufo-electrodynamic-fragmentation-tech"], function(m)log(m)end, Log.FINE)
 
 data:extend(edf_recipes)
+
+-- ###############################################################
+
+-- fix for #38
+-- unset next_upgrade in poles defined by certain mods which have different bounding-boxes
+local mod_poles = {
+    ["dea-dia-system"] = { "large-electric-pole" },
+    ["James-Train-Mod"] = { "james-rail-pole", "james-track-pole" },
+}
+
+for mod, poles in pairs(mod_poles) do
+    if mods[mod]then
+        for _, k in pairs(poles) do
+            local pole = data.raw["electric-pole"][k]
+            Log.logMsg(function(m)log(m)end, Log.CONFIG, "unset next_upgrade for %s from %s", k, mod)
+            pole.next_upgrade = nil
+        end
+    end
+end
