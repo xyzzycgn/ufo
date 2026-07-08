@@ -22,7 +22,7 @@ local ufo_inhibitor_shard_item = prototypeHelper.copyAndReplace("item", "iron-pl
 })
 
 local ufo_inhibitor_shard_recipe = prototypeHelper.copyAndReplace("recipe", "iron-plate", "ufo-resonance-shard", {
-    category = "metallurgy",
+    categories = { "metallurgy" },
     ingredients = {
         { type = 'item', name = 'ufo-resonance-raw-shard', amount = 1 },
         { type = 'item', name = 'holmium-ore', amount = 1 }
@@ -111,7 +111,7 @@ local ufo_inhibitor_tech = {
     icons = {
         {
             icon = "__mferrari_graphics_pack_1__/graphics/entities/conduit/conduit-icon.png",
-            icon_size = 256,
+            icon_size = 64,
             icon_mipmaps = 4,
             scale = scale_factor,
         }
