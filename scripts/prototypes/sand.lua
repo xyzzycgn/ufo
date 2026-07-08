@@ -55,7 +55,7 @@ local sand_recipe =   {
     results = { { type = "item", name = "ufo-sand", amount = 5 } },
     allow_productivity = true,
     auto_recycle = false,
-    category = "crushing",
+    categories = { "crushing" },
     subgroup = "intermediate-product",
     hide_from_player_crafting = true,
     factoriopedia_alternative = "ufo-sand-from-concrete-rubble",
@@ -69,7 +69,7 @@ local ufo_resonance_raw_shard_item = prototypeHelper.copyAndReplace("item", "iro
 })
 
 local ufo_resonance_raw_shard_recipe = prototypeHelper.copyAndReplace("recipe", "iron-plate", "ufo-resonance-raw-shard", {
-    category = "metallurgy",
+    categories = { "metallurgy" },
     ingredients = {
         { type = "item", name = "ufo-sand", amount = 20 },
         { type = "item", name = "holmium-ore", amount = 15 }
@@ -125,7 +125,7 @@ local concrete_rubble_recipe =   {
     results = { { type = "item", name = "ufo-concrete-rubble", amount = 8 } },
     allow_productivity = true,
     auto_recycle = false,
-    category = "crushing",
+    categories = { "crushing" },
     hide_from_player_crafting = true,
     energy_required = 12,
 }

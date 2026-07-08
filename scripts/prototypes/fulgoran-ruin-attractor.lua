@@ -91,7 +91,7 @@ local ufo_adapter_recipe = prototypeHelper.copyAndReplace("recipe", "processing-
         { type = "item", name = "holmium-plate", amount = 1 },
         { type = "item", name = "ufo-resonance-raw-shard", amount = 1 },
     },
-    category="electronics",
+    categories = { "electronics" },
     allow_quality=false,
     energy_required=20,
 })
