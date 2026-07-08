@@ -111,7 +111,7 @@ local ufo_inhibitor_tech = {
     icons = {
         {
             icon = "__mferrari_graphics_pack_1__/graphics/entities/conduit/conduit-icon.png",
-            icon_size = 256,
+            icon_size = 64,
             icon_mipmaps = 4,
             scale = scale_factor,
         }
