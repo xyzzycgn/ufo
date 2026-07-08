@@ -96,7 +96,7 @@ local ufo_resonance_raw_shard_tech = {
     prerequisites = { "ufo-archeological-tech" },
     effects = {{ type = 'unlock-recipe', recipe = 'ufo-resonance-raw-shard' }},
 
-    research_trigger = { type = "mine-entity", entity = "fulgoran-ruin-colossal"},
+    research_trigger = { type = "mine-entity", entities = { "fulgoran-ruin-colossal" }},
     order = "ufo-b",
     factoriopedia_description = { "factoriopedia-description.ufo-resonance-raw-shard-tech" }
 }
