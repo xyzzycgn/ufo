@@ -3,10 +3,10 @@ Version: 1.1.0
 Date: 2026-07-02
   Changes:
     - Upgrade to V 2.1 of base game
-    - Changed dependency to Hovercrafts-reloaded and to V 2.1
-    - Modified certain recipe prototypes to the new format vor 2.1
-    - Modified technology prototypes to the new format vor 2.1
-    - Adapted to new location of recycler (own mod)
+    - Changed dependency to Hovercrafts-reloaded and to V 2.1.0
+    - Modified certain recipe prototypes to the new format for 2.1 API
+    - Modified technology prototypes to the new format for 2.1 API
+    - Adapted to new location of recycler (now own mod, formerly part of quality)
     - Adapted some graphics due to changed behaviour of sprite loader / new images in base game
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.11
