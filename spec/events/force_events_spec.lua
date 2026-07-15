@@ -1,7 +1,7 @@
 ---
 --- Tests for scripts/events/force.lua
 ---
-local Require = require("test.require")
+local Require = require("spec.require")
 _G.require = Require.replace(require)
 
 local assert = require("luassert")

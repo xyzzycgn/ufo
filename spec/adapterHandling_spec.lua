@@ -1,7 +1,7 @@
 ---
 --- Created by xyzzycgn.
 ---
-local Require = require("test.require")
+local Require = require("spec.require")
 _G.require = Require.replace(_G.require)
 
 require("spec.common")
