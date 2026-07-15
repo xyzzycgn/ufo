@@ -39,7 +39,7 @@ Hint: It is recommended to research these **before** the advanced technologies. 
 This mod is compatible to vanilla game (= space age) and offers some changes to two (optional) mods 
 
 - [Fulgoran enemies](https://mods.factorio.com/mod/Electric_flying_enemies)
-- [Hovercrafts](https://mods.factorio.com/mod/Hovercrafts)
+- [Hovercrafts-reloaded](https://mods.factorio.com/mod/Hovercrafts-reloaded)
 
 for better integration.
 
