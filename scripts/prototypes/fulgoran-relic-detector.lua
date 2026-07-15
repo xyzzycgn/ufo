@@ -183,7 +183,7 @@ data.raw.car.tank.equipment_grid = "tank-equipment-grid"
 table.insert(data.raw["equipment-grid"]["spidertron-equipment-grid"].equipment_categories, "vehicle")
 
 -- add detector to Hovercrafts (if mod is loaded)
-if mods["Hovercrafts"] then
+if mods["Hovercrafts-reloaded"] then
     table.insert(data.raw["equipment-grid"]["hovercraft-equipment"].equipment_categories, "vehicle")
     table.insert(data.raw["equipment-grid"]["missile-hovercraft-equipment"].equipment_categories, "vehicle")
 end

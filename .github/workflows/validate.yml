@@ -16,6 +16,6 @@ jobs:
           ref: V2.1
 
       - name: Validate Mod
-        uses: xyzzycgn/factorio-mod-uploader-action@2.0.7
+        uses: xyzzycgn/factorio-mod-uploader-action@2.0.8
         with:
           action: validate

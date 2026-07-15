@@ -39,7 +39,7 @@ Hint: It is recommended to research these **before** the advanced technologies. 
 This mod is compatible to vanilla game (= space age) and offers some changes to two (optional) mods 
 
 - [Fulgoran enemies](https://mods.factorio.com/mod/Electric_flying_enemies)
-- [Hovercrafts](https://mods.factorio.com/mod/Hovercrafts)
+- [Hovercrafts-reloaded](https://mods.factorio.com/mod/Hovercrafts-reloaded)
 
 for better integration.
 
@@ -66,11 +66,11 @@ Up to three achievements are awarded when certain stages of technologies are rea
   - русский (ru)
   - svenska (sv-SE)
   - türkçe (tr)
-  - українська (uk-UA)
-  - 中国人 (zh-CN)
-  - 中國人 (zh-TW)
+  - українська (uk)
+  - 简体中文 (zh-CN)
+  - 繁體中文 (zh-TW)
 
-Mostly translated with google or AI - may contain wrong translations or such sounding strange/funny for native speakers.
+Mostly translated with google or AI – may contain wrong translations or such sounding strange/funny for native speakers.
 
 Contributions adding new language localizations or corrections are welcomed.
 
