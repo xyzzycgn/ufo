@@ -2,7 +2,7 @@
 --- Created by xyzzycgn
 --- Tests for ufo.lua
 ---
-local Require = require("test.require")
+local Require = require("spec.require")
 _G.require = Require.replace(require)
 
 require("spec.common")
