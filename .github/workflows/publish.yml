@@ -12,17 +12,17 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Validate Mod
-        uses: xyzzycgn/factorio-mod-uploader-action@2.0.7
+        uses: xyzzycgn/factorio-mod-uploader-action@2.0.8
         with:
           action: validate
 
       - name: Create zip
-        uses: xyzzycgn/factorio-mod-uploader-action@2.0.7
+        uses: xyzzycgn/factorio-mod-uploader-action@2.0.8
         with:
           action: compress
 
       - name: Upload Mod
-        uses: xyzzycgn/factorio-mod-uploader-action@2.0.7
+        uses: xyzzycgn/factorio-mod-uploader-action@2.0.8
         with:
           action: upload
           factorio-api-key: ${{ secrets.FACTORIO_API_KEY }}
