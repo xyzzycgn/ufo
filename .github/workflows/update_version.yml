@@ -1,0 +1,38 @@
+name: Bump Version in JSON (2.1 series)
+
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # fetches git-History
+
+      - name: Switch to V2.1 Branch manually
+        run: |
+          git checkout V2.1
+          git pull origin V2.1
+
+      - name: Calculate Next Semantic Version
+        id: version
+        uses: Kaven-Universe/github-action-auto-increment-version@v1
+        with:
+          file: "info.json"
+
+      - name: Commit and Push JSON Change
+        run: |
+          git config --local user.email "github-actions[bot]@://github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add "info.json"
+          # Prevents the workflow from failing if the version has not changed.
+          git diff-index --quiet HEAD || git commit -m "chore: bump version to ${{ steps.version.outputs.newVersion }} [skip ci]"
+          git push
+
