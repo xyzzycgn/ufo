@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - '1.1.[0-9]*' # TODO change back to '[0-9]*.[0-9]*.[0-9]*' when factorio 2.1 is finally released
+
+permissions:
+  contents: write
+
 jobs:
   publish-mod:
     runs-on: ubuntu-latest
