@@ -21,7 +21,7 @@ for recipe, recipe_parameters in pairs(edf_sources) do
 
     local ufo_edf_recipe = prototypeHelper.copyAndReplace("recipe", recipe , name, {
         enabled = false,
-        category = "electrodynamic-fragmentation-category",
+        categories = { "electrodynamic-fragmentation-category" },
         subgroup = "intermediate-product",
         hide_from_player_crafting = true,
         hidden = false,
