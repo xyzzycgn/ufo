@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.1
+Date: 2026-07-20
+  Changes:
+    - Reverted dependency to Hovercrafts - the new mod Hovercrafts-reloaded will retire soon as the changes made
+      to it have been integrated into Hovercrafts recently.
+---------------------------------------------------------------------------------------------------
 Version: 1.1.0
 Date: 2026-07-15
   Changes:
