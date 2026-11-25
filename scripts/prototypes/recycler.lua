@@ -14,7 +14,7 @@ local tint = { r = 0.75, g = 0.75, b = 1, a = 0.6 }
 -- to use tint it must be icons
 local icons = {
     {
-        icon = "__quality__/graphics/icons/recycler.png",
+        icon = "__recycler__/graphics/icons/recycler.png",
         icon_size = 64,
         tint = tint,
         scale = scale_factor,
@@ -65,7 +65,7 @@ local ufo_recycler_tech = {
     type = "technology",
     icons = {
         {
-            icon = "__quality__/graphics/technology/recycling.png",
+            icon = "__recycler__/graphics/technology/recycling.png",
             icon_size = 256,
             icon_mipmaps = 4,
             tint = tint,

@@ -59,7 +59,7 @@ ufo_furnace_item.order = order .. "-a"
 
 local ufo_furnace_recipe = prototypeHelper.copyAndReplace("recipe", "electric-furnace", "ufo-electric-furnace", {
     enabled = false,
-    category = "crafting-with-fluid",
+    categories = { "crafting-with-fluid" },
     surface_conditions = consts.sc_only_fulgora,
 })
 prototypeHelper.additionalIngredients(ufo_furnace_recipe, {
